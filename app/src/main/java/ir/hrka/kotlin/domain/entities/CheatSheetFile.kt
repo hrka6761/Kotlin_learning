@@ -14,5 +14,7 @@ data class CheatSheetFile(
     @field:Json(name = "git_url") val gitUrl: String,
     @field:Json(name = "download_url") val downloadUrl: String,
     @field:Json val type: String,
+    @field:Json val content: String,
+    @field:Json val encoding: String,
     @field:Json(name = "_links") val links: Links,
 )
