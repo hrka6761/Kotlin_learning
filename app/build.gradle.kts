@@ -87,4 +87,15 @@ dependencies {
 
     // Constraintlayout
     implementation(libs.constraintlayout.compose)
+
+    // Retrofit
+    implementation(libs.converter.moshi)
+
+    // Moshi
+    implementation(libs.moshi.kotlin)
+    /*noinspection KaptUsageInsteadOfKsp*/
+    kapt(libs.moshi.kotlin.codegen)
+
+    // OkHTTP logger
+    implementation(libs.logging.interceptor)
 }
