@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class CheatSheetFile(
+data class RepoFileModel(
     @field:Json val name: String,
     @field:Json val path: String,
     @field:Json val sha: String,
