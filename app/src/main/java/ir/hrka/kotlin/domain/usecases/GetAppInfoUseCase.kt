@@ -12,9 +12,10 @@ class GetAppInfoUseCase @Inject constructor(private val appInfoRepo: AppInfoRepo
 
     suspend operator fun invoke(): Resource<AppInfoModel?> {
         val gradleFile = appInfoRepo.getAppInfo().data
-        val gradleFileContent = if (gradleFile != null) decodeBase64(gradleFile.content) else null
+        val gradleContent = gradleFile?.content ?: ""
+        val gradleFileContent = if (gradleFile != null) decodeBase64(gradleContent) else null
 
-        return if (gradleFileContent != null)
+        return if (!gradleFileContent.isNullOrEmpty())
             Resource.Success(provideAppInfoModel(gradleFileContent))
         else
             Resource.Error(ErrorModel(READ_FILE_ERROR_CODE, "Can't access the github repository files."))
