@@ -3,28 +3,29 @@ package ir.hrka.kotlin.data.repositories
 import ir.hrka.kotlin.core.utilities.Constants.RETROFIT_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.GithubAPI
-import ir.hrka.kotlin.domain.entities.RepoFileModel
 import ir.hrka.kotlin.domain.entities.ErrorModel
-import ir.hrka.kotlin.domain.repositories.AppInfoRepo
+import ir.hrka.kotlin.domain.entities.RepoFileModel
+import ir.hrka.kotlin.domain.repositories.CheatSheetsRepo
 import javax.inject.Inject
 
-class AppInfoRepoImpl @Inject constructor(
+class CheatSheetRepoImpl @Inject constructor(
     private val githubAPI: GithubAPI
-) : AppInfoRepo {
+) : CheatSheetsRepo {
 
-    override suspend fun getAppInfo(): Resource<RepoFileModel?> {
+    override suspend fun getCheatSheetsList(): Resource<List<RepoFileModel>?> {
         return try {
-            val response = githubAPI.getAppInfo()
+            val response = githubAPI.getCheatSheetsList()
 
-            if (response.isSuccessful)
+            if (response.isSuccessful) {
                 Resource.Success(response.body())
-            else
+            } else {
                 Resource.Error(
                     ErrorModel(
                         errorCode = response.code(),
-                        errorMsg = response.errorBody()?.string().toString()
+                        errorMsg = response.message()
                     )
                 )
+            }
         } catch (e: Exception) {
             Resource.Error(
                 ErrorModel(

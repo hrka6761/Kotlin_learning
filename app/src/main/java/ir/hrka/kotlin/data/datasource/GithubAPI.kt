@@ -10,4 +10,8 @@ interface GithubAPI {
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("app/build.gradle.kts")
     suspend fun getAppInfo(): Response<RepoFileModel>
+
+    @Headers("Accept: application/vnd.github.v3+json")
+    @GET("app/src/main/java/ir/hrka/kotlin/cheatSheet")
+    suspend fun getCheatSheetsList(): Response<List<RepoFileModel>>
 }
