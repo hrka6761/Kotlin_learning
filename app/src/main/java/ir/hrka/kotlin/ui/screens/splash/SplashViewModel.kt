@@ -66,10 +66,6 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    fun resetAppInfo() {
-        _appInfo.value = Resource.Initial()
-    }
-
     fun checkNewVersion(context: Context) {
         try {
             val packageInfo: PackageInfo =
@@ -77,9 +73,9 @@ class SplashViewModel @Inject constructor(
             val versionCode = packageInfo.longVersionCode.toInt()
             if (_appInfo.value.data != null)
                 if (versionCode < _appInfo.value.data!!.versionCode)
-                    _newVersionState.value = NEW_VERSION_NOT_AVAILABLE
-                else
                     _newVersionState.value = NEW_VERSION_AVAILABLE
+                else
+                    _newVersionState.value = NEW_VERSION_NOT_AVAILABLE
         } catch (e: Exception) {
             _newVersionState.value = NEW_VERSION_UNKNOWN_STATE
         }
@@ -129,9 +125,10 @@ class SplashViewModel @Inject constructor(
             getNewVersionApkFileName()
         )
 
+
     private fun getNewVersionApkFileName(): String =
-        /*"Kotlin_Cheat_Sheet_V${_appInfo.value.data?.versionName}.apk"*/"v0.12.1-dariarnd.apk"
+        "Kotlin_Cheat_Sheet_V${_appInfo.value.data?.versionName}.apk"
 
     private fun getNewVersionApkFileUrl(): String =
-        BASE_APK_PATH_URL +/* "V" +*/ /*_appInfo.value.data?.versionName*/"/0.0.0/" + getNewVersionApkFileName()
+        BASE_APK_PATH_URL + "V" + _appInfo.value.data?.versionName + getNewVersionApkFileName()
 }

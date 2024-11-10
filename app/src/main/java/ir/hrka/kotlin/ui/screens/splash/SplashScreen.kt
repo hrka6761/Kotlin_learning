@@ -269,28 +269,29 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     }
 
     LaunchedEffect(appInfo) {
-        when (appInfo) {
-            is Resource.Initial -> {}
-            is Resource.Loading -> {}
-            is Resource.Success -> {
-                viewModel.checkNewVersion(activity)
-                viewModel.resetAppInfo()
-            }
+        if (newVersionState == NEW_VERSION_NO_STATE)
+            when (appInfo) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    viewModel.checkNewVersion(activity)
+                }
 
-            is Resource.Error -> {
-                snackBarHostState.showSnackbar(
-                    message = appInfo.error?.errorMsg.toString(),
-                    duration = SnackbarDuration.Long
-                )
-                viewModel.setNewVersionDialogState(NEW_VERSION_UNKNOWN_STATE)
-                viewModel.resetAppInfo()
+                is Resource.Error -> {
+                    viewModel.setNewVersionDialogState(NEW_VERSION_UNKNOWN_STATE)
+                }
             }
-        }
     }
 
     LaunchedEffect(newVersionState) {
-        if (newVersionState == NEW_VERSION_NOT_AVAILABLE || newVersionState == NEW_VERSION_UNKNOWN_STATE) {
+        if (newVersionState == NEW_VERSION_NOT_AVAILABLE) {
             delay(1000)
+            navHostController.navigate(Home())
+        } else if (newVersionState == NEW_VERSION_UNKNOWN_STATE) {
+            snackBarHostState.showSnackbar(
+                message = appInfo.error?.errorMsg.toString(),
+                duration = SnackbarDuration.Short
+            )
             navHostController.navigate(Home())
         } else if (newVersionState == NEW_VERSION_CANCEL) {
             if (appInfo.data?.versionNameSuffix == MANDATORY)

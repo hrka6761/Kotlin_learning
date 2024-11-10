@@ -24,11 +24,16 @@ class HomeViewModel @Inject constructor(
     private val _cheatSheets: MutableStateFlow<Resource<List<RepoFileModel>?>> =
         MutableStateFlow(Resource.Initial())
     val cheatSheets: StateFlow<Resource<List<RepoFileModel>?>> = _cheatSheets
+    private val _progressBarState: MutableStateFlow<Boolean?> = MutableStateFlow(true)
+    val progressBarState: MutableStateFlow<Boolean?> = _progressBarState
 
+
+    fun setProgressBarState(state: Boolean?) {
+        _progressBarState.value = state
+    }
 
     fun getCheatSheets() {
         viewModelScope.launch(io) {
-            Log.i(TAG, "getCheatSheets: ")
             _cheatSheets.value = Resource.Loading()
             _cheatSheets.value = getCheatSheetsListUseCase()
         }

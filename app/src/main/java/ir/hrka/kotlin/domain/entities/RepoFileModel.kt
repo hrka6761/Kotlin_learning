@@ -2,6 +2,7 @@ package ir.hrka.kotlin.domain.entities
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import ir.hrka.kotlin.core.utilities.extractFileIdByName
 
 @JsonClass(generateAdapter = true)
 data class RepoFileModel(
@@ -17,4 +18,6 @@ data class RepoFileModel(
     @field:Json val content: String?,
     @field:Json val encoding: String?,
     @field:Json(name = "_links") val links: Links,
-)
+) {
+    val id: Int by lazy { name.extractFileIdByName() }
+}
