@@ -17,7 +17,7 @@ data class RepoFileModel(
     @field:Json val type: String,
     @field:Json val content: String?,
     @field:Json val encoding: String?,
-    @field:Json(name = "_links") val links: Links,
+    @field:Json(name = "_links") val linksModel: LinksModel,
 ) {
     val id: Int by lazy { name.extractFileIdByName() }
 }
