@@ -4,7 +4,7 @@ import ir.hrka.kotlin.helpers.Log.printRed
 import ir.hrka.kotlin.helpers.Log.printYellow
 
 /**
- * * We declare a `package` at the top of your Kotlin file using the package keyword.
+ * * We declare a `package` at the top of your Kotlin file using the package keyword:
  *    * Use all lowercase letters.
  *    * Use reverse domain name notation to ensure uniqueness (e.g., com.example).
  *    * Avoid using reserved words or special characters.
@@ -19,9 +19,9 @@ import ir.hrka.kotlin.helpers.Log.printYellow
  *    * It equals regular variable in java.
  *    * It has getter and setter.
  * * Compile-time constants `const val`:
- *    * It must be a top-level property, or a member of an object declaration or a companion object
- *    * It must be initialized with a value of type String or a primitive type
- *    * It cannot be a custom getter
+ *    * It must be a top-level property, or a member of an object declaration or a companion object.
+ *    * It must be initialized with a value of type String or a primitive type.
+ *    * It cannot be a custom getter.
  * * The compiler will inline usages of the constant, replacing the reference to the constant with its actual value.
  * However, the field will not be removed and therefore can be interacted with using reflection.
  * * Use `val` wherever possible.
@@ -39,14 +39,14 @@ import ir.hrka.kotlin.helpers.Log.printYellow
  * (directly when the class is not derived from any class and indirect when the class is derived from a class).
  * * `Nothing` is a regular class that has not any instance because its constructor is private
  * (if a function has the return type of Nothing, it means that it never returns (always throws an exception)).
- * * In the following cases if person.name = null s is Nothing
+ * * In the following cases if person.name = null s is Nothing:
  * ```
  * val s = person.name ?: return
  * val s = person.name ?: throw NullPointerException()
  * ```
  * * `TODO()` return Nothing and throws exception.
- * it is a standard function of kotlin that is used in the body of functions that is not implemented yet.
- * (we can pass it a string as a reason.)
+ * it is a standard function of kotlin that is used in the body of functions that is not implemented yet
+ * (we can pass it a string as a reason.).
  * * Late-initialized properties and variables `lateinit var`:
  *    * This modifier can be used on var properties declared inside the body of a class.
  *    * You can not declare primitive types by late init (only reference types such String or etc).
@@ -98,22 +98,22 @@ class SampleCLass {
  * ```
  * * Unsigned integer is declared to as int in the java.
  * * All integer and decimal types are number and extend it and comparable class.
- * * To perform a runtime check use `is` and `!is` operators:
+ * * To perform a runtime check use `is` and `!is` operators.
  * * Smart casts occurred after using `is` and `!is` operators in a control flow like `if` and `when`.
  * * To cast, you must use `as` operator.
- * * To safe casting on nullable use `as?` :
+ * * To safe casting on nullable use `as?`:
  * ```
  * val x: String? = y as String?
  * // if y=null x=null , if y is not a string throw ClassCastException.
  * val x: String? = y as? String
  * // if y=null or is not a string x=null.
  * ```
- * * `return`    -> by default returns from the nearest enclosing function or anonymous function.
- * * `break`     -> terminates the nearest enclosing loop.
- * * `continue`  -> proceeds to the next step of the nearest enclosing loop.
+ * * `return`: by default returns from the nearest enclosing function or anonymous function.
+ * * `break`: terminates the nearest enclosing loop.
+ * * `continue`: proceeds to the next step of the nearest enclosing loop.
  * * There is not any checked exception in kotlin.
  * * To handling exceptions, we can use try-catch-finally blocks.
- * * To explicit throw exception by function use @Throws annotation
+ * * To explicit throw exception by function use @Throws annotation.
  */
 
 
@@ -198,7 +198,7 @@ val mutableMap: Map<Int, Long> = mutableMapOf(Pair(1, 1L), Pair(1, 2L), Pair(2, 
 
 
 /**
- * * There are four visibility modifiers in Kotlin: `private`, `protected`, `internal`, `public`
+ * * There are four visibility modifiers in Kotlin: `private`, `protected`, `internal`, `public`.
  * * `private` means that the member is visible inside class or file only.
  * * `protected` means that the member has the same visibility as one marked as private, but that it is also visible in subclasses.
  * * `internal` means that any client inside this module who sees the declaring class sees its internal members(a module is a set of Kotlin files compiled together).
