@@ -35,4 +35,28 @@ class CheatSheetRepoImpl @Inject constructor(
             )
         }
     }
+
+    override suspend fun getCheatSheetFile(fileName: String): Resource<RepoFileModel?> {
+        return try {
+            val response = githubAPI.getCheatSheetFile(fileName)
+
+            if (response.isSuccessful) {
+                Resource.Success(response.body())
+            } else {
+                Resource.Error(
+                    ErrorModel(
+                        errorCode = response.code(),
+                        errorMsg = response.message()
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            Resource.Error(
+                ErrorModel(
+                    errorCode = RETROFIT_ERROR_CODE,
+                    errorMsg = e.message.toString()
+                )
+            )
+        }
+    }
 }
