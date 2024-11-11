@@ -5,6 +5,7 @@ object Constants {
     const val TAG = "KotlinCheatSheetProject"
     const val SPLASH_SCREEN = "splash"
     const val HOME_SCREEN = "home"
+    const val CHEATSHEET_SCREEN = "cheatSheet"
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
     const val BASE_APK_PATH_URL = "https://github.com/hrka6761/Kotlin_cheat_sheet/releases/download/"
     const val RETROFIT_ERROR_CODE = 1000

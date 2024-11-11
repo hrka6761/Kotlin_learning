@@ -10,6 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
+import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
+import ir.hrka.kotlin.ui.screens.cheatsheet.CheatSheetScreen
 import ir.hrka.kotlin.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.ui.screens.splash.SplashScreen
 import ir.hrka.kotlin.ui.theme.KotlinTheme
@@ -30,6 +32,9 @@ fun AppContent() {
             }
             composable(route = Home()) {
                 HomeScreen(activity, navHostController)
+            }
+            composable(route = CheatSheet()) {
+                CheatSheetScreen(activity, navHostController)
             }
         }
     }
