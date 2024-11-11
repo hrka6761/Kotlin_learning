@@ -1,9 +1,16 @@
 package ir.hrka.kotlin.core.utilities
 
+import android.util.Base64
+
 private const val versionCodePattern = """versionCode\s*=\s*(\d+)"""
 private const val versionNamePattern = """versionName\s*=\s*"([^"]+)""""
 private const val versionSuffixPattern = """versionNameSuffix\s*=\s*"([^"]+)""""
 
+
+fun String.decodeBase64(): String {
+    val decodedBytes = Base64.decode(this, Base64.DEFAULT)
+    return String(decodedBytes)
+}
 
 fun String.extractVersionCodeFromGradleContent(): Int {
     val versionCodeRegex = versionCodePattern.toRegex()
