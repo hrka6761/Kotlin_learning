@@ -5,9 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import ir.hrka.kotlin.core.utilities.Constants.CHEATSHEET_SCREEN_ARGUMENT_NAME
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
@@ -33,8 +36,15 @@ fun AppContent() {
             composable(route = Home()) {
                 HomeScreen(activity, navHostController)
             }
-            composable(route = CheatSheet()) {
-                CheatSheetScreen(activity, navHostController)
+            composable(
+                route = "${CheatSheet()}/{${CHEATSHEET_SCREEN_ARGUMENT_NAME}}",
+                arguments = listOf(navArgument(CHEATSHEET_SCREEN_ARGUMENT_NAME) {
+                    type = NavType.StringType
+                })
+            ) { backStackEntry ->
+                val cheatSheetFileName =
+                    backStackEntry.arguments?.getString(CHEATSHEET_SCREEN_ARGUMENT_NAME) ?: ""
+                CheatSheetScreen(activity, navHostController, cheatSheetFileName)
             }
         }
     }

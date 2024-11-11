@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.ui.screens.home
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,7 +49,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.utilities.Constants.TAG
 import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.utilities.Screen
 import ir.hrka.kotlin.core.utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
 import ir.hrka.kotlin.domain.entities.RepoFileModel
@@ -82,7 +85,7 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
 
                 sortedList?.let {
                     items(it.size) { index ->
-                        CheatSheetItem(it[index])
+                        CheatSheetItem(it[index], navHostController)
                     }
                 }
             }
@@ -167,7 +170,7 @@ fun HomeAppBar() {
 }
 
 @Composable
-fun CheatSheetItem(cheatSheet: RepoFileModel) {
+fun CheatSheetItem(cheatSheet: RepoFileModel, navHostController: NavHostController) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,7 +180,9 @@ fun CheatSheetItem(cheatSheet: RepoFileModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer)
-                .clickable { }
+                .clickable {
+                    navHostController.navigate(Screen.CheatSheet.appendArg(cheatSheet.name))
+                }
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
