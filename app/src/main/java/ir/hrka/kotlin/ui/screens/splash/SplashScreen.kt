@@ -2,11 +2,9 @@ package ir.hrka.kotlin.ui.screens.splash
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -62,7 +60,6 @@ import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_DOWNLOADED
 import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_NO_STATE
 import ir.hrka.kotlin.core.utilities.Constants.TAG
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
 
@@ -335,7 +332,6 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
 }
 
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {
