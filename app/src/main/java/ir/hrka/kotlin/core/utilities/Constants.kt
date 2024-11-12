@@ -7,6 +7,7 @@ object Constants {
     const val HOME_SCREEN = "home"
     const val CHEATSHEET_SCREEN = "cheatSheet"
     const val CHEATSHEET_SCREEN_ARGUMENT_NAME= "CheatSheetFileName"
+    const val TOKEN = "Bearer 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"
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
     const val BASE_APK_PATH_URL = "https://github.com/hrka6761/Kotlin_cheat_sheet/releases/download/"
     const val RETROFIT_ERROR_CODE = 1000
