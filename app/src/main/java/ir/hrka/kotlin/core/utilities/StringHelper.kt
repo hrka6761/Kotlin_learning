@@ -52,9 +52,13 @@ fun String.extractSnippetCodeFromPoint(): List<String>? {
     val snippetCodeRegex = snippetCodePattern.toRegex(RegexOption.DOT_MATCHES_ALL)
 
     val snippetsCode =
-        snippetCodeRegex.findAll(this).map { it.groupValues[1].trim().replace("*", "") }.toList()
+        snippetCodeRegex.findAll(this).map { it.groupValues[1].trim().replace("*", " ") }.toList()
+    var modifiedSnippetsCode: List<String>? = null
 
-    return snippetsCode.ifEmpty { null }
+    if (snippetsCode.isNotEmpty())
+        modifiedSnippetsCode = snippetsCode.map { item -> " $item" }
+
+    return modifiedSnippetsCode
 }
 
 fun String.extractHeadPointsFromPointContent(): String = this.split(":").first()

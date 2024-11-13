@@ -10,10 +10,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import ir.hrka.kotlin.core.utilities.Constants.CHEATSHEET_SCREEN_ARGUMENT_NAME
+import ir.hrka.kotlin.core.utilities.Constants.POINT_SCREEN_ARGUMENT_NAME
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
-import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
+import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.ui.screens.cheatsheet.CheatSheetScreen
 import ir.hrka.kotlin.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.ui.screens.splash.SplashScreen
@@ -37,13 +37,13 @@ fun AppContent() {
                 HomeScreen(activity, navHostController)
             }
             composable(
-                route = "${CheatSheet()}/{${CHEATSHEET_SCREEN_ARGUMENT_NAME}}",
-                arguments = listOf(navArgument(CHEATSHEET_SCREEN_ARGUMENT_NAME) {
+                route = "${Point()}/{${POINT_SCREEN_ARGUMENT_NAME}}",
+                arguments = listOf(navArgument(POINT_SCREEN_ARGUMENT_NAME) {
                     type = NavType.StringType
                 })
             ) { backStackEntry ->
                 val cheatSheetFileName =
-                    backStackEntry.arguments?.getString(CHEATSHEET_SCREEN_ARGUMENT_NAME) ?: ""
+                    backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_NAME) ?: ""
                 CheatSheetScreen(activity, navHostController, cheatSheetFileName)
             }
         }

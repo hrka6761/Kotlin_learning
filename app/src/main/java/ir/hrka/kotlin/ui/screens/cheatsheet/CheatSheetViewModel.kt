@@ -24,7 +24,13 @@ class CheatSheetViewModel @Inject constructor(
     private val _points: MutableStateFlow<Resource<List<PointDataModel>?>> =
         MutableStateFlow(Resource.Initial())
     val points: StateFlow<Resource<List<PointDataModel>?>> = _points
+    private val _progressBarState: MutableStateFlow<Boolean?> = MutableStateFlow(true)
+    val progressBarState: MutableStateFlow<Boolean?> = _progressBarState
 
+
+    fun setProgressBarState(state: Boolean?) {
+        _progressBarState.value = state
+    }
 
     fun getPoints(fileName: String) {
         viewModelScope.launch(io) {
