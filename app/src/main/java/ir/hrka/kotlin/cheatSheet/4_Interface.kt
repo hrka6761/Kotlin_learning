@@ -11,7 +11,7 @@ import ir.hrka.kotlin.helpers.Log.printYellow
  * * Properties declared in interfaces can't have backing fields,
  * and therefore accessors declared in interfaces can't reference them.
  * * A property declared in an interface can either be abstract or provide implementations for accessors.
- * * Interface can't have properties with initializers.(because it cannot have state)
+ * * Interface can't have properties with initializers because it cannot have state.
  * * Interface can contains abstract and concrete methods.
  * * Concrete member is open by default.
  * * We can't use `final` keyword in an interface.

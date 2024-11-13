@@ -125,7 +125,8 @@ class DelegateClass2(baseImplementation: Base) : Base by baseImplementation {
 
 
 /**
- * * `Lazy properties`: the value is computed only on first access.
+ * * `Lazy properties`:
+ *    * the value is computed only on first access.
  * * We can pass a map object into a class by storing properties in a map instead of a separate field
  * for each property and inferred the value by `by` keyword.
  * * `lazy()` is a function that takes a lambda and returns an instance of Lazy<T>,
@@ -134,38 +135,34 @@ class DelegateClass2(baseImplementation: Base) : Base by baseImplementation {
  * Subsequent calls to get() simply return the remembered result.
  * * The property that be delegated by lazy must be as a val no var.
  * * Modes of lazy are:
- *    * `LazyThreadSafetyMode.SYNCHRONIZED`(default) -
- *    The value is computed only in one thread, but all threads will see the same value.
- *    * `LazyThreadSafetyMode.PUBLICATION` -
- *    If the synchronization of the initialization delegate is not required to allow multiple threads to execute it simultaneously
- *    * `LazyThreadSafetyMode.NONE` -
- *    If you're sure that the initialization will always happen in the same thread as the one where you use the property
- * * `Observable properties` : Delegates.observable() takes two arguments, the initial value and a handler for modifications.
- * the handler is called every time you assign to the property
- * * `vetoable properties`: If you want to intercept assignments and veto them, use Delegates.vetoable()
+ *    * `SYNCHRONIZED`(default) -> The value is computed only in one thread, but all threads will see the same value.
+ *    * `PUBLICATION` -> If the synchronization of the initialization delegate is not required to allow multiple threads to execute it simultaneously
+ *    * `NONE` -> If you're sure that the initialization will always happen in the same thread as the one where you use the property
+ * * `Observable` properties:
+ *    * Delegates.observable() takes two arguments, the initial value and a handler for modifications.
+ *    the handler is called every time you assign to the property
+ * * `vetoable` properties:
+ *    * If you want to intercept assignments and veto them
  * * A property can delegate its getter and setter to another property.
- * * We can create custom property delegate:
- *    * For a read-only property (val),
- *    a delegate should provide an operator function getValue() with the following parameters:
- *        * thisRef must be the same type as, or a supertype of,
- *        the property owner (for extension properties, it should be the type being extended).
- *        * property must be of type KProperty<*> or its supertype.
- *        * getValue() must return the same type as the property (or its subtype).
- *    * For a mutable property (var),
- *    a delegate has to additionally provide an operator function setValue() with the following parameters:
- *        * thisRef must be the same type as, or a supertype of,
- *        the property owner (for extension properties, it should be the type being extended).
- *        * property must be of type KProperty<*> or its supertype.
- *        * value must be of the same type as the property (or its supertype).
+ * * We can create custom property delegate.
+ * * For a read-only property (val), a delegate should provide an operator function getValue() with the following parameters:
+ *    * thisRef must be the same type as, or a supertype of, the property owner (for extension properties, it should be the type being extended).
+ *    * property must be of type KProperty<*> or its supertype.
+ *    * getValue() must return the same type as the property (or its subtype).
+ * * For a mutable property (var), a delegate has to additionally provide an operator function setValue() with the following parameters:
+ *    * thisRef must be the same type as, or a supertype of, the property owner (for extension properties, it should be the type being extended).
+ *    * property must be of type KProperty<*> or its supertype.
+ *    * value must be of the same type as the property (or its supertype).
  * * The type of thisRef (T) can vary depending on where the property is declared or accessed:
- *     * If the property is in a class, thisRef is an instance of that class.
- *     * For an extension property, thisRef is the instance on which the extension is applied.
- *     * In singleton objects, thisRef is the singleton object itself.
- *     * For top-level properties, thisRef might be null or refer to the context in which it's used.
+ *    * If the property is in a class, thisRef is an instance of that class.
+ *    * For an extension property, thisRef is the instance on which the extension is applied.
+ *    * In singleton objects, thisRef is the singleton object itself.
+ *    * For top-level properties, thisRef might be null or refer to the context in which it's used.
  * * You can create delegates as anonymous objects without creating new classes,
  * by using the interfaces `ReadOnlyProperty` and `ReadWriteProperty` from the Kotlin standard library.
- * T the type of object which owns the delegated property. V the type of the property value.
- * * Storing properties in a map: we can use the map instance itself as the delegate for a delegated property.
+ * T the type of object which owns the delegated property and V the type of the property value.
+ * * Storing properties in a map:
+ *    * we can use the map instance itself as the delegate for a delegated property.
  * * We can declare local variables as delegated properties (In the function).
  * The variable will be computed on first access only.
  */

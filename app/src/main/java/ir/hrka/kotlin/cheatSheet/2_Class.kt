@@ -4,18 +4,18 @@ import ir.hrka.kotlin.helpers.Log.printYellow
 
 
 /**
- *  * A class in Kotlin can have only one primary constructor and one or more secondary constructors.
- *  * Members of a class is final by default and must be open to overriding (an open member can not be private).
- *  * If a class has a primary constructor, secondary constructors must be invoke primary constructor.
- *  (directly or indirectly by calling another secondary constructor that the primary constructor calls)
- *  * A class is public and final and with a public zero-param constructor by default.
- *  * During the initialization of an instance, the initializer blocks are executed in the same order
- *  as they appear in the class body, interleaved with the property initializers.
- *  * Initialization block codes convert to constructor in java after decompile.
- *  * Members that declared in the companion object block must be called by the class name without instantiating.
- *  * Class members can access the private members of the corresponding companion object.
- *  * After decompile in java create static final class Companion and member function of companion object
- *  is declared in it and member property of companion object is declared as static final property.
+ * * A class in Kotlin can have only one primary constructor and one or more secondary constructors.
+ * * Members of a class is final by default and must be open to overriding (an open member can not be private).
+ * * If a class has a primary constructor, secondary constructors must be invoke primary constructor:
+ *   * directly or indirectly by calling another secondary constructor that the primary constructor calls.
+ * * A class is public and final and with a public zero-param constructor by default.
+ * * During the initialization of an instance, the initializer blocks are executed in the same order
+ * as they appear in the class body, interleaved with the property initializers.
+ * * Initialization block codes convert to constructor in java after decompile.
+ * * Members that declared in the companion object block must be called by the class name without instantiating.
+ * * Class members can access the private members of the corresponding companion object.
+ * * After decompile in java create static final class Companion and member function of companion object
+ * is declared in it and member property of companion object is declared as static final property.
  */
 
 open class Class(val int: Int = 1) {

@@ -18,11 +18,10 @@ import java.io.Serializable
  *    * It makes a type parameter contravariant, meaning it can only be consumed and never produced.
  *    * `in T` (in kotlin) ~ `? super T` (in java)
  * * The most common use case for declaring definitely non-nullable types is when
- * you want to override a Java method that contains @NotNull as an argument. `T & Any`
+ * you want to override a Java method that contains @NotNull as an argument (`T & Any`).
  * * The underscore operator `_` can be used for type arguments.
- * Use it to automatically infer a type of the argument when other types are explicitly specified.
- * * star projection `*` is a way to work with generic types when you don't know or don't need to
- * specify the exact type parameter.
+ * * Use underscore operator to automatically infer a type of the argument when other types are explicitly specified.
+ * * star projection `*` is a way to work with generic types when you don't know or don't need to specify the exact type parameter.
  */
 
 class GenericClass<T : Serializable, U, V>

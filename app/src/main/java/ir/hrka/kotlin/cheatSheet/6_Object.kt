@@ -98,9 +98,9 @@ class ObjectExpression {
  * * An object can derive from a class or implement interfaces.
  * * Object declarations can't be local (that is, they can't be nested directly inside a function),
  * but they can be nested into other object declarations or non-inner classes.
- * * Just like data classes in data object the compiler generates toString(), equals(), hashCode().
+ * * Just like data classes in data object the compiler generates `toString()`, `equals()`, `hashCode()`.
  * * You can't provide a custom equals or hashCode implementation for a data object.
- * * Data object does not have copy() and componentN() function.
+ * * Data object does not have `copy()` and `componentN()` function.
  */
 
 

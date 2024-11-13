@@ -7,13 +7,11 @@ import ir.hrka.kotlin.helpers.Log.printYellow
  * * All direct subclasses of a sealed class are known at compile time.
  * * A sealed class itself is always an abstract class,
  * and as a result, can't be instantiated directly.
- * * Each enum constant exists only as a single instance,
- * while subclasses of a sealed class may have multiple instances.
+ * * Each enum constant exists only as a single instance, while subclasses of a sealed class may have multiple instances.
  * * Constructors of sealed classes can have one of two visibilities:
- *    * Protected (by default)
- *    * Private
- * * We can override function of interface that implemented by sealed class,
- * can be implemented in every sub class or by own sealed class.
+ *    * Protected (by default).
+ *    * Private.
+ * * We can override function of interface that implemented by sealed class, can be implemented in every sub class or by own sealed class.
  * * Sealed class can contain abstract member that must be implemented by all instances.
  * * A sealed interface can be derived from another interface then sub classes must be implemented its members.
  * * When you combine sealed classes or interfaces with the when expression,

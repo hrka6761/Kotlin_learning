@@ -10,9 +10,9 @@ import kotlin.time.measureTime
  * * If a function does not return a useful value, its return type is `Unit`.
  * * Inside a function, a `vararg-parameter` of type T is visible as an array of T.
  * * Only one parameter can be marked as vararg.
- * * If you already have an array and want to pass its contents to the function,
- * use the spread operator (prefix the array with `*`)
- * * `Infix functions` must meet the following requirements:
+ * * If you already have an array and want to pass its contents to the function, use the spread operator:
+ *    * prefix the array with `*`
+ * * `Infix` functions must meet the following requirements:
  *    * They must be member functions or extension functions.
  *    * They must have a single parameter.
  *    * The parameter must not accept variable number of arguments and must have no default value.
@@ -20,46 +20,45 @@ import kotlin.time.measureTime
  *    * Top level function (in a file)
  *    * local function (in a function)
  *    * member function (in a class)
- * * A `tailrec function` is a recursive function that is optimized
- * by the compiler to prevent stack overflow errors by reusing the same stack frame for recursive calls.
- * * In the tailrec function, optimization is only possible if the recursive call is the last operation in the function.
- * * You cannot use tail recursion when there is more code after the recursive call,
- * within try/catch/finally blocks, or on open functions.
+ * * A `tailrec` function is a recursive function that is optimized by the compiler to prevent stack overflow errors by reusing the same stack frame for recursive calls.
+ * * In the `tailrec` function, optimization is only possible if the recursive call is the last operation in the function.
+ * * You cannot use tail recursion when there is more code after the recursive call, within try/catch/finally blocks, or on open functions.
  * * Kotlin functions are first-class, which means they can be stored in variables and data structures,
  * and can be passed as arguments to and returned from other higher-order functions.
  * * A `higher-order function` is a function that takes functions as parameters, or returns a function.
+ * * Function literals are functions that are not declared but are passed immediately as an expression.
  * * `Lambda expressions` and `anonymous functions` are function literals.
- * Function literals are functions that are not declared but are passed immediately as an expression.
  * * If an exception is thrown from an lambda passed into high order function rest of the code after it dose not execute.
  * * We can use a `callable reference` to an existing declaration:
- *    * a top-level, local, member, or extension function: ::isOdd, String::toInt,
- *    * a top-level, member, or extension property: List<Int>::size,
- *    * a constructor: ::Regex
+ *    * a top-level, local, member, or extension function (::isOdd, String::toInt),
+ *    * a top-level, member, or extension property (List<Int>::size),
+ *    * a constructor (::Regex)
  * * A lambda expression or anonymous function (as well as a local function and an object expression) can access its closure,
  * which includes the variables declared in the outer scope.
  * * Using higher-order functions imposes certain runtime penalties:
- * each function is an object, and it captures a closure.
+ *    * each function is an object.
+ *    * each function captures a closure.
  * A closure is a scope of variables that can be accessed in the body of the function.
- * * Benefits of `Inline Functions`:
+ * * Benefits of `Inline` functions:
  *    * When you mark a function as inline, the Kotlin compiler replaces the function call with the actual function body.
  *    This avoids creating a function object and stack frame for each call, which reduces overhead and can improve performance.
- *    (This is particularly beneficial for short and frequently called functions).
+ *    * This is particularly beneficial for short and frequently called functions.
  *    * You can use return inside a lambda passed to an inline function to return from the enclosing function.
  * * Avoid inlining large functions because the generated code to grow.
- * * The inline modifier affects both the function itself and the lambdas passed to it:
+ * * The inline modifier affects both the function itself and the lambdas passed to it and
  * all of those will be inlined into the call site.
  * * We can not use local function in inline functions.
  * * If you don't want all of the lambdas passed to an inline function to be inlined,
  * mark some of your function parameters with the `noinline` modifier.
- * * Use the `reified` modifier to make the type parameter accessible inside the inline function
- * (no reflection is needed and normal operators like '!is' and 'as' are now available for you to use).
+ * * Use the `reified` modifier to make the type parameter accessible inside the inline function:
+ *    * No reflection is needed and normal operators like '!is' and 'as' are now available for you to use.
  * * Normal functions (not marked as inline) cannot have reified parameters.
- * * The 'inline' modifier can be used on accessors of properties that don't have backing fields.
+ * * The 'inline' modifier can be used on accessors of properties that don't have backing fields:
  *    * 'inline' property cannot have backing field.
  *    * 'inline' modifier is not allowed on virtual members.
  *    * In an interface only private or final members can be inlined.
  * * At the call site, inline accessors are inlined as regular inline functions.
- * * To implement an `operator function`, provide a member function or an extension function
+ * * To implement an `operator` function, provide a member function or an extension function
  * with a specific name for the corresponding type.
  * * When we mark a function with `suspend`, we can only use this function in coroutines or another suspend function.
  */

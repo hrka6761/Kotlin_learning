@@ -4,7 +4,7 @@ import ir.hrka.kotlin.helpers.Log.printYellow
 
 /**
  * * Kotlin provides the ability to extend a class or an interface with new functionality without
- * having to inherit from the class (This is done via special declarations called extensions).
+ * having to inherit from the class and This is done via special declarations called extensions.
  * * The 'this' keyword inside an extension function or getter and setter body of extension property
  * corresponds to the receiver object.
  * * If an extension is declared outside its receiver type, it cannot access
@@ -18,12 +18,12 @@ import ir.hrka.kotlin.helpers.Log.printYellow
  * * Since extensions do not actually insert members into classes,
  * there's no efficient way for an extension property to have a backing field.
  * This is why initializers are not allowed for extension properties.
- * Their behavior can only be defined by explicitly providing getters/setters.
+ * * Extensions behavior can only be defined by explicitly providing getters/setters.
  * * We can call extensions on the instance of subclasses.
  * * If a class has a companion object defined, you can also define extension functions and
  * properties for the companion object.
  * * To use an extension outside its declaring package, import it at the call site.
- * * We can declare extensions as members of a class. in this way there are two implicit receivers.
+ * * We can declare extensions as members of a class, in this way there are two implicit receivers:
  *    * Dispatch receiver: Instance of class that in which the extension is declared.
  *    * Extension receiver: Instance of class that extension declared on it.
  * * In the event of a conflict name between the members of dispatch receiver and extension receiver,

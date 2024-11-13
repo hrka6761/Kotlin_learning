@@ -6,8 +6,11 @@ import ir.hrka.kotlin.helpers.Log.printYellow
 /**
  * * We declare a `package` at the top of your Kotlin file using the package keyword:
  *    * Use all lowercase letters.
- *    * Use reverse domain name notation to ensure uniqueness (e.g., com.example).
+ *    * Use reverse domain name notation to ensure uniqueness.
  *    * Avoid using reserved words or special characters.
+ * ```
+ * package com.google.kotlin
+ * ```
  * * When we want to use another file or class in our class,
  * we must `import` its package name in our class unless it is in the same package.
  * * We can declare value by `val` that is immutable:
@@ -113,7 +116,7 @@ class SampleCLass {
  * * `continue`: proceeds to the next step of the nearest enclosing loop.
  * * There is not any checked exception in kotlin.
  * * To handling exceptions, we can use try-catch-finally blocks.
- * * To explicit throw exception by function use @Throws annotation.
+ * * To explicit throw exception by function use `@Throws` annotation.
  */
 
 

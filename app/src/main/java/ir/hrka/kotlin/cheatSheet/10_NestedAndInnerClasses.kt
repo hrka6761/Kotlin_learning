@@ -3,12 +3,10 @@ package ir.hrka.kotlin.cheatSheet
 import ir.hrka.kotlin.helpers.Log.printYellow
 
 /**
- * * We can nest classes in classes, interfaces in classes, classes in interfaces,
- * and interfaces in interfaces.
+ * * We can nest classes in classes, interfaces in classes, classes in interfaces, and interfaces in interfaces.
  * * A nested class marked as inner can access the members of its outer class.
- * Inner classes carry a reference to an object of an outer class.
- * * An inner class is like a regular nested class in java,
- * but a nested class is like static nested class in java.
+ * * Inner classes carry a reference to an object of an outer class.
+ * * An inner class is like a regular nested class in java, but a nested class is like static nested class in java.
  * * A nested class in an interface is like static nested class in java.
  */
 
