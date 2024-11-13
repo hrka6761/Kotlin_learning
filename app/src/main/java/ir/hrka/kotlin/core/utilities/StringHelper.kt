@@ -73,9 +73,10 @@ fun String.extractSubPointsFromPointContent(): MutableList<String>? {
                 .split(":")
                 .last()
                 .replace("  ", "")
-            if (filteredPoint.isEmpty()) {
+
+            if (filteredPoint.isNotEmpty())
                 filteredPoint.split(".").toMutableList()
-            } else
+            else
                 null
         } else
             this.split(":").last().split(".").toMutableList()
