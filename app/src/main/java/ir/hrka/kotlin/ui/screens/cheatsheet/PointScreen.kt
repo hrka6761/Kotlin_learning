@@ -17,11 +17,13 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -63,7 +65,7 @@ fun CheatSheetScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { PointAppBar(cheatSheetFileName) }
+        topBar = { PointAppBar(cheatSheetFileName, navHostController) }
     ) { innerPaddings ->
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -120,13 +122,22 @@ fun CheatSheetScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PointAppBar(cheatSheetFileName: String) {
-    TopAppBar(title = {
-        Text(
-            text = cheatSheetFileName.extractFileName().splitByCapitalLetters(),
-            fontWeight = FontWeight.Bold
-        )
-    })
+fun PointAppBar(cheatSheetFileName: String, navHostController: NavHostController) {
+    TopAppBar(
+        title = {
+            Text(
+                text = cheatSheetFileName.extractFileName().splitByCapitalLetters(),
+                fontWeight = FontWeight.Bold
+            )
+        },
+        navigationIcon = {
+            IconButton(
+                onClick = { navHostController.popBackStack() }
+            ) {
+                Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
+            }
+        }
+    )
 }
 
 @Composable
@@ -179,19 +190,12 @@ fun PointItem(point: PointDataModel) {
                             top.linkTo(pointHead.bottom, margin = 16.dp)
                             end.linkTo(parent.end, margin = 8.dp)
                             start.linkTo(parent.start, margin = 8.dp)
-                            bottom.linkTo(parent.bottom, margin = 8.dp)
+                            if (point.snippetsCode.isNullOrEmpty())
+                                bottom.linkTo(parent.bottom, margin = 8.dp)
                         }
                 ) {
                     items(point.subPoints.size) { index ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            verticalAlignment = Alignment.Top,
-                            horizontalArrangement = Arrangement.Start
-                        ) {
-                            SubPintItem(point.subPoints[index])
-                        }
+                        SubPintItem(point.subPoints[index])
                     }
                 }
 
@@ -199,7 +203,7 @@ fun PointItem(point: PointDataModel) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 1200.dp)
+                        .heightIn(max = 400.dp)
                         .constrainAs(snippetCodes) {
                             top.linkTo(
                                 if (point.subPoints.isNullOrEmpty()) pointHead.bottom else subPoints.bottom,
@@ -211,22 +215,7 @@ fun PointItem(point: PointDataModel) {
                         }
                 ) {
                     items(point.snippetsCode.size) { index ->
-                        ElevatedCard(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(MaterialTheme.colorScheme.primaryContainer)
-                                    .padding(vertical = 8.dp),
-                                text = point.snippetsCode[index],
-                                textAlign = TextAlign.Start,
-                                fontSize = 10.sp,
-                                lineHeight = 16.sp
-                            )
-                        }
+                        SnippetCodeItem(point.snippetsCode[index])
                     }
                 }
         }
@@ -235,11 +224,39 @@ fun PointItem(point: PointDataModel) {
 
 @Composable
 fun SubPintItem(subPoints: String) {
-    Icon(Icons.Default.PlayArrow, contentDescription = null)
-    Text(
-        text = subPoints,
-        color = MaterialTheme.colorScheme.primary
-    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Icon(Icons.Default.PlayArrow, contentDescription = null)
+        Text(
+            text = subPoints,
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
+fun SnippetCodeItem(snippetCode: String) {
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .padding(vertical = 8.dp),
+            text = snippetCode,
+            textAlign = TextAlign.Start,
+            fontSize = 10.sp,
+            lineHeight = 16.sp
+        )
+    }
 }
 
 
