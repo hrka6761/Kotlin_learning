@@ -98,4 +98,11 @@ dependencies {
 
     // OkHTTP logger
     implementation(libs.logging.interceptor)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    /*noinspection KaptUsageInsteadOfKsp*/
+    kapt(libs.androidx.room.compiler)
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }
