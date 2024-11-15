@@ -58,7 +58,7 @@ fun CheatSheetScreen(
     cheatSheetFileName: String
 ) {
 
-    val viewModel: CheatSheetViewModel = hiltViewModel()
+    val viewModel: PointViewModel = hiltViewModel()
     val points by viewModel.points.collectAsState()
     val progressBarState by viewModel.progressBarState.collectAsState()
 
@@ -162,7 +162,7 @@ fun PointItem(point: PointDataModel) {
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(50)
                     ),
-                text = point.id.toString(),
+                text = point.num.toString(),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold

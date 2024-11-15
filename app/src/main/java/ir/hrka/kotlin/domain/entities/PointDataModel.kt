@@ -1,7 +1,8 @@
 package ir.hrka.kotlin.domain.entities
 
 data class PointDataModel(
-    val id: Int,
+    val num: Int,
+    val databaseId: Int,
     val rawPoint: String,
     val headPoint: String,
     val subPoints: List<String>?,
@@ -9,7 +10,8 @@ data class PointDataModel(
 ) {
 
     override fun toString(): String {
-        return "id = $id\n" +
+        return "num = $num\n" +
+                "id = $databaseId\n" +
                 "headPoint = $headPoint\n" +
                 "subPoints = $subPoints\n" +
                 "snippetsCode = $snippetsCode"

@@ -1,10 +1,8 @@
 package ir.hrka.kotlin.ui.screens.cheatsheet
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.utilities.Constants.TAG
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.PointDataModel
 import ir.hrka.kotlin.domain.usecases.GetCheatSheetContent
@@ -16,7 +14,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class CheatSheetViewModel @Inject constructor(
+class PointViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val getCheatSheetContent: GetCheatSheetContent
 ) : ViewModel() {

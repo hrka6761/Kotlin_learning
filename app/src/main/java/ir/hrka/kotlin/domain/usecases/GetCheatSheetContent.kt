@@ -46,9 +46,11 @@ class GetCheatSheetContent @Inject constructor(private val cheatSheetsRepo: Chea
                     val headPoint = clearPoint.extractHeadPointsFromPointContent()
                     if (headPoint.isNotEmpty()) {
                         val subPoint = clearPoint.extractSubPointsFromPointContent()
+                        val num = index++
                         list.add(
                             PointDataModel(
-                                index++,
+                                num,
+                                num,
                                 rawPoint,
                                 headPoint,
                                 subPoint,
