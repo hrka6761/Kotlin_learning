@@ -26,4 +26,5 @@ object Constants {
     const val NEW_VERSION_NOT_INSTALL_PERMISSION = 9
     const val NEW_VERSION_INSTALLING = 10
     const val NEW_VERSION_DOWNLOAD_FAILED = 11
+    const val DATABASE_NAME = "cheatsheet-database"
 }
