@@ -41,7 +41,7 @@ fun AppContent() {
                 })
             ) { backStackEntry ->
                 val githubVersionName =
-                    backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_NAME) ?: ""
+                    backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_NAME)
                 HomeScreen(activity, navHostController, githubVersionName)
             }
             composable(

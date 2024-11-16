@@ -8,7 +8,7 @@ import ir.hrka.kotlin.domain.entities.RepoFileModel
 import ir.hrka.kotlin.domain.repositories.CheatSheetsRepo
 import javax.inject.Inject
 
-class CheatSheetRepoImpl @Inject constructor(
+class ReadGithubCheatSheetsRepoImpl @Inject constructor(
     private val githubAPI: GithubAPI
 ) : CheatSheetsRepo {
 
@@ -36,7 +36,7 @@ class CheatSheetRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCheatSheetFile(fileName: String): Resource<RepoFileModel?> {
+    override suspend fun getCheatSheetContent(fileName: String): Resource<RepoFileModel?> {
         return try {
             val response = githubAPI.getCheatSheetFile(fileName = fileName)
 

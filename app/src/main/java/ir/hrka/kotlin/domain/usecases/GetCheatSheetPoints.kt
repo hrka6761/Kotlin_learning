@@ -13,11 +13,12 @@ import ir.hrka.kotlin.domain.entities.PointDataModel
 import ir.hrka.kotlin.domain.entities.ErrorModel
 import ir.hrka.kotlin.domain.repositories.CheatSheetsRepo
 import javax.inject.Inject
+import javax.inject.Named
 
-class GetCheatSheetContent @Inject constructor(private val cheatSheetsRepo: CheatSheetsRepo) {
+class GetCheatSheetPoints @Inject constructor(@Named("Github") private val cheatSheetsRepo: CheatSheetsRepo) {
 
     suspend operator fun invoke(fileName: String): Resource<List<PointDataModel>?> {
-        val cheatSheetFile = cheatSheetsRepo.getCheatSheetFile(fileName).data
+        val cheatSheetFile = cheatSheetsRepo.getCheatSheetContent(fileName).data
         val encodedCheatSheetContent = cheatSheetFile?.content ?: ""
         val decodedCheatSheetContent = encodedCheatSheetContent.decodeBase64()
 

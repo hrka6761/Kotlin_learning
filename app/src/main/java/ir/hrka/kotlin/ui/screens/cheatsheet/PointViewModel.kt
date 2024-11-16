@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.PointDataModel
-import ir.hrka.kotlin.domain.usecases.GetCheatSheetContent
+import ir.hrka.kotlin.domain.usecases.GetCheatSheetPoints
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ import javax.inject.Named
 @HiltViewModel
 class PointViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
-    private val getCheatSheetContent: GetCheatSheetContent
+    private val getCheatSheetPoints: GetCheatSheetPoints
 ) : ViewModel() {
 
     private val _points: MutableStateFlow<Resource<List<PointDataModel>?>> =
@@ -33,7 +33,7 @@ class PointViewModel @Inject constructor(
     fun getPoints(fileName: String) {
         viewModelScope.launch(io) {
             _points.value = Resource.Loading()
-            _points.value = getCheatSheetContent(fileName)
+            _points.value = getCheatSheetPoints(fileName)
         }
     }
 }

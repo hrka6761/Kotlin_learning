@@ -6,5 +6,5 @@ import ir.hrka.kotlin.domain.entities.RepoFileModel
 interface CheatSheetsRepo {
 
     suspend fun getCheatSheetsList(): Resource<List<RepoFileModel>?>
-    suspend fun getCheatSheetFile(fileName: String): Resource<RepoFileModel?>
+    suspend fun getCheatSheetContent(fileName: String): Resource<RepoFileModel?>
 }

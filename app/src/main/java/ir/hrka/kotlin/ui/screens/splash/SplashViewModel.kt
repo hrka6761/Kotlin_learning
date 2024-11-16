@@ -81,7 +81,6 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun downloadNewVersion(activity: MainActivity) {
         if (getNewVersionApkFile().exists()) {
             setNewVersionDialogState(NEW_VERSION_DOWNLOADED)

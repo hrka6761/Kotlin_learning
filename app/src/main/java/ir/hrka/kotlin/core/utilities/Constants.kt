@@ -14,6 +14,11 @@ object Constants {
         "https://github.com/hrka6761/Kotlin_cheat_sheet/releases/download/"
     const val RETROFIT_ERROR_CODE = 1000
     const val READ_FILE_ERROR_CODE = 1001
+    const val LOCAL_DATA_READ_ERROR_CODE = 2000
+    const val LOCAL_DATA_WRITE_ERROR_CODE = 2001
+    const val DB_READ_POINT_ERROR_CODE = 3000
+    const val DB_WRITE_POINT_ERROR_CODE = 3001
+    const val DB_CLEAR_POINTS_ERROR_CODE = 3002
     const val MANDATORY = "mandatory"
     const val NON_MANDATORY = "non_mandatory"
     const val NEW_VERSION_NO_STATE = 1
@@ -28,6 +33,5 @@ object Constants {
     const val NEW_VERSION_INSTALLING = 10
     const val NEW_VERSION_DOWNLOAD_FAILED = 11
     const val DATABASE_NAME = "cheatsheet-database"
-    const val MINOR_VERSION_KEY = "minor_version_key"
-    const val READ_MINOR_ERROR_CODE = 1003
+    const val VERSION_NAME_KEY = "version_name_key"
 }

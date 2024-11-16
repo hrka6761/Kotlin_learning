@@ -93,3 +93,7 @@ fun String.extractFileName(): String = this.split("_").last().split(".").first()
 fun String.extractFileIdByName(): Int = this.split("_").first().toInt()
 
 fun String.splitByCapitalLetters(): String = replace(Regex("(?=[A-Z])"), " ")
+
+fun String.extractMinorFromVersionName(): Int = this.split(".")[1].toInt()
+
+fun String.extractMajorFromVersionName(): Int = this.split(".")[0].toInt()

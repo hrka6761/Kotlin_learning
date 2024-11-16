@@ -80,13 +80,20 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        snackbarHost = {
+            SnackbarHost(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                hostState = snackBarHostState
+            )
+        }
     ) { innerPaddings ->
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPaddings)
         ) {
-            val (logo, title, authorImg, authorName, progressBar, snackBar) = createRefs()
+            val (logo, title, authorImg, authorName, progressBar) = createRefs()
 
             Image(
                 modifier = Modifier
@@ -261,17 +268,6 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                     shape = RoundedCornerShape(16.dp),
                     tonalElevation = 16.dp
                 )
-
-            SnackbarHost(
-                modifier = Modifier
-                    .constrainAs(snackBar) {
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-                    .fillMaxWidth(),
-                hostState = snackBarHostState
-            )
         }
     }
 

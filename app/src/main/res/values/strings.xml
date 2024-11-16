@@ -14,4 +14,6 @@
     <string name="new_version_dialog_desc_install_permission">Please allow to install app from this source.%1$s</string>
     <string name="downloading_notification_desc">Downloading new version of kotlin cheat sheet app.</string>
     <string name="downloading_notification_title">Kotlin cheat sheet</string>
+    <string name="fetching_new_cheatsheets_list_msg">Fetching new cheatsheets list from github.</string>
+    <string name="no_cheatsheets_msg">There are no Cheatsheets available in the database.</string>
 </resources>

@@ -28,6 +28,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,16 +60,30 @@ import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
 import ir.hrka.kotlin.domain.entities.RepoFileModel
 
 @Composable
-fun HomeScreen(activity: MainActivity, navHostController: NavHostController, githubVersionName: String) {
+fun HomeScreen(
+    activity: MainActivity,
+    navHostController: NavHostController,
+    githubVersionName: String?
+) {
 
     val viewModel: HomeViewModel = hiltViewModel()
+    val snackBarHostState = remember { SnackbarHostState() }
     val cheatSheets by viewModel.cheatSheets.collectAsState()
     val progressBarState by viewModel.progressBarState.collectAsState()
+    val hasNewUpdate by viewModel.hasNewUpdate.collectAsState()
+    val savePointsResult by viewModel.savePointsResult.collectAsState()
 
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { HomeAppBar() }
+        topBar = { HomeAppBar() },
+        snackbarHost = {
+            SnackbarHost(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                hostState = snackBarHostState
+            )
+        }
     ) { innerPaddings ->
 
         Box(
@@ -100,6 +117,25 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController, git
         }
     }
 
+    LaunchedEffect(Unit) {
+        if (hasNewUpdate == null)
+            viewModel.checkNewUpdateForCheatsheetsList(githubVersionName)
+    }
+
+    LaunchedEffect(hasNewUpdate) {
+        if (cheatSheets is Resource.Initial) {
+            if (hasNewUpdate == true) {
+                viewModel.getCheatSheetsFromGithub()
+                snackBarHostState.showSnackbar(
+                    message = activity.getString(R.string.fetching_new_cheatsheets_list_msg),
+                    duration = SnackbarDuration.Short
+                )
+            } else if (hasNewUpdate == false)
+                viewModel.getCheatSheetFromDatabase()
+
+        }
+    }
+
     LaunchedEffect(cheatSheets) {
         when (cheatSheets) {
             is Resource.Initial -> {
@@ -109,17 +145,42 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController, git
             is Resource.Loading -> {}
             is Resource.Success -> {
                 viewModel.setProgressBarState(false)
+                if (cheatSheets.data?.isEmpty() != false) {
+                    snackBarHostState.showSnackbar(
+                        message = activity.getString(R.string.no_cheatsheets_msg),
+                        duration = SnackbarDuration.Long
+                    )
+                    return@LaunchedEffect
+                }
+                if (hasNewUpdate == true && savePointsResult is Resource.Initial)
+                    viewModel.saveCheatsheetsOnDB(githubVersionName!!)
             }
 
             is Resource.Error -> {
                 viewModel.setProgressBarState(null)
+                snackBarHostState.showSnackbar(
+                    message = cheatSheets.error?.errorMsg.toString(),
+                    duration = SnackbarDuration.Long
+                )
             }
         }
     }
 
-    LaunchedEffect(Unit) {
-        if (viewModel.cheatSheets.value is Resource.Initial)
-            viewModel.getCheatSheets()
+    LaunchedEffect(savePointsResult) {
+        when (savePointsResult) {
+            is Resource.Initial -> {}
+            is Resource.Loading -> {}
+            is Resource.Success -> {
+                viewModel.saveVersionMinor(githubVersionName!!)
+            }
+
+            is Resource.Error -> {
+                snackBarHostState.showSnackbar(
+                    message = savePointsResult.error?.errorMsg.toString(),
+                    duration = SnackbarDuration.Long
+                )
+            }
+        }
     }
 
     BackHandler {
