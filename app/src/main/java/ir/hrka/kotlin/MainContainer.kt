@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ir.hrka.kotlin.core.utilities.Constants.HOME_SCREEN_ARGUMENT_NAME
 import ir.hrka.kotlin.core.utilities.Constants.POINT_SCREEN_ARGUMENT_NAME
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
@@ -33,8 +34,15 @@ fun AppContent() {
             composable(route = Splash()) {
                 SplashScreen(activity, navHostController)
             }
-            composable(route = Home()) {
-                HomeScreen(activity, navHostController)
+            composable(
+                route = "${Home()}/{${HOME_SCREEN_ARGUMENT_NAME}}",
+                arguments = listOf(navArgument(HOME_SCREEN_ARGUMENT_NAME) {
+                    type = NavType.StringType
+                })
+            ) { backStackEntry ->
+                val githubVersionName =
+                    backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_NAME) ?: ""
+                HomeScreen(activity, navHostController, githubVersionName)
             }
             composable(
                 route = "${Point()}/{${POINT_SCREEN_ARGUMENT_NAME}}",

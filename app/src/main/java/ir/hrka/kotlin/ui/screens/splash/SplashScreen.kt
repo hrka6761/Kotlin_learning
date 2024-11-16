@@ -293,18 +293,18 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     LaunchedEffect(newVersionState) {
         if (newVersionState == NEW_VERSION_NOT_AVAILABLE) {
             delay(1000)
-            navHostController.navigate(Home())
+            navHostController.navigate(Home.appendArg(appInfo.data?.versionName ?: ""))
         } else if (newVersionState == NEW_VERSION_UNKNOWN_STATE) {
             snackBarHostState.showSnackbar(
                 message = appInfo.error?.errorMsg.toString(),
                 duration = SnackbarDuration.Short
             )
-            navHostController.navigate(Home())
+            navHostController.navigate(Home.appendArg(appInfo.data?.versionName ?: ""))
         } else if (newVersionState == NEW_VERSION_CANCEL) {
             if (appInfo.data?.versionNameSuffix == MANDATORY)
                 activity.finish()
             else
-                navHostController.navigate(Home())
+                navHostController.navigate(Home.appendArg(appInfo.data?.versionName ?: ""))
         } else if (newVersionState == NEW_VERSION_CONTINUE) {
             viewModel.downloadNewVersion(activity)
         } else if (newVersionState == NEW_VERSION_DOWNLOAD_FAILED) {
@@ -313,7 +313,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 duration = SnackbarDuration.Long
             )
             delay(1000)
-            navHostController.navigate(Home())
+            navHostController.navigate(Home.appendArg(appInfo.data?.versionName ?: ""))
         } else if (newVersionState == NEW_VERSION_DOWNLOADED) {
             if (viewModel.hasUnknownSourceInstallPermission(activity))
                 viewModel.setNewVersionDialogState(NEW_VERSION_INSTALLING)

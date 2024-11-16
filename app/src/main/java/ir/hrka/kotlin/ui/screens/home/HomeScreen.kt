@@ -57,7 +57,7 @@ import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
 import ir.hrka.kotlin.domain.entities.RepoFileModel
 
 @Composable
-fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
+fun HomeScreen(activity: MainActivity, navHostController: NavHostController, githubVersionName: String) {
 
     val viewModel: HomeViewModel = hiltViewModel()
     val cheatSheets by viewModel.cheatSheets.collectAsState()
@@ -207,5 +207,5 @@ fun CheatSheetItem(cheatSheet: RepoFileModel, navHostController: NavHostControll
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(MainActivity(), rememberNavController())
+    HomeScreen(MainActivity(), rememberNavController(), "")
 }

@@ -7,6 +7,7 @@ object Constants {
     const val HOME_SCREEN = "home"
     const val POINT_SCREEN = "pointSheet"
     const val POINT_SCREEN_ARGUMENT_NAME = "CheatSheetFileName"
+    const val HOME_SCREEN_ARGUMENT_NAME = "githubVersionName"
     const val TOKEN = "Token is secret"
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
     const val BASE_APK_PATH_URL =
