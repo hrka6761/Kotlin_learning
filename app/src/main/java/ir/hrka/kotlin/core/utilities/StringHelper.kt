@@ -94,6 +94,11 @@ fun String.extractFileIdByName(): Int = this.split("_").first().toInt()
 
 fun String.splitByCapitalLetters(): String = replace(Regex("(?=[A-Z])"), " ")
 
+fun String.extractPatchFromVersionName(): Int = this.split(".")[2].toInt()
+
 fun String.extractMinorFromVersionName(): Int = this.split(".")[1].toInt()
 
 fun String.extractMajorFromVersionName(): Int = this.split(".")[0].toInt()
+
+fun String.extractUpdatedCheatsheetsListFromVersionName(): List<Int> =
+    this.split("_").map { stringId -> stringId.toInt() }

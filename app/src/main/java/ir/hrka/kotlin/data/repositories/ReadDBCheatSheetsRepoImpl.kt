@@ -16,7 +16,7 @@ class ReadDBCheatSheetsRepoImpl @Inject constructor(
         return try {
             val cheatsheets = cheatsheetDao.getCheatsheets().let {
                 it.map { dbCheatsheet ->
-                    RepoFileModel(
+                    val repoFileModel = RepoFileModel(
                         name = dbCheatsheet.title,
                         path = "",
                         sha = "",
@@ -30,6 +30,9 @@ class ReadDBCheatSheetsRepoImpl @Inject constructor(
                         encoding = null,
                         linksModel = null
                     )
+                    repoFileModel.hasContentUpdated = dbCheatsheet.hasContentUpdated
+
+                    return@map repoFileModel
                 }
             }
             Resource.Success(cheatsheets)

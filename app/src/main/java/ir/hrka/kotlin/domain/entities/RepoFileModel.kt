@@ -20,4 +20,5 @@ data class RepoFileModel(
     @field:Json(name = "_links") val linksModel: LinksModel?,
 ) {
     val id: Int by lazy { name.extractFileIdByName() }
+    var hasContentUpdated: Boolean = true
 }

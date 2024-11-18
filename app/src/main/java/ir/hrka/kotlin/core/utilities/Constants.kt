@@ -6,8 +6,9 @@ object Constants {
     const val SPLASH_SCREEN = "splash"
     const val HOME_SCREEN = "home"
     const val POINT_SCREEN = "pointSheet"
-    const val POINT_SCREEN_ARGUMENT_NAME = "CheatSheetFileName"
-    const val HOME_SCREEN_ARGUMENT_NAME = "githubVersionName"
+    const val POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME = "CheatSheetName"
+    const val HOME_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
+    const val HOME_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
     const val TOKEN = "Token is secret"
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
     const val BASE_APK_PATH_URL =
@@ -17,8 +18,9 @@ object Constants {
     const val LOCAL_DATA_READ_ERROR_CODE = 2000
     const val LOCAL_DATA_WRITE_ERROR_CODE = 2001
     const val DB_READ_POINT_ERROR_CODE = 3000
-    const val DB_WRITE_POINT_ERROR_CODE = 3001
-    const val DB_CLEAR_POINTS_ERROR_CODE = 3002
+    const val DB_WRITE_CHEATSHEETS_ERROR_CODE = 3001
+    const val DB_CLEAR_CHEATSHEETS_ERROR_CODE = 3002
+    const val DB_UPDATE_CHEATSHEETS_ERROR_CODE = 3003
     const val MANDATORY = "mandatory"
     const val NON_MANDATORY = "non_mandatory"
     const val NEW_VERSION_NO_STATE = 1

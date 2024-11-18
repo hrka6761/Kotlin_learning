@@ -1,7 +1,8 @@
 package ir.hrka.kotlin.data.repositories
 
-import ir.hrka.kotlin.core.utilities.Constants.DB_CLEAR_POINTS_ERROR_CODE
-import ir.hrka.kotlin.core.utilities.Constants.DB_WRITE_POINT_ERROR_CODE
+import ir.hrka.kotlin.core.utilities.Constants.DB_CLEAR_CHEATSHEETS_ERROR_CODE
+import ir.hrka.kotlin.core.utilities.Constants.DB_UPDATE_CHEATSHEETS_ERROR_CODE
+import ir.hrka.kotlin.core.utilities.Constants.DB_WRITE_CHEATSHEETS_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.CheatsheetDao
 import ir.hrka.kotlin.domain.entities.ErrorModel
@@ -19,7 +20,7 @@ class WriteDBCheatSheetsRepoImpl @Inject constructor(private val cheatsheetDao: 
         } catch (e: Exception) {
             Resource.Error(
                 ErrorModel(
-                    errorCode = DB_WRITE_POINT_ERROR_CODE,
+                    errorCode = DB_WRITE_CHEATSHEETS_ERROR_CODE,
                     errorMsg = e.message.toString()
                 )
             )
@@ -33,7 +34,24 @@ class WriteDBCheatSheetsRepoImpl @Inject constructor(private val cheatsheetDao: 
         } catch (e: Exception) {
             Resource.Error(
                 ErrorModel(
-                    errorCode = DB_CLEAR_POINTS_ERROR_CODE,
+                    errorCode = DB_CLEAR_CHEATSHEETS_ERROR_CODE,
+                    errorMsg = e.message.toString()
+                )
+            )
+        }
+    }
+
+    override suspend fun updateCheatsheetUpdateStateOnDB(
+        id: Int,
+        hasContentUpdated: Boolean
+    ): Resource<Boolean> {
+        return try {
+            cheatsheetDao.updateCheatsheetUpdateState(id, hasContentUpdated)
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(
+                ErrorModel(
+                    errorCode = DB_UPDATE_CHEATSHEETS_ERROR_CODE,
                     errorMsg = e.message.toString()
                 )
             )

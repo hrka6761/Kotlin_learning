@@ -8,5 +8,6 @@ import androidx.room.PrimaryKey
 data class Cheatsheet(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "version_name") val versionName: String
+    @ColumnInfo(name = "version_name") val versionName: String,
+    @ColumnInfo(name = "has_content_updated") val hasContentUpdated: Boolean = true,
 )

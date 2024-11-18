@@ -16,4 +16,7 @@ interface CheatsheetDao {
 
     @Query("DELETE FROM cheatsheet")
     suspend fun deleteCheatsheets()
+
+    @Query("UPDATE cheatsheet SET has_content_updated = :hasContentUpdated WHERE id = :id")
+    suspend fun updateCheatsheetUpdateState(id: Int, hasContentUpdated: Boolean)
 }
