@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinKapt)
     alias(libs.plugins.daggerHiltAndroid)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp.devtool)
 }
 
 android {
@@ -93,16 +94,14 @@ dependencies {
 
     // Moshi
     implementation(libs.moshi.kotlin)
-    /*noinspection KaptUsageInsteadOfKsp*/
-    kapt(libs.moshi.kotlin.codegen)
+    ksp(libs.moshi.kotlin.codegen)
 
     // OkHTTP logger
     implementation(libs.logging.interceptor)
 
     // Room
     implementation(libs.androidx.room.runtime)
-    /*noinspection KaptUsageInsteadOfKsp*/
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 }
