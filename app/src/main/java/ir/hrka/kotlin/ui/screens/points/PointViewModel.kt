@@ -81,7 +81,6 @@ class PointViewModel @Inject constructor(
             _points.value.data?.forEach { pointDataModel ->
                 savePointResult = Point(
                     pointText = pointDataModel.headPoint,
-                    versionName = "",
                     cheatsheetName = cheatsheetName
                 ).let {
                     saveCheatsheetPointsOnDBUseCase(it)
