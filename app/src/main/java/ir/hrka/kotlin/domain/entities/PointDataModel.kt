@@ -2,7 +2,7 @@ package ir.hrka.kotlin.domain.entities
 
 data class PointDataModel(
     val num: Int,
-    val databaseId: Int,
+    val databaseId: Long?,
     val rawPoint: String,
     val headPoint: String,
     val subPoints: List<String>?,

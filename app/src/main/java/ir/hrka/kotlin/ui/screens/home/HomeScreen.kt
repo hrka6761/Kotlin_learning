@@ -280,7 +280,13 @@ fun CheatSheetItem(
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .clickable {
-                    navHostController.navigate(Screen.Point.appendArg(cheatSheet.name))
+                    navHostController.navigate(
+                        Screen.Point.appendArg(
+                            cheatSheet.name,
+                            cheatSheet.hasContentUpdated.toString(),
+                            cheatSheet.id.toString()
+                        )
+                    )
                 }
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,

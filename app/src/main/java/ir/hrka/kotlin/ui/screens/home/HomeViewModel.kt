@@ -1,10 +1,8 @@
 package ir.hrka.kotlin.ui.screens.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.utilities.Constants.TAG
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractMajorFromVersionName
 import ir.hrka.kotlin.core.utilities.extractMinorFromVersionName
@@ -12,8 +10,8 @@ import ir.hrka.kotlin.core.utilities.extractPatchFromVersionName
 import ir.hrka.kotlin.core.utilities.extractUpdatedCheatsheetsListFromVersionName
 import ir.hrka.kotlin.domain.entities.RepoFileModel
 import ir.hrka.kotlin.domain.entities.db.Cheatsheet
-import ir.hrka.kotlin.domain.usecases.ClearCheatsheetsOnDBUseCase
-import ir.hrka.kotlin.domain.usecases.GetDBCheatsheetsUseCase
+import ir.hrka.kotlin.domain.usecases.ClearCheatsheetTableUseCase
+import ir.hrka.kotlin.domain.usecases.GetDBCheatSheetsUseCase
 import ir.hrka.kotlin.domain.usecases.GetGithubCheatSheetsUseCase
 import ir.hrka.kotlin.domain.usecases.LoadCurrentVersionNameUseCase
 import ir.hrka.kotlin.domain.usecases.SaveCheatSheetsOnDBUseCase
@@ -31,10 +29,10 @@ import javax.inject.Named
 class HomeViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val getGithubCheatSheetsUseCase: GetGithubCheatSheetsUseCase,
-    private val getDBCheatsheetsUseCase: GetDBCheatsheetsUseCase,
+    private val getDBCheatsheetsUseCase: GetDBCheatSheetsUseCase,
     private val loadCurrentVersionNameUseCase: LoadCurrentVersionNameUseCase,
     private val saveCurrentVersionNameUseCase: SaveCurrentVersionNameUseCase,
-    private val clearCheatsheetsOnDBUseCase: ClearCheatsheetsOnDBUseCase,
+    private val clearCheatsheetTableUseCase: ClearCheatsheetTableUseCase,
     private val saveCheatsheetsOnDBUseCase: SaveCheatSheetsOnDBUseCase,
     private val updateCheatSheetUpdateStateUseCase: UpdateCheatSheetUpdateStateUseCase
 ) : ViewModel() {
@@ -146,15 +144,15 @@ class HomeViewModel @Inject constructor(
                 githubVersionSuffix!!.extractUpdatedCheatsheetsListFromVersionName()
 
             updateCheatsheetsOnDBResult.value = updateCheatSheetUpdateStateUseCase(
-                    *updatedCheatsheetsList.toIntArray(),
-                    hasContentUpdated = true
-                )
+                *updatedCheatsheetsList.toIntArray(),
+                hasContentUpdated = true
+            )
         }
     }
 
     fun saveCheatsheetsOnDB(githubVersionName: String) {
         viewModelScope.launch(io) {
-            val clearDiffered = async { clearCheatsheetsOnDBUseCase() }
+            val clearDiffered = async { clearCheatsheetTableUseCase() }
             val clearResult = clearDiffered.await()
 
             if (clearResult is Resource.Error) {
@@ -164,7 +162,7 @@ class HomeViewModel @Inject constructor(
 
             _cheatSheets.value.data?.map { repoFileModel ->
                 Cheatsheet(
-                    id = repoFileModel.id,
+                    id = repoFileModel.id.toLong(),
                     title = repoFileModel.name,
                     versionName = githubVersionName
                 )

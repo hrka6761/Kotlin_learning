@@ -12,11 +12,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ir.hrka.kotlin.core.utilities.Constants.HOME_SCREEN_ARGUMENT_VERSION_NAME
 import ir.hrka.kotlin.core.utilities.Constants.HOME_SCREEN_ARGUMENT_VERSION_SUFFIX
+import ir.hrka.kotlin.core.utilities.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_ID
 import ir.hrka.kotlin.core.utilities.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME
+import ir.hrka.kotlin.core.utilities.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import ir.hrka.kotlin.core.utilities.Screen.Point
-import ir.hrka.kotlin.ui.screens.cheatsheet.CheatSheetScreen
+import ir.hrka.kotlin.ui.screens.points.PointsScreen
 import ir.hrka.kotlin.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.ui.screens.splash.SplashScreen
 import ir.hrka.kotlin.ui.theme.KotlinTheme
@@ -49,14 +51,26 @@ fun AppContent() {
                 HomeScreen(activity, navHostController, githubVersionName, githubVersionSuffix)
             }
             composable(
-                route = "${Point()}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME}}",
+                route = "${Point()}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME}}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME}}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_ID}}",
                 arguments = listOf(navArgument(POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME) {
                     type = NavType.StringType
                 })
             ) { backStackEntry ->
                 val cheatSheetFileName =
                     backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME) ?: ""
-                CheatSheetScreen(activity, navHostController, cheatSheetFileName)
+                val hasContentUpdated =
+                    backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME)
+                        ?: false
+                val cheatsheetId =
+                    backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_CHEATSHEET_ID)
+                        ?: "-1"
+                PointsScreen(
+                    activity,
+                    navHostController,
+                    cheatSheetFileName,
+                    cheatsheetId.toInt(),
+                    hasContentUpdated == "true"
+                )
             }
         }
     }

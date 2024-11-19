@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.ui.screens.cheatsheet
+package ir.hrka.kotlin.ui.screens.points
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -26,12 +26,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -45,6 +49,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
+import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.utilities.Constants.TAG
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractFileName
@@ -52,20 +57,31 @@ import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
 import ir.hrka.kotlin.domain.entities.PointDataModel
 
 @Composable
-fun CheatSheetScreen(
+fun PointsScreen(
     activity: MainActivity,
     navHostController: NavHostController,
-    cheatSheetFileName: String
+    cheatsheetFileName: String,
+    cheatsheetId: Int,
+    hasContentUpdated: Boolean
 ) {
 
     val viewModel: PointViewModel = hiltViewModel()
+    val snackBarHostState = remember { SnackbarHostState() }
     val points by viewModel.points.collectAsState()
     val progressBarState by viewModel.progressBarState.collectAsState()
+    val saveCheatsheetPointsResult by viewModel.saveCheatsheetPointsResult.collectAsState()
 
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { PointAppBar(cheatSheetFileName, navHostController) }
+        topBar = { PointAppBar(cheatsheetFileName, navHostController) },
+        snackbarHost = {
+            SnackbarHost(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                hostState = snackBarHostState
+            )
+        }
     ) { innerPaddings ->
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -97,6 +113,17 @@ fun CheatSheetScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        if (hasContentUpdated && viewModel.points.value is Resource.Initial) {
+            viewModel.getPointsFromGithub(cheatsheetFileName)
+            snackBarHostState.showSnackbar(
+                message = activity.getString(R.string.fetching_new_points_list_msg),
+                duration = SnackbarDuration.Short
+            )
+        } else
+            viewModel.getPointsFromDatabase(cheatsheetFileName)
+    }
+
     LaunchedEffect(points) {
         when (points) {
             is Resource.Initial -> {
@@ -106,6 +133,9 @@ fun CheatSheetScreen(
             is Resource.Loading -> {}
             is Resource.Success -> {
                 viewModel.setProgressBarState(false)
+
+                if (hasContentUpdated && saveCheatsheetPointsResult is Resource.Initial)
+                    viewModel.saveCheatsheetsOnDB(cheatsheetFileName)
             }
 
             is Resource.Error -> {
@@ -114,9 +144,28 @@ fun CheatSheetScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        if (viewModel.points.value is Resource.Initial)
-            viewModel.getPoints(cheatSheetFileName)
+    LaunchedEffect(saveCheatsheetPointsResult) {
+        when (saveCheatsheetPointsResult) {
+            is Resource.Initial -> {
+                viewModel.setProgressBarState(true)
+            }
+
+            is Resource.Loading -> {}
+            is Resource.Success -> {
+                Log.i(TAG, "PointsScreen: Success")
+                viewModel.setProgressBarState(false)
+                viewModel.updateCheatsheetState(cheatsheetId)
+            }
+
+            is Resource.Error -> {
+                Log.i(TAG, "PointsScreen: ${saveCheatsheetPointsResult.error}")
+                viewModel.setProgressBarState(null)
+                snackBarHostState.showSnackbar(
+                    message = saveCheatsheetPointsResult.error?.errorMsg.toString(),
+                    duration = SnackbarDuration.Long
+                )
+            }
+        }
     }
 }
 
@@ -263,5 +312,5 @@ fun SnippetCodeItem(snippetCode: String) {
 @Preview(showBackground = true)
 @Composable
 fun CheatSheetScreenPreview() {
-    CheatSheetScreen(MainActivity(), rememberNavController(), "")
+    PointsScreen(MainActivity(), rememberNavController(), "", -1, false)
 }

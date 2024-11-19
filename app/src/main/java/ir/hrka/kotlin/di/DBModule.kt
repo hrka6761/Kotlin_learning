@@ -10,6 +10,9 @@ import dagger.hilt.components.SingletonComponent
 import ir.hrka.kotlin.core.utilities.Constants.DATABASE_NAME
 import ir.hrka.kotlin.data.datasource.AppDatabase
 import ir.hrka.kotlin.data.datasource.CheatsheetDao
+import ir.hrka.kotlin.data.datasource.PointDao
+import ir.hrka.kotlin.data.datasource.SnippetCodeDao
+import ir.hrka.kotlin.data.datasource.SubPointDao
 import javax.inject.Singleton
 
 
@@ -29,4 +32,16 @@ class DBModule {
     @Singleton
     @Provides
     fun provideCheatSheetDao(db: AppDatabase): CheatsheetDao = db.cheatsheetDao()
+
+    @Singleton
+    @Provides
+    fun providePointDao(db: AppDatabase): PointDao = db.pointDao()
+
+    @Singleton
+    @Provides
+    fun provideSubPointDao(db: AppDatabase): SubPointDao = db.supPointDao()
+
+    @Singleton
+    @Provides
+    fun provideSnippetCodeDao(db: AppDatabase): SnippetCodeDao = db.snippetCodeDao()
 }

@@ -1,11 +1,11 @@
 package ir.hrka.kotlin.domain.usecases
 
 import ir.hrka.kotlin.domain.entities.db.Cheatsheet
-import ir.hrka.kotlin.domain.repositories.DBRepo
+import ir.hrka.kotlin.domain.repositories.WriteCheatsheetRepo
 import javax.inject.Inject
 
-class SaveCheatSheetsOnDBUseCase @Inject constructor(private val dbRepo: DBRepo) {
+class SaveCheatSheetsOnDBUseCase @Inject constructor(private val writeCheatsheetRepo: WriteCheatsheetRepo) {
 
     suspend operator fun invoke(cheatsheets: List<Cheatsheet>) =
-        dbRepo.saveCheatSheetsOnDB(cheatsheets)
+        writeCheatsheetRepo.saveCheatSheetsOnDB(cheatsheets)
 }

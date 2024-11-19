@@ -5,13 +5,13 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ir.hrka.kotlin.data.repositories.AppInfoRepoImpl
-import ir.hrka.kotlin.data.repositories.ReadDBCheatSheetsRepoImpl
-import ir.hrka.kotlin.data.repositories.ReadGithubCheatSheetsRepoImpl
-import ir.hrka.kotlin.data.repositories.WriteDBCheatSheetsRepoImpl
+import ir.hrka.kotlin.data.repositories.ReadDBCheatSheetRepoImpl
+import ir.hrka.kotlin.data.repositories.ReadGithubCheatSheetRepoImpl
+import ir.hrka.kotlin.data.repositories.WriteDBCheatsheetRepoImpl
 import ir.hrka.kotlin.data.repositories.LocalDataRepoImpl
 import ir.hrka.kotlin.domain.repositories.AppInfoRepo
-import ir.hrka.kotlin.domain.repositories.CheatSheetsRepo
-import ir.hrka.kotlin.domain.repositories.DBRepo
+import ir.hrka.kotlin.domain.repositories.ReadCheatSheetRepo
+import ir.hrka.kotlin.domain.repositories.WriteCheatsheetRepo
 import ir.hrka.kotlin.domain.repositories.LocalDataRepo
 import javax.inject.Named
 
@@ -24,15 +24,15 @@ interface RepositoryModule {
 
     @Named("Github")
     @Binds
-    fun bindGithubCheatSheetsListRepo(readGithubCheatSheetsRepoImpl: ReadGithubCheatSheetsRepoImpl): CheatSheetsRepo
+    fun bindGithubCheatSheetsListRepo(readGithubCheatSheetsRepoImpl: ReadGithubCheatSheetRepoImpl): ReadCheatSheetRepo
 
     @Named("db")
     @Binds
-    fun bindDBCheatSheetsListRepo(ReadDBCheatSheetsRepoImpl: ReadDBCheatSheetsRepoImpl): CheatSheetsRepo
+    fun bindDBCheatSheetsListRepo(readDBCheatSheetsRepoImpl: ReadDBCheatSheetRepoImpl): ReadCheatSheetRepo
 
     @Binds
     fun bindLocalDataRepo(localDataRepoImpl: LocalDataRepoImpl): LocalDataRepo
 
     @Binds
-    fun bindDBRepo(writeDbCheatSheetsRepoImpl: WriteDBCheatSheetsRepoImpl): DBRepo
+    fun bindDBRepo(writeDbCheatSheetsRepoImpl: WriteDBCheatsheetRepoImpl): WriteCheatsheetRepo
 }
