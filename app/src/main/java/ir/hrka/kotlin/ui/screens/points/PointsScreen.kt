@@ -51,6 +51,7 @@ import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.utilities.Constants.TAG
+import ir.hrka.kotlin.core.utilities.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
@@ -70,11 +71,12 @@ fun PointsScreen(
     val points by viewModel.points.collectAsState()
     val progressBarState by viewModel.progressBarState.collectAsState()
     val saveCheatsheetPointsResult by viewModel.saveCheatsheetPointsResult.collectAsState()
+    val updateCheatsheetsOnDBResult by viewModel.updateCheatsheetsOnDBResult.collectAsState()
 
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { PointAppBar(cheatsheetFileName, navHostController) },
+        topBar = { PointAppBar(cheatsheetFileName, navHostController, cheatsheetId) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -152,13 +154,11 @@ fun PointsScreen(
 
             is Resource.Loading -> {}
             is Resource.Success -> {
-                Log.i(TAG, "PointsScreen: Success")
                 viewModel.setProgressBarState(false)
                 viewModel.updateCheatsheetState(cheatsheetId)
             }
 
             is Resource.Error -> {
-                Log.i(TAG, "PointsScreen: ${saveCheatsheetPointsResult.error}")
                 viewModel.setProgressBarState(null)
                 snackBarHostState.showSnackbar(
                     message = saveCheatsheetPointsResult.error?.errorMsg.toString(),
@@ -167,11 +167,29 @@ fun PointsScreen(
             }
         }
     }
+
+    LaunchedEffect(updateCheatsheetsOnDBResult) {
+        when(updateCheatsheetsOnDBResult) {
+            is Resource.Initial -> {}
+            is Resource.Loading -> {}
+            is Resource.Success -> {
+                navHostController
+                    .previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(UPDATED_ID_KEY, cheatsheetId)
+            }
+            is Resource.Error -> {}
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PointAppBar(cheatSheetFileName: String, navHostController: NavHostController) {
+fun PointAppBar(
+    cheatSheetFileName: String,
+    navHostController: NavHostController,
+    cheatsheetId: Int
+) {
     TopAppBar(
         title = {
             Text(

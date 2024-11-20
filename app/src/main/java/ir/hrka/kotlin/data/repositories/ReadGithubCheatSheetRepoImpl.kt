@@ -26,7 +26,8 @@ class ReadGithubCheatSheetRepoImpl @Inject constructor(
             val response = githubAPI.getCheatSheetsList()
 
             if (response.isSuccessful) {
-                Resource.Success(response.body())
+                val sortedList = response.body()?.sortedBy { item -> item.id }
+                Resource.Success(sortedList)
             } else {
                 Resource.Error(
                     ErrorModel(

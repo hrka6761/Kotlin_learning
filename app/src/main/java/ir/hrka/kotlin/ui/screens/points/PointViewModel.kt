@@ -46,6 +46,10 @@ class PointViewModel @Inject constructor(
         MutableStateFlow(Resource.Initial())
     val saveCheatsheetPointsResult: MutableStateFlow<Resource<Boolean>> =
         _saveCheatsheetPointsResult
+    private val _updateCheatsheetsOnDBResult: MutableStateFlow<Resource<Boolean>> =
+        MutableStateFlow(Resource.Initial())
+    val updateCheatsheetsOnDBResult: MutableStateFlow<Resource<Boolean>> =
+        _updateCheatsheetsOnDBResult
 
 
     fun setProgressBarState(state: Boolean?) {
@@ -125,7 +129,8 @@ class PointViewModel @Inject constructor(
 
     fun updateCheatsheetState(cheatsheetId: Int) {
         viewModelScope.launch(io) {
-            updateCheatSheetUpdateStateUseCase(cheatsheetId, hasContentUpdated = false)
+            _updateCheatsheetsOnDBResult.value =
+                updateCheatSheetUpdateStateUseCase(cheatsheetId, hasContentUpdated = false)
         }
     }
 }

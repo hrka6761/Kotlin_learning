@@ -43,4 +43,5 @@ object Constants {
     const val NEW_VERSION_DOWNLOAD_FAILED = 11
     const val DATABASE_NAME = "cheatsheet-database"
     const val VERSION_NAME_KEY = "version_name_key"
+    const val UPDATED_ID_KEY = "updatedId"
 }

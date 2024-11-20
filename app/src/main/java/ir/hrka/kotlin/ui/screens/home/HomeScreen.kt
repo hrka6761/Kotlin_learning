@@ -56,6 +56,7 @@ import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.utilities.Constants.TAG
+import ir.hrka.kotlin.core.utilities.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen
 import ir.hrka.kotlin.core.utilities.extractFileName
@@ -78,7 +79,11 @@ fun HomeScreen(
     val hasUpdateForCheatSheetsContent by viewModel.hasUpdateForCheatSheetsContent.collectAsState()
     val saveCheatsheetsListResult by viewModel.saveCheatsheetsListResult.collectAsState()
     val updateCheatsheetsOnDBResult by viewModel.updateCheatsheetsOnDBResult.collectAsState()
+    val updatedId = navHostController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.get<Int>(UPDATED_ID_KEY)
 
+    updatedId?.let { id -> viewModel.updateCheatSheetsList(id - 1) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -103,10 +108,7 @@ fun HomeScreen(
                 columns = StaggeredGridCells.Fixed(1),
                 contentPadding = PaddingValues(8.dp)
             ) {
-                val list = cheatSheets.data
-                val sortedList = list?.sortedBy { it.id }
-
-                sortedList?.let {
+                cheatSheets.data?.let {
                     items(it.size) { index ->
                         CheatSheetItem(it[index], navHostController, hasUpdateForCheatSheetsContent)
                     }
