@@ -6,6 +6,7 @@ object Constants {
     const val SPLASH_SCREEN = "splash"
     const val HOME_SCREEN = "home"
     const val POINT_SCREEN = "pointSheet"
+    const val PROFILE_SCREEN = "profileSheet"
     const val POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME = "CheatSheetName"
     const val POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME = "CheatSheetStateName"
     const val POINT_SCREEN_ARGUMENT_CHEATSHEET_ID = "cheatsheetId"
