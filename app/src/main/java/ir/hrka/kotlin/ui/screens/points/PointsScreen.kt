@@ -116,13 +116,9 @@ fun PointsScreen(
     }
 
     LaunchedEffect(Unit) {
-        if (hasContentUpdated && viewModel.points.value is Resource.Initial) {
+        if (hasContentUpdated && viewModel.points.value is Resource.Initial)
             viewModel.getPointsFromGithub(cheatsheetFileName)
-            snackBarHostState.showSnackbar(
-                message = activity.getString(R.string.fetching_new_points_list_msg),
-                duration = SnackbarDuration.Short
-            )
-        } else
+        else
             viewModel.getPointsFromDatabase(cheatsheetFileName)
     }
 
@@ -132,7 +128,13 @@ fun PointsScreen(
                 viewModel.setProgressBarState(true)
             }
 
-            is Resource.Loading -> {}
+            is Resource.Loading -> {
+                snackBarHostState.showSnackbar(
+                    message = activity.getString(R.string.fetching_new_points_list_msg),
+                    duration = SnackbarDuration.Short
+                )
+            }
+
             is Resource.Success -> {
                 viewModel.setProgressBarState(false)
 
@@ -142,6 +144,10 @@ fun PointsScreen(
 
             is Resource.Error -> {
                 viewModel.setProgressBarState(null)
+                snackBarHostState.showSnackbar(
+                    message = points.error?.errorMsg.toString(),
+                    duration = SnackbarDuration.Short
+                )
             }
         }
     }
@@ -169,7 +175,7 @@ fun PointsScreen(
     }
 
     LaunchedEffect(updateCheatsheetsOnDBResult) {
-        when(updateCheatsheetsOnDBResult) {
+        when (updateCheatsheetsOnDBResult) {
             is Resource.Initial -> {}
             is Resource.Loading -> {}
             is Resource.Success -> {
@@ -178,6 +184,7 @@ fun PointsScreen(
                     ?.savedStateHandle
                     ?.set(UPDATED_ID_KEY, cheatsheetId)
             }
+
             is Resource.Error -> {}
         }
     }
