@@ -130,6 +130,10 @@ class HomeViewModel @Inject constructor(
             val currentVersionPatch = currentVersionPatchDiffered.await() ?: -1
 
             if (githubVersionPatch != currentVersionPatch) {
+                if ((githubVersionPatch - currentVersionPatch) > 1) {
+                    _hasUpdateForCheatSheetsList.value = true
+                    return@launch
+                }
                 _hasUpdateForCheatSheetsContent.value = true
                 return@launch
             }
