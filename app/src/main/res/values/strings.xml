@@ -17,4 +17,5 @@
     <string name="fetching_new_cheatsheets_list_msg">Fetching new cheatsheets list from github.</string>
     <string name="fetching_new_points_list_msg">Fetching new points list from github.</string>
     <string name="no_cheatsheets_msg">There are no Cheatsheets available in the database.</string>
+    <string name="updated_label_txt">Updated</string>
 </resources>
