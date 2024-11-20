@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.cheatSheet
 
-import ir.hrka.kotlin.helpers.Log.printYellow
+import ir.hrka.kotlin.core.utilities.Log.printYellow
 
 /**
  * * Data classes in Kotlin are primarily used to hold data.

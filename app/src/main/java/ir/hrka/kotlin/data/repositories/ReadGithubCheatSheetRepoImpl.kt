@@ -1,7 +1,7 @@
 package ir.hrka.kotlin.data.repositories
 
-import ir.hrka.kotlin.core.utilities.Constants.READ_FILE_ERROR_CODE
-import ir.hrka.kotlin.core.utilities.Constants.RETROFIT_ERROR_CODE
+import ir.hrka.kotlin.core.Constants.READ_FILE_ERROR_CODE
+import ir.hrka.kotlin.core.Constants.RETROFIT_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.decodeBase64
 import ir.hrka.kotlin.core.utilities.extractClearPointsFromRawPoint

@@ -43,11 +43,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.utilities.Constants.CLIPBOARD_LABEL
-import ir.hrka.kotlin.core.utilities.Constants.CLIPBOARD_TEXT
-import ir.hrka.kotlin.core.utilities.Constants.GITHUB_URL
-import ir.hrka.kotlin.core.utilities.Constants.LINKEDIN_URL
-import ir.hrka.kotlin.core.utilities.Constants.SOURCE_URL
+import ir.hrka.kotlin.core.Constants.CLIPBOARD_LABEL
+import ir.hrka.kotlin.core.Constants.CLIPBOARD_TEXT
+import ir.hrka.kotlin.core.Constants.GITHUB_URL
+import ir.hrka.kotlin.core.Constants.LINKEDIN_URL
+import ir.hrka.kotlin.core.Constants.SOURCE_URL
 
 @Composable
 fun ProfileScreen(activity: MainActivity, navHostController: NavHostController) {

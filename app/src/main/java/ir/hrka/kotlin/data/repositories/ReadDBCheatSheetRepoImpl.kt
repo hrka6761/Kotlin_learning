@@ -1,7 +1,7 @@
 package ir.hrka.kotlin.data.repositories
 
-import ir.hrka.kotlin.core.utilities.Constants.DB_READ_CHEATSHEETS_LIST_ERROR_CODE
-import ir.hrka.kotlin.core.utilities.Constants.DB_READ_CHEATSHEET_POINTS_ERROR_CODE
+import ir.hrka.kotlin.core.Constants.DB_READ_CHEATSHEETS_LIST_ERROR_CODE
+import ir.hrka.kotlin.core.Constants.DB_READ_CHEATSHEET_POINTS_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.CheatsheetDao
 import ir.hrka.kotlin.data.datasource.PointDao

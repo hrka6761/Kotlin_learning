@@ -1,10 +1,8 @@
 package ir.hrka.kotlin.ui.screens.points
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.utilities.Constants.TAG
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.PointDataModel
 import ir.hrka.kotlin.domain.entities.db.Point

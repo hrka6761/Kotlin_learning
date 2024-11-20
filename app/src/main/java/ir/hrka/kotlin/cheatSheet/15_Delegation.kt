@@ -1,8 +1,8 @@
 package ir.hrka.kotlin.cheatSheet
 
-import ir.hrka.kotlin.helpers.Log.printBlue
-import ir.hrka.kotlin.helpers.Log.printRed
-import ir.hrka.kotlin.helpers.Log.printYellow
+import ir.hrka.kotlin.core.utilities.Log.printBlue
+import ir.hrka.kotlin.core.utilities.Log.printRed
+import ir.hrka.kotlin.core.utilities.Log.printYellow
 import kotlin.properties.Delegates
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty

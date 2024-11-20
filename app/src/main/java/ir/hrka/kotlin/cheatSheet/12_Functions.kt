@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.cheatSheet
 
-import ir.hrka.kotlin.helpers.Log.printYellow
+import ir.hrka.kotlin.core.utilities.Log.printYellow
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.time.Duration

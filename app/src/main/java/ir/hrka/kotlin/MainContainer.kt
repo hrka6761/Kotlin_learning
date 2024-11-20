@@ -10,11 +10,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import ir.hrka.kotlin.core.utilities.Constants.HOME_SCREEN_ARGUMENT_VERSION_NAME
-import ir.hrka.kotlin.core.utilities.Constants.HOME_SCREEN_ARGUMENT_VERSION_SUFFIX
-import ir.hrka.kotlin.core.utilities.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_ID
-import ir.hrka.kotlin.core.utilities.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME
-import ir.hrka.kotlin.core.utilities.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME
+import ir.hrka.kotlin.core.Constants.HOME_SCREEN_ARGUMENT_VERSION_NAME
+import ir.hrka.kotlin.core.Constants.HOME_SCREEN_ARGUMENT_VERSION_SUFFIX
+import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_ID
+import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME
+import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import ir.hrka.kotlin.core.utilities.Screen.Point

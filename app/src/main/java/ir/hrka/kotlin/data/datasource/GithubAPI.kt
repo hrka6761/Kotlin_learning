@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.data.datasource
 
-import ir.hrka.kotlin.core.utilities.Constants.TOKEN
+import ir.hrka.kotlin.core.Constants.TOKEN
 import ir.hrka.kotlin.domain.entities.RepoFileModel
 import retrofit2.Response
 import retrofit2.http.GET

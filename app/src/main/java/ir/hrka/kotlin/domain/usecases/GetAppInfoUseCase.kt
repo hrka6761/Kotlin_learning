@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.domain.usecases
 
-import ir.hrka.kotlin.core.utilities.Constants.READ_FILE_ERROR_CODE
+import ir.hrka.kotlin.core.Constants.READ_FILE_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.decodeBase64
 import ir.hrka.kotlin.core.utilities.extractVersionCodeFromGradleContent

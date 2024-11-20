@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.helpers
+package ir.hrka.kotlin.core.utilities
 
 import android.util.Log
 

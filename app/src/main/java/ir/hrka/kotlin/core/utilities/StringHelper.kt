@@ -1,8 +1,6 @@
 package ir.hrka.kotlin.core.utilities
 
 import android.util.Base64
-import android.util.Log
-import ir.hrka.kotlin.core.utilities.Constants.TAG
 
 private const val versionCodePattern = """versionCode\s*=\s*(\d+)"""
 private const val versionNamePattern = """versionName\s*=\s*"([^"]+)""""

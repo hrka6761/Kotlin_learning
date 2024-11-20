@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.cheatSheet
 
-import ir.hrka.kotlin.helpers.Log.printYellow
+import ir.hrka.kotlin.core.utilities.Log.printYellow
 
 /**
  * * Sealed classes and interfaces provide controlled inheritance of a class hierarchies.

@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ir.hrka.kotlin.core.utilities.Constants.DATABASE_NAME
+import ir.hrka.kotlin.core.Constants.DATABASE_NAME
 import ir.hrka.kotlin.data.datasource.AppDatabase
 import ir.hrka.kotlin.data.datasource.CheatsheetDao
 import ir.hrka.kotlin.data.datasource.PointDao

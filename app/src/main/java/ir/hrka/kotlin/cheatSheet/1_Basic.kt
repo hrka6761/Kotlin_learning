@@ -1,7 +1,7 @@
 package ir.hrka.kotlin.cheatSheet
 
-import ir.hrka.kotlin.helpers.Log.printRed
-import ir.hrka.kotlin.helpers.Log.printYellow
+import ir.hrka.kotlin.core.utilities.Log.printRed
+import ir.hrka.kotlin.core.utilities.Log.printYellow
 
 /**
  * * We declare a `package` at the top of your Kotlin file using the package keyword:

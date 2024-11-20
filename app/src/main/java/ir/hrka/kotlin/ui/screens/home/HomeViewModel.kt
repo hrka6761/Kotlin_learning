@@ -1,10 +1,8 @@
 package ir.hrka.kotlin.ui.screens.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.utilities.Constants.TAG
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractMajorFromVersionName
 import ir.hrka.kotlin.core.utilities.extractMinorFromVersionName

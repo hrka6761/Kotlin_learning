@@ -3,7 +3,6 @@ package ir.hrka.kotlin.ui.screens.splash
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -40,16 +39,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.utilities.Constants.MANDATORY
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_CANCEL
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_NOT_AVAILABLE
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_CONTINUE
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_AVAILABLE
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_DOWNLOADING
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_DOWNLOAD_FAILED
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_INSTALLING
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_NOT_INSTALL_PERMISSION
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_UNKNOWN_STATE
+import ir.hrka.kotlin.core.Constants.MANDATORY
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_CANCEL
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_NOT_AVAILABLE
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_CONTINUE
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_AVAILABLE
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_DOWNLOADING
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_DOWNLOAD_FAILED
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_INSTALLING
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_NOT_INSTALL_PERMISSION
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import kotlinx.coroutines.delay
@@ -58,9 +57,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.FileProvider
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_DOWNLOADED
-import ir.hrka.kotlin.core.utilities.Constants.NEW_VERSION_NO_STATE
-import ir.hrka.kotlin.core.utilities.Constants.TAG
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_DOWNLOADED
+import ir.hrka.kotlin.core.Constants.NEW_VERSION_NO_STATE
 
 @Composable
 fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {

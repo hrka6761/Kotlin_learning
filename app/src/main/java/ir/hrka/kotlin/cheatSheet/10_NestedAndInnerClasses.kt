@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.cheatSheet
 
-import ir.hrka.kotlin.helpers.Log.printYellow
+import ir.hrka.kotlin.core.utilities.Log.printYellow
 
 /**
  * * We can nest classes in classes, interfaces in classes, classes in interfaces, and interfaces in interfaces.

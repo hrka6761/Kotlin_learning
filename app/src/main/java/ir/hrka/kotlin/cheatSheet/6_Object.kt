@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.cheatSheet
 
-import ir.hrka.kotlin.helpers.Log.printYellow
+import ir.hrka.kotlin.core.utilities.Log.printYellow
 
 /**
  * * Sometimes you need to create an object that is a slight modification of some class,

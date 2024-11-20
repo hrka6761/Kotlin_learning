@@ -1,6 +1,5 @@
 package ir.hrka.kotlin.ui.screens.points
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,8 +49,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.utilities.Constants.TAG
-import ir.hrka.kotlin.core.utilities.Constants.UPDATED_ID_KEY
+import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.splitByCapitalLetters

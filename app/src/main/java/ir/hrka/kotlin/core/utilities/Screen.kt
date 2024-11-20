@@ -1,9 +1,9 @@
 package ir.hrka.kotlin.core.utilities
 
-import ir.hrka.kotlin.core.utilities.Constants.POINT_SCREEN
-import ir.hrka.kotlin.core.utilities.Constants.SPLASH_SCREEN
-import ir.hrka.kotlin.core.utilities.Constants.HOME_SCREEN
-import ir.hrka.kotlin.core.utilities.Constants.PROFILE_SCREEN
+import ir.hrka.kotlin.core.Constants.POINT_SCREEN
+import ir.hrka.kotlin.core.Constants.SPLASH_SCREEN
+import ir.hrka.kotlin.core.Constants.HOME_SCREEN
+import ir.hrka.kotlin.core.Constants.PROFILE_SCREEN
 
 
 enum class Screen(private val destination: String) {

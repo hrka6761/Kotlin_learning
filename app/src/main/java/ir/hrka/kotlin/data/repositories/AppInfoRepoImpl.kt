@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.data.repositories
 
-import ir.hrka.kotlin.core.utilities.Constants.RETROFIT_ERROR_CODE
+import ir.hrka.kotlin.core.Constants.RETROFIT_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.GithubAPI
 import ir.hrka.kotlin.domain.entities.RepoFileModel
