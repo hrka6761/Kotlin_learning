@@ -45,4 +45,9 @@ object Constants {
     const val DATABASE_NAME = "cheatsheet-database"
     const val VERSION_NAME_KEY = "version_name_key"
     const val UPDATED_ID_KEY = "updatedId"
+    const val CLIPBOARD_TEXT = "hrk6761@gmail.com"
+    const val CLIPBOARD_LABEL = "Email"
+    const val GITHUB_URL = "https://github.com/hrka6761/Kotlin_cheat_sheet.git"
+    const val LINKEDIN_URL = "https://www.linkedin.com/in/hamidrezaka"
+    const val SOURCE_URL = "https://kotlinlang.org/"
 }
