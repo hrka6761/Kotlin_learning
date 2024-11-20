@@ -53,7 +53,8 @@ import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.utilities.Constants.TAG
 import ir.hrka.kotlin.core.utilities.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Screen
+import ir.hrka.kotlin.core.utilities.Screen.Point
+import ir.hrka.kotlin.core.utilities.Screen.Profile
 import ir.hrka.kotlin.core.utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
 import ir.hrka.kotlin.domain.entities.RepoFileModel
@@ -82,7 +83,7 @@ fun HomeScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { HomeAppBar() },
+        topBar = { HomeAppBar(navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -221,7 +222,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeAppBar() {
+fun HomeAppBar(navHostController: NavHostController) {
     CenterAlignedTopAppBar(
         title = { Text("Kotlin Cheat Sheet") },
         navigationIcon = {
@@ -236,7 +237,7 @@ fun HomeAppBar() {
         },
         actions = {
             IconButton(
-                onClick = {}
+                onClick = { navHostController.navigate(Profile()) }
             ) {
                 Icon(
                     modifier = Modifier
@@ -266,7 +267,7 @@ fun CheatSheetItem(
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .clickable {
                     navHostController.navigate(
-                        Screen.Point.appendArg(
+                        Point.appendArg(
                             cheatSheet.name,
                             cheatSheet.hasContentUpdated.toString(),
                             cheatSheet.id.toString()
