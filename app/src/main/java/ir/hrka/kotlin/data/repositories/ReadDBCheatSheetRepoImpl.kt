@@ -9,8 +9,8 @@ import ir.hrka.kotlin.data.datasource.SnippetCodeDao
 import ir.hrka.kotlin.data.datasource.SubPointDao
 import ir.hrka.kotlin.domain.entities.ErrorModel
 import ir.hrka.kotlin.domain.entities.PointDataModel
-import ir.hrka.kotlin.domain.entities.RepoFileModel
-import ir.hrka.kotlin.domain.repositories.ReadCheatSheetRepo
+import ir.hrka.kotlin.domain.entities.db.Cheatsheet
+import ir.hrka.kotlin.domain.repositories.ReadDBCheatSheetRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -23,32 +23,11 @@ class ReadDBCheatSheetRepoImpl @Inject constructor(
     private val pointDao: PointDao,
     private val subPointDao: SubPointDao,
     private val snippetCodeDao: SnippetCodeDao
-) : ReadCheatSheetRepo {
+) : ReadDBCheatSheetRepo {
 
-    override suspend fun getCheatSheetsList(): Resource<List<RepoFileModel>?> {
+    override suspend fun getCheatSheetsList(): Resource<List<Cheatsheet>?> {
         return try {
-            val cheatsheets = cheatsheetDao.getCheatsheets().let {
-                it.map { dbCheatsheet ->
-                    val repoFileModel = RepoFileModel(
-                        name = dbCheatsheet.title,
-                        path = "",
-                        sha = "",
-                        size = -1,
-                        htmlUrl = "",
-                        url = "",
-                        gitUrl = "",
-                        downloadUrl = "",
-                        type = "",
-                        content = null,
-                        encoding = null,
-                        linksModel = null
-                    )
-                    repoFileModel.hasContentUpdated = dbCheatsheet.hasContentUpdated
-
-                    return@map repoFileModel
-                }
-            }
-            Resource.Success(cheatsheets)
+            Resource.Success(cheatsheetDao.getCheatsheets())
         } catch (e: Exception) {
             Resource.Error(
                 ErrorModel(

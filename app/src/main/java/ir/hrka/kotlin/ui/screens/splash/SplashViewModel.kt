@@ -26,7 +26,7 @@ import ir.hrka.kotlin.core.Constants.NEW_VERSION_DOWNLOAD_FAILED
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.AppInfoModel
-import ir.hrka.kotlin.domain.usecases.GetAppInfoUseCase
+import ir.hrka.kotlin.domain.usecases.github.GetAppInfoUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

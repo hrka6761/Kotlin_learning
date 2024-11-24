@@ -15,4 +15,6 @@ interface WriteCheatsheetRepo {
     suspend fun saveSubPointsOnDB(subPoints: Array<SubPoint>): Resource<Boolean>
     suspend fun saveSnippetCodesOnDB(snippetCodes: Array<SnippetCode>): Resource<Boolean>
     suspend fun deleteCheatsheetPoints(cheatsheetName: String): Resource<Boolean>
+    suspend fun deletePointSubPoints(pointId: Long): Resource<Boolean>
+    suspend fun deletePointSnippetCodes(pointId: Long): Resource<Boolean>
 }

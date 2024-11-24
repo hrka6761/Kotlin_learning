@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.domain.usecases
+package ir.hrka.kotlin.domain.usecases.preference
 
 import ir.hrka.kotlin.domain.repositories.LocalDataRepo
 import javax.inject.Inject

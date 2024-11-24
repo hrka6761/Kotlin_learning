@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.domain.usecases
+package ir.hrka.kotlin.domain.usecases.db.write
 
 import ir.hrka.kotlin.domain.entities.db.Cheatsheet
 import ir.hrka.kotlin.domain.repositories.WriteCheatsheetRepo

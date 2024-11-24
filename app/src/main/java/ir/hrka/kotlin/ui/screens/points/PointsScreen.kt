@@ -127,17 +127,18 @@ fun PointsScreen(
             }
 
             is Resource.Loading -> {
-                snackBarHostState.showSnackbar(
-                    message = activity.getString(R.string.fetching_new_points_list_msg),
-                    duration = SnackbarDuration.Short
-                )
+                if (hasContentUpdated)
+                    snackBarHostState.showSnackbar(
+                        message = activity.getString(R.string.fetching_new_points_list_msg),
+                        duration = SnackbarDuration.Short
+                    )
             }
 
             is Resource.Success -> {
                 viewModel.setProgressBarState(false)
 
                 if (hasContentUpdated && saveCheatsheetPointsResult is Resource.Initial)
-                    viewModel.saveCheatsheetsOnDB(cheatsheetFileName)
+                    viewModel.saveCheatsheetPointsOnDB(cheatsheetFileName)
             }
 
             is Resource.Error -> {

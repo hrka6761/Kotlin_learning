@@ -1,22 +1,23 @@
 package ir.hrka.kotlin.ui.screens.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractMajorFromVersionName
 import ir.hrka.kotlin.core.utilities.extractMinorFromVersionName
 import ir.hrka.kotlin.core.utilities.extractPatchFromVersionName
 import ir.hrka.kotlin.core.utilities.extractUpdatedCheatsheetsListFromVersionName
-import ir.hrka.kotlin.domain.entities.RepoFileModel
 import ir.hrka.kotlin.domain.entities.db.Cheatsheet
-import ir.hrka.kotlin.domain.usecases.ClearCheatsheetTableUseCase
-import ir.hrka.kotlin.domain.usecases.GetDBCheatSheetsUseCase
-import ir.hrka.kotlin.domain.usecases.GetGithubCheatSheetsUseCase
-import ir.hrka.kotlin.domain.usecases.LoadCurrentVersionNameUseCase
-import ir.hrka.kotlin.domain.usecases.SaveCheatSheetsOnDBUseCase
-import ir.hrka.kotlin.domain.usecases.SaveCurrentVersionNameUseCase
-import ir.hrka.kotlin.domain.usecases.UpdateCheatSheetUpdateStateUseCase
+import ir.hrka.kotlin.domain.usecases.db.write.ClearCheatsheetTableUseCase
+import ir.hrka.kotlin.domain.usecases.db.read.GetDBCheatSheetsUseCase
+import ir.hrka.kotlin.domain.usecases.github.GetGithubCheatSheetsUseCase
+import ir.hrka.kotlin.domain.usecases.preference.LoadCurrentVersionNameUseCase
+import ir.hrka.kotlin.domain.usecases.db.write.SaveCheatSheetsOnDBUseCase
+import ir.hrka.kotlin.domain.usecases.preference.SaveCurrentVersionNameUseCase
+import ir.hrka.kotlin.domain.usecases.db.write.UpdateCheatSheetUpdateStateUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,9 +38,9 @@ class HomeViewModel @Inject constructor(
     private val updateCheatSheetUpdateStateUseCase: UpdateCheatSheetUpdateStateUseCase
 ) : ViewModel() {
 
-    private val _cheatSheets: MutableStateFlow<Resource<List<RepoFileModel>?>> =
+    private val _cheatSheets: MutableStateFlow<Resource<List<Cheatsheet>?>> =
         MutableStateFlow(Resource.Initial())
-    val cheatSheets: StateFlow<Resource<List<RepoFileModel>?>> = _cheatSheets
+    val cheatSheets: StateFlow<Resource<List<Cheatsheet>?>> = _cheatSheets
     private val _progressBarState: MutableStateFlow<Boolean?> = MutableStateFlow(true)
     val progressBarState: MutableStateFlow<Boolean?> = _progressBarState
     private val _hasUpdateForCheatSheetsList: MutableStateFlow<Boolean?> = MutableStateFlow(null)
@@ -164,10 +165,10 @@ class HomeViewModel @Inject constructor(
                 return@launch
             }
 
-            _cheatSheets.value.data?.map { repoFileModel ->
+            _cheatSheets.value.data?.map { cheatsheet ->
                 Cheatsheet(
-                    id = repoFileModel.id.toLong(),
-                    title = repoFileModel.name,
+                    id = cheatsheet.id,
+                    name = cheatsheet.name,
                     versionName = githubVersionName
                 )
             }?.let {

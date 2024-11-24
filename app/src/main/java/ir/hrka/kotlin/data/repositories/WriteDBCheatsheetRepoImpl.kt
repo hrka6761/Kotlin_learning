@@ -2,6 +2,8 @@ package ir.hrka.kotlin.data.repositories
 
 import ir.hrka.kotlin.core.Constants.DB_CLEAR_CHEATSHEET_TABLE_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.DB_DELETE_CHEATSHEET_POINTS_ERROR_CODE
+import ir.hrka.kotlin.core.Constants.DB_DELETE_POINT_SNIPPET_CODES_ERROR_CODE
+import ir.hrka.kotlin.core.Constants.DB_DELETE_POINT_SUB_POINTS_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.DB_UPDATE_CHEATSHEETS_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.DB_WRITE_CHEATSHEETS_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.DB_WRITE_POINTS_ERROR_CODE
@@ -122,6 +124,34 @@ class WriteDBCheatsheetRepoImpl @Inject constructor(
             Resource.Error(
                 ErrorModel(
                     errorCode = DB_DELETE_CHEATSHEET_POINTS_ERROR_CODE,
+                    errorMsg = e.message.toString()
+                )
+            )
+        }
+    }
+
+    override suspend fun deletePointSubPoints(pointId: Long): Resource<Boolean> {
+        return try {
+            subPointDao.deletePointSubPoints(pointId)
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(
+                ErrorModel(
+                    errorCode = DB_DELETE_POINT_SUB_POINTS_ERROR_CODE,
+                    errorMsg = e.message.toString()
+                )
+            )
+        }
+    }
+
+    override suspend fun deletePointSnippetCodes(pointId: Long): Resource<Boolean> {
+        return try {
+            snippetCodeDao.deletePointSnippetCodes(pointId)
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(
+                ErrorModel(
+                    errorCode = DB_DELETE_POINT_SNIPPET_CODES_ERROR_CODE,
                     errorMsg = e.message.toString()
                 )
             )

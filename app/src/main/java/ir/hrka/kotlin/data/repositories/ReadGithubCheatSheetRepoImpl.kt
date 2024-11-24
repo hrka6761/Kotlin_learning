@@ -14,19 +14,19 @@ import ir.hrka.kotlin.data.datasource.GithubAPI
 import ir.hrka.kotlin.domain.entities.ErrorModel
 import ir.hrka.kotlin.domain.entities.PointDataModel
 import ir.hrka.kotlin.domain.entities.RepoFileModel
-import ir.hrka.kotlin.domain.repositories.ReadCheatSheetRepo
+import ir.hrka.kotlin.domain.repositories.ReadGithubCheatSheetRepo
 import javax.inject.Inject
 
 class ReadGithubCheatSheetRepoImpl @Inject constructor(
     private val githubAPI: GithubAPI
-) : ReadCheatSheetRepo {
+) : ReadGithubCheatSheetRepo {
 
     override suspend fun getCheatSheetsList(): Resource<List<RepoFileModel>?> {
         return try {
             val response = githubAPI.getCheatSheetsList()
 
             if (response.isSuccessful) {
-                val sortedList = response.body()?.sortedBy { item -> item.id }
+                val sortedList = response.body()
                 Resource.Success(sortedList)
             } else {
                 Resource.Error(

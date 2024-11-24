@@ -1,22 +1,17 @@
 package ir.hrka.kotlin.ui.screens.points
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.PointDataModel
-import ir.hrka.kotlin.domain.entities.db.Point
-import ir.hrka.kotlin.domain.entities.db.SnippetCode
-import ir.hrka.kotlin.domain.entities.db.SubPoint
-import ir.hrka.kotlin.domain.usecases.DeleteCheatSheetPointsUseCase
-import ir.hrka.kotlin.domain.usecases.GetDBCheatSheetPointsUseCase
-import ir.hrka.kotlin.domain.usecases.GetGithubCheatSheetPointsUseCase
-import ir.hrka.kotlin.domain.usecases.SaveCheatsheetPointsOnDBUseCase
-import ir.hrka.kotlin.domain.usecases.SavePointSnippetCodesOnDBUseCase
-import ir.hrka.kotlin.domain.usecases.SavePointSubPointsOnDBUseCase
-import ir.hrka.kotlin.domain.usecases.UpdateCheatSheetUpdateStateUseCase
+import ir.hrka.kotlin.domain.usecases.db.read.GetDBCheatSheetPointsUseCase
+import ir.hrka.kotlin.domain.usecases.github.GetGithubCheatSheetPointsUseCase
+import ir.hrka.kotlin.domain.usecases.db.write.SaveCheatsheetPointsOnDBUseCase
+import ir.hrka.kotlin.domain.usecases.db.write.UpdateCheatSheetUpdateStateUseCase
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -28,10 +23,7 @@ class PointViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val getGithubCheatSheetPointsUseCase: GetGithubCheatSheetPointsUseCase,
     private val getDBCheatSheetPointsUseCase: GetDBCheatSheetPointsUseCase,
-    private val deleteCheatSheetPointsUseCase: DeleteCheatSheetPointsUseCase,
     private val saveCheatsheetPointsOnDBUseCase: SaveCheatsheetPointsOnDBUseCase,
-    private val savePointSubPointsOnDBUseCase: SavePointSubPointsOnDBUseCase,
-    private val savePointSnippetCodesOnDBUseCase: SavePointSnippetCodesOnDBUseCase,
     private val updateCheatSheetUpdateStateUseCase: UpdateCheatSheetUpdateStateUseCase
 ) : ViewModel() {
 
@@ -68,60 +60,10 @@ class PointViewModel @Inject constructor(
         }
     }
 
-    fun saveCheatsheetsOnDB(cheatsheetName: String) {
+    fun saveCheatsheetPointsOnDB(cheatsheetName: String) {
         viewModelScope.launch(io) {
-            val deleteDiffered = async { deleteCheatSheetPointsUseCase(cheatsheetName) }
-            val deleteResult = deleteDiffered.await()
-
-            if (deleteResult is Resource.Error) {
-                _saveCheatsheetPointsResult.value = deleteResult
-                return@launch
-            }
-
-            var savePointResult: Resource<Long>
-
-            _points.value.data?.forEach { pointDataModel ->
-                savePointResult = Point(
-                    pointText = pointDataModel.headPoint,
-                    cheatsheetName = cheatsheetName
-                ).let {
-                    saveCheatsheetPointsOnDBUseCase(it)
-                }
-
-                savePointResult.data?.let { id ->
-                    val subPoints = pointDataModel.subPoints?.map { str ->
-                        SubPoint(
-                            pointId = id,
-                            subPointText = str
-                        )
-                    }
-                    subPoints?.let {
-                        val result = savePointSubPointsOnDBUseCase(it.toTypedArray())
-
-                        if (result is Resource.Error) {
-                            _saveCheatsheetPointsResult.value = result
-                            return@forEach
-                        }
-                    }
-
-                    val snippetCodes = pointDataModel.snippetsCode?.map { str ->
-                        SnippetCode(
-                            pointId = id,
-                            snippetCodeText = str
-                        )
-                    }
-                    snippetCodes?.let {
-                        val result = savePointSnippetCodesOnDBUseCase(snippetCodes.toTypedArray())
-
-                        if (result is Resource.Error) {
-                            _saveCheatsheetPointsResult.value = result
-                            return@forEach
-                        }
-                    }
-                }
-            }
-
-            _saveCheatsheetPointsResult.value = Resource.Success(true)
+            _saveCheatsheetPointsResult.value =
+                _points.value.data?.let { saveCheatsheetPointsOnDBUseCase(it, cheatsheetName) }!!
         }
     }
 

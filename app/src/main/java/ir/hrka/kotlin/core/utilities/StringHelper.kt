@@ -88,7 +88,7 @@ fun String.extractSubPointsFromPointContent(): MutableList<String>? {
 
 fun String.extractFileName(): String = this.split("_").last().split(".").first()
 
-fun String.extractFileIdByName(): Int = this.split("_").first().toInt()
+fun String.extractFileIdByName(): Long = this.split("_").first().toLong()
 
 fun String.splitByCapitalLetters(): String = replace(Regex("(?=[A-Z])"), " ")
 

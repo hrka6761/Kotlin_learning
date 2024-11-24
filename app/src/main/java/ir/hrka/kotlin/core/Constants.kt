@@ -12,7 +12,7 @@ object Constants {
     const val POINT_SCREEN_ARGUMENT_CHEATSHEET_ID = "cheatsheetId"
     const val HOME_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
     const val HOME_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
-    const val TOKEN = "Token is secret"
+    const val TOKEN = "This is a secret."
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
     const val BASE_APK_PATH_URL =
         "https://github.com/hrka6761/Kotlin_cheat_sheet/releases/download/"
@@ -29,6 +29,8 @@ object Constants {
     const val DB_WRITE_SUB_POINTS_ERROR_CODE = 3006
     const val DB_WRITE_SNIPPET_CODES_ERROR_CODE = 3007
     const val DB_DELETE_CHEATSHEET_POINTS_ERROR_CODE = 3008
+    const val DB_DELETE_POINT_SUB_POINTS_ERROR_CODE = 3009
+    const val DB_DELETE_POINT_SNIPPET_CODES_ERROR_CODE = 3010
     const val MANDATORY = "mandatory"
     const val NON_MANDATORY = "non_mandatory"
     const val NEW_VERSION_NO_STATE = 1

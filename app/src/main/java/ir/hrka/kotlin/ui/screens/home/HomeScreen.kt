@@ -54,8 +54,7 @@ import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.core.utilities.Screen.Profile
 import ir.hrka.kotlin.core.utilities.extractFileName
-import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
-import ir.hrka.kotlin.domain.entities.RepoFileModel
+import ir.hrka.kotlin.domain.entities.db.Cheatsheet
 
 @Composable
 fun HomeScreen(
@@ -251,7 +250,7 @@ fun HomeAppBar(navHostController: NavHostController) {
 
 @Composable
 fun CheatSheetItem(
-    cheatSheet: RepoFileModel,
+    cheatSheet: Cheatsheet,
     navHostController: NavHostController,
 ) {
     ElevatedCard(
@@ -301,9 +300,7 @@ fun CheatSheetItem(
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
                 },
-                text = cheatSheet.name
-                    .extractFileName()
-                    .splitByCapitalLetters(),
+                text = cheatSheet.name.extractFileName(),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
             )

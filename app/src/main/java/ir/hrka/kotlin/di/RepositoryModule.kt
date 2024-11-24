@@ -10,10 +10,10 @@ import ir.hrka.kotlin.data.repositories.ReadGithubCheatSheetRepoImpl
 import ir.hrka.kotlin.data.repositories.WriteDBCheatsheetRepoImpl
 import ir.hrka.kotlin.data.repositories.LocalDataRepoImpl
 import ir.hrka.kotlin.domain.repositories.AppInfoRepo
-import ir.hrka.kotlin.domain.repositories.ReadCheatSheetRepo
+import ir.hrka.kotlin.domain.repositories.ReadGithubCheatSheetRepo
 import ir.hrka.kotlin.domain.repositories.WriteCheatsheetRepo
 import ir.hrka.kotlin.domain.repositories.LocalDataRepo
-import javax.inject.Named
+import ir.hrka.kotlin.domain.repositories.ReadDBCheatSheetRepo
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -22,13 +22,11 @@ interface RepositoryModule {
     @Binds
     fun bindAppInfoRepo(appInfoRepoImpl: AppInfoRepoImpl): AppInfoRepo
 
-    @Named("Github")
     @Binds
-    fun bindGithubCheatSheetsListRepo(readGithubCheatSheetsRepoImpl: ReadGithubCheatSheetRepoImpl): ReadCheatSheetRepo
+    fun bindGithubCheatSheetsListRepo(readGithubCheatSheetsRepoImpl: ReadGithubCheatSheetRepoImpl): ReadGithubCheatSheetRepo
 
-    @Named("db")
     @Binds
-    fun bindDBCheatSheetsListRepo(readDBCheatSheetsRepoImpl: ReadDBCheatSheetRepoImpl): ReadCheatSheetRepo
+    fun bindDBCheatSheetsListRepo(readDBCheatSheetsRepoImpl: ReadDBCheatSheetRepoImpl): ReadDBCheatSheetRepo
 
     @Binds
     fun bindLocalDataRepo(localDataRepoImpl: LocalDataRepoImpl): LocalDataRepo
