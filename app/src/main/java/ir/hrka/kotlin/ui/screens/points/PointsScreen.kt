@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.ui.screens.points
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,6 +50,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractFileName
@@ -114,10 +116,12 @@ fun PointsScreen(
     }
 
     LaunchedEffect(Unit) {
-        if (hasContentUpdated && viewModel.points.value is Resource.Initial)
-            viewModel.getPointsFromGithub(cheatsheetFileName)
-        else
-            viewModel.getPointsFromDatabase(cheatsheetFileName)
+        if (points is Resource.Initial) {
+            if (hasContentUpdated)
+                viewModel.getPointsFromGithub(cheatsheetFileName)
+            else
+                viewModel.getPointsFromDatabase(cheatsheetFileName)
+        }
     }
 
     LaunchedEffect(points) {
@@ -153,11 +157,11 @@ fun PointsScreen(
 
     LaunchedEffect(saveCheatsheetPointsResult) {
         when (saveCheatsheetPointsResult) {
-            is Resource.Initial -> {
+            is Resource.Initial -> {}
+            is Resource.Loading -> {
                 viewModel.setProgressBarState(true)
             }
 
-            is Resource.Loading -> {}
             is Resource.Success -> {
                 viewModel.setProgressBarState(false)
                 viewModel.updateCheatsheetState(cheatsheetId)
