@@ -174,7 +174,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                             NEW_VERSION_AVAILABLE -> {
                                 TextButton(
                                     onClick = {
-                                        viewModel.setNewVersionDialogState(NEW_VERSION_CONTINUE)
+                                        viewModel.goToUpdate(activity)
                                     }
                                 ) {
                                     Text(

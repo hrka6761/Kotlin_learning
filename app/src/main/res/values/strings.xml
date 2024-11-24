@@ -6,7 +6,7 @@
     <string name="new_version_dialog_title_install_permission">Install permission</string>
     <string name="new_version_dialog_cancel_btn">Cancel</string>
     <string name="new_version_dialog_allow_btn">Allow</string>
-    <string name="new_version_dialog_update_btn">Update</string>
+    <string name="new_version_dialog_update_btn">Go to Update</string>
     <string name="splash_screen_author_name">Powered by HAMIDREZA KARAMI</string>
     <string name="splash_screen_title">Kotlin Cheat Sheet</string>
     <string name="new_version_dialog_desc_available">Update the app with new version.%1$s</string>

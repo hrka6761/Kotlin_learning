@@ -3,6 +3,7 @@ package ir.hrka.kotlin.ui.screens.splash
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Context.RECEIVER_EXPORTED
+import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageInfo
 import android.net.Uri
@@ -14,6 +15,8 @@ import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.DownloadReceiver
 import ir.hrka.kotlin.core.Constants.BASE_APK_PATH_URL
+import ir.hrka.kotlin.core.Constants.BAZAAR_URL
+import ir.hrka.kotlin.core.Constants.MYKET_URL
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_NOT_AVAILABLE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_NO_STATE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_AVAILABLE
@@ -119,6 +122,11 @@ class SplashViewModel @Inject constructor(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
             getNewVersionApkFileName()
         )
+
+    fun goToUpdate(activity: MainActivity) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BAZAAR_URL))
+        activity.startActivity(intent)
+    }
 
 
     private fun getNewVersionApkFileName(): String =

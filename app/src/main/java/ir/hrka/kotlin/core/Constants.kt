@@ -50,4 +50,6 @@ object Constants {
     const val GITHUB_URL = "https://github.com/hrka6761/Kotlin_cheat_sheet.git"
     const val LINKEDIN_URL = "https://www.linkedin.com/in/hamidrezaka"
     const val SOURCE_URL = "https://kotlinlang.org/"
+    const val BAZAAR_URL = "https://cafebazaar.ir/app/ir.hrka.kotlin"
+    const val MYKET_URL = "https://myket.ir/app/ir.hrka.kotlin"
 }
