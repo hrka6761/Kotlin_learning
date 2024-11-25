@@ -1,10 +1,10 @@
 package ir.hrka.kotlin.ui.screens.points
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.Constants.TAG
+import ir.hrka.kotlin.core.ExecutionState
+import ir.hrka.kotlin.core.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.PointDataModel
 import ir.hrka.kotlin.domain.usecases.db.read.GetDBCheatSheetPointsUseCase
@@ -30,8 +30,8 @@ class PointViewModel @Inject constructor(
     private val _points: MutableStateFlow<Resource<List<PointDataModel>?>> =
         MutableStateFlow(Resource.Initial())
     val points: StateFlow<Resource<List<PointDataModel>?>> = _points
-    private val _progressBarState: MutableStateFlow<Boolean?> = MutableStateFlow(true)
-    val progressBarState: MutableStateFlow<Boolean?> = _progressBarState
+    private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
+    val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _saveCheatsheetPointsResult: MutableStateFlow<Resource<Boolean>> =
         MutableStateFlow(Resource.Initial())
     val saveCheatsheetPointsResult: MutableStateFlow<Resource<Boolean>> =
@@ -42,8 +42,8 @@ class PointViewModel @Inject constructor(
         _updateCheatsheetsOnDBResult
 
 
-    fun setProgressBarState(state: Boolean?) {
-        _progressBarState.value = state
+    fun setExecutionState(state: ExecutionState) {
+        _executionState.value = state
     }
 
     fun getPointsFromGithub(fileName: String) {

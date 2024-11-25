@@ -1,6 +1,5 @@
 package ir.hrka.kotlin.ui.screens.points
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,8 +49,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
+import ir.hrka.kotlin.core.ExecutionState.Start
+import ir.hrka.kotlin.core.ExecutionState.Loading
+import ir.hrka.kotlin.core.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
@@ -69,14 +70,14 @@ fun PointsScreen(
     val viewModel: PointViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
     val points by viewModel.points.collectAsState()
-    val progressBarState by viewModel.progressBarState.collectAsState()
+    val executionState by viewModel.executionState.collectAsState()
     val saveCheatsheetPointsResult by viewModel.saveCheatsheetPointsResult.collectAsState()
     val updateCheatsheetsOnDBResult by viewModel.updateCheatsheetsOnDBResult.collectAsState()
 
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { PointAppBar(cheatsheetFileName, navHostController, cheatsheetId) },
+        topBar = { PointAppBar(cheatsheetFileName, navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -109,14 +110,14 @@ fun PointsScreen(
                 modifier = Modifier
                     .width(50.dp)
                     .height(50.dp)
-                    .alpha(if (progressBarState == true) 1f else 0f),
+                    .alpha(if (executionState == Loading) 1f else 0f),
                 strokeWidth = 2.dp
             )
         }
     }
 
     LaunchedEffect(Unit) {
-        if (points is Resource.Initial) {
+        if (executionState == Start) {
             if (hasContentUpdated)
                 viewModel.getPointsFromGithub(cheatsheetFileName)
             else
@@ -125,70 +126,85 @@ fun PointsScreen(
     }
 
     LaunchedEffect(points) {
-        when (points) {
-            is Resource.Initial -> {
-                viewModel.setProgressBarState(true)
-            }
+        if (executionState != Stop) {
+            when (points) {
+                is Resource.Initial -> {
+                    viewModel.setExecutionState(Loading)
+                }
 
-            is Resource.Loading -> {
-                if (hasContentUpdated)
+                is Resource.Loading -> {
+                    if (hasContentUpdated)
+                        snackBarHostState.showSnackbar(
+                            message = activity.getString(R.string.fetching_new_points_list_msg),
+                            duration = SnackbarDuration.Long
+                        )
+                }
+
+                is Resource.Success -> {
+                    if (hasContentUpdated)
+                        viewModel.saveCheatsheetPointsOnDB(cheatsheetFileName)
+                    else
+                        viewModel.setExecutionState(Stop)
+                }
+
+                is Resource.Error -> {
+                    viewModel.setExecutionState(Stop)
                     snackBarHostState.showSnackbar(
-                        message = activity.getString(R.string.fetching_new_points_list_msg),
-                        duration = SnackbarDuration.Short
+                        message = points.error?.errorMsg.toString(),
+                        duration = SnackbarDuration.Long
                     )
-            }
-
-            is Resource.Success -> {
-                viewModel.setProgressBarState(false)
-
-                if (hasContentUpdated && saveCheatsheetPointsResult is Resource.Initial)
-                    viewModel.saveCheatsheetPointsOnDB(cheatsheetFileName)
-            }
-
-            is Resource.Error -> {
-                viewModel.setProgressBarState(null)
-                snackBarHostState.showSnackbar(
-                    message = points.error?.errorMsg.toString(),
-                    duration = SnackbarDuration.Short
-                )
+                }
             }
         }
     }
 
     LaunchedEffect(saveCheatsheetPointsResult) {
-        when (saveCheatsheetPointsResult) {
-            is Resource.Initial -> {}
-            is Resource.Loading -> {
-                viewModel.setProgressBarState(true)
-            }
+        if (executionState != Stop) {
+            when (saveCheatsheetPointsResult) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {
+                    snackBarHostState.showSnackbar(
+                        message = "Saving points on the database.",
+                        duration = SnackbarDuration.Long
+                    )
+                }
 
-            is Resource.Success -> {
-                viewModel.setProgressBarState(false)
-                viewModel.updateCheatsheetState(cheatsheetId)
-            }
+                is Resource.Success -> {
+                    viewModel.updateCheatsheetState(cheatsheetId)
+                }
 
-            is Resource.Error -> {
-                viewModel.setProgressBarState(null)
-                snackBarHostState.showSnackbar(
-                    message = saveCheatsheetPointsResult.error?.errorMsg.toString(),
-                    duration = SnackbarDuration.Long
-                )
+                is Resource.Error -> {
+                    viewModel.setExecutionState(Stop)
+                    snackBarHostState.showSnackbar(
+                        message = "Failed to Save points on the database.",
+                        duration = SnackbarDuration.Long
+                    )
+                }
             }
         }
     }
 
     LaunchedEffect(updateCheatsheetsOnDBResult) {
-        when (updateCheatsheetsOnDBResult) {
-            is Resource.Initial -> {}
-            is Resource.Loading -> {}
-            is Resource.Success -> {
-                navHostController
-                    .previousBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(UPDATED_ID_KEY, cheatsheetId)
-            }
+        if (executionState != Stop) {
+            when (updateCheatsheetsOnDBResult) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    navHostController
+                        .previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(UPDATED_ID_KEY, cheatsheetId)
+                    viewModel.setExecutionState(Stop)
+                }
 
-            is Resource.Error -> {}
+                is Resource.Error -> {
+                    snackBarHostState.showSnackbar(
+                        message = "Failed to Save points on the database.",
+                        duration = SnackbarDuration.Long
+                    )
+                    viewModel.setExecutionState(Stop)
+                }
+            }
         }
     }
 }
@@ -197,8 +213,7 @@ fun PointsScreen(
 @Composable
 fun PointAppBar(
     cheatSheetFileName: String,
-    navHostController: NavHostController,
-    cheatsheetId: Int
+    navHostController: NavHostController
 ) {
     TopAppBar(
         title = {
