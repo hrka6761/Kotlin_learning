@@ -57,10 +57,15 @@ class HomeViewModel @Inject constructor(
     val updateCheatsheetsOnDBResult: MutableStateFlow<Resource<Boolean>> =
         _updateCheatsheetsOnDBResult
     private lateinit var currentVersionName: String
-
+    private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val failedState: StateFlow<Boolean> = _failedState
 
     fun setExecutionState(state: ExecutionState) {
         _executionState.value = state
+    }
+
+    fun setFailedState(state: Boolean) {
+        _failedState.value = state
     }
 
     fun getCheatSheetsFromGithub() {
@@ -93,7 +98,7 @@ class HomeViewModel @Inject constructor(
                 async { githubVersionName.extractMajorFromVersionName() }
 
             val githubVersionMajor = githubVersionMajorDiffered.await()
-            val currentVersionMajor = currentVersionMajorDiffered.await() ?: -1
+            val currentVersionMajor = currentVersionMajorDiffered.await()
 
             if (githubVersionMajor != currentVersionMajor) {
                 _hasUpdateForCheatSheetsList.value = true
@@ -106,7 +111,7 @@ class HomeViewModel @Inject constructor(
                 async { githubVersionName.extractMinorFromVersionName() }
 
             val githubVersionMinor = githubVersionMinorDiffered.await()
-            val currentVersionMinor = currentVersionMinorDiffered.await() ?: -1
+            val currentVersionMinor = currentVersionMinorDiffered.await()
 
             if (githubVersionMinor != currentVersionMinor) {
                 _hasUpdateForCheatSheetsList.value = true
@@ -130,7 +135,7 @@ class HomeViewModel @Inject constructor(
                 async { githubVersionName.extractPatchFromVersionName() }
 
             val githubVersionPatch = githubVersionPatchDiffered.await()
-            val currentVersionPatch = currentVersionPatchDiffered.await() ?: -1
+            val currentVersionPatch = currentVersionPatchDiffered.await()
 
             if (githubVersionPatch != currentVersionPatch) {
                 if ((githubVersionPatch - currentVersionPatch) > 1) {

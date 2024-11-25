@@ -5,7 +5,9 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -73,6 +75,7 @@ fun HomeScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val cheatSheets by viewModel.cheatSheets.collectAsState()
     val executionState by viewModel.executionState.collectAsState()
+    val failedState by viewModel.failedState.collectAsState()
     val hasUpdateForCheatSheetsList by viewModel.hasUpdateForCheatSheetsList.collectAsState()
     val hasUpdateForCheatSheetsContent by viewModel.hasUpdateForCheatSheetsContent.collectAsState()
     val saveCheatsheetsListResult by viewModel.saveCheatsheetsListResult.collectAsState()
@@ -99,6 +102,31 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .alpha(if (failedState) 1f else 0f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp),
+                    painter = painterResource(R.drawable.error),
+                    contentDescription = null
+                )
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    text = "Failed to fetch the data",
+                    textAlign = TextAlign.Center
+                )
+            }
+
             LazyVerticalStaggeredGrid(
                 modifier = Modifier
                     .fillMaxSize()
@@ -185,6 +213,7 @@ fun HomeScreen(
                 is Resource.Success -> {
                     if (cheatSheets.data?.isEmpty() != false) {
                         viewModel.setExecutionState(Stop)
+                        viewModel.setFailedState(true)
                         snackBarHostState.showSnackbar(
                             message = activity.getString(R.string.no_cheatsheets_msg),
                             duration = SnackbarDuration.Long
@@ -200,6 +229,7 @@ fun HomeScreen(
 
                 is Resource.Error -> {
                     viewModel.setExecutionState(Stop)
+                    viewModel.setFailedState(true)
                     snackBarHostState.showSnackbar(
                         message = cheatSheets.error?.errorMsg.toString(),
                         duration = SnackbarDuration.Long
@@ -239,7 +269,7 @@ fun HomeScreen(
 @Composable
 fun HomeAppBar(navHostController: NavHostController) {
     CenterAlignedTopAppBar(
-        title = { Text("Kotlin Cheat Sheet") },
+        title = { Text(stringResource(R.string.home_app_bar_title)) },
         navigationIcon = {
             Image(
                 modifier = Modifier

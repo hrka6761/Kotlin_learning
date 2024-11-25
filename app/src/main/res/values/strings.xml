@@ -8,7 +8,7 @@
     <string name="new_version_dialog_allow_btn">Allow</string>
     <string name="new_version_dialog_update_btn">Go to Update</string>
     <string name="splash_screen_author_name">Powered by HAMIDREZA KARAMI</string>
-    <string name="splash_screen_title">Kotlin Cheat Sheet</string>
+    <string name="splash_screen_title">Kotlin Learning</string>
     <string name="new_version_dialog_desc_available">Update the app with new version.%1$s</string>
     <string name="new_version_dialog_desc_available_mandatory_update">\n\n * If you do not update, you cannot use the app.</string>
     <string name="new_version_dialog_desc_install_permission">Please allow to install app from this source.%1$s</string>
@@ -20,7 +20,8 @@
     <string name="updated_label_txt">Updated</string>
     <string name="profile_screen_author_name">Hamidreza Karami</string>
     <string name="profile_screen_github_repo_address">https://github.com/hrka6761/Kotlin_cheat_sheet.git</string>
-    <string name="profile_screen_cheatSheet_source">Source:   www.kotlinlang.org</string>
+    <string name="profile_screen_cheatSheet_source">Source: www.kotlinlang.org</string>
     <string name="profile_screen_linkedin_address">https://www.linkedin.com/in/hamidrezaka</string>
     <string name="profile_screen_author_email">hrk6761@gmail.com</string>
+    <string name="home_app_bar_title">Kotlin Learning</string>
 </resources>
