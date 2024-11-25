@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Kotlin cheat sheet</string>
+    <string name="app_name">Kotlin</string>
     <string name="new_version_download_failed_msg">Failed to download new version, please try again later.</string>
     <string name="new_version_dialog_title_update">Update</string>
     <string name="new_version_dialog_title_downloading">Downloading</string>
