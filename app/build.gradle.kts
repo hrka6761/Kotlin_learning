@@ -15,9 +15,9 @@ android {
         applicationId = "ir.hrka.kotlin"
         minSdk = 31
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.0.0"
-        versionNameSuffix = "Non-mandatory"
+        versionCode = 3
+        versionName = "2.0.0"
+        versionNameSuffix = "mandatory"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
