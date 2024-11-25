@@ -47,19 +47,39 @@ class ReadGithubCheatSheetRepoImpl @Inject constructor(
     }
 
     override suspend fun getCheatSheetPoints(cheatsheetName: String): Resource<List<PointDataModel>?> {
-        val cheatSheetFile = githubAPI.getCheatSheetFile(fileName = cheatsheetName).body()
-        val encodedCheatSheetContent = cheatSheetFile?.content ?: ""
-        val decodedCheatSheetContent = encodedCheatSheetContent.decodeBase64()
+        return try {
+            val response = githubAPI.getCheatSheetFile(fileName = cheatsheetName)
 
-        return if (decodedCheatSheetContent.isNotEmpty())
-            Resource.Success(provideCheatSheetData(decodedCheatSheetContent))
-        else
+            if (response.isSuccessful) {
+                val cheatSheetFile = response.body()
+                val encodedCheatSheetContent = cheatSheetFile?.content ?: ""
+                val decodedCheatSheetContent = encodedCheatSheetContent.decodeBase64()
+
+                return if (decodedCheatSheetContent.isNotEmpty())
+                    Resource.Success(provideCheatSheetData(decodedCheatSheetContent))
+                else
+                    Resource.Error(
+                        ErrorModel(
+                            READ_FILE_ERROR_CODE,
+                            "Can't access the github repository files."
+                        )
+                    )
+            } else {
+                Resource.Error(
+                    ErrorModel(
+                        errorCode = response.code(),
+                        errorMsg = response.message()
+                    )
+                )
+            }
+        } catch (e: Exception) {
             Resource.Error(
                 ErrorModel(
-                    READ_FILE_ERROR_CODE,
-                    "Can't access the github repository files."
+                    errorCode = RETROFIT_ERROR_CODE,
+                    errorMsg = e.message.toString()
                 )
             )
+        }
     }
 
 
