@@ -159,11 +159,11 @@ fun HomeScreen(
                 }
 
                 is Resource.Error -> {
+                    viewModel.setExecutionState(Stop)
                     snackBarHostState.showSnackbar(
                         message = updateCheatsheetsOnDBResult.error?.errorMsg ?: "",
                         duration = SnackbarDuration.Short
                     )
-                    viewModel.setExecutionState(Stop)
                 }
             }
         }
@@ -184,6 +184,7 @@ fun HomeScreen(
 
                 is Resource.Success -> {
                     if (cheatSheets.data?.isEmpty() != false) {
+                        viewModel.setExecutionState(Stop)
                         snackBarHostState.showSnackbar(
                             message = activity.getString(R.string.no_cheatsheets_msg),
                             duration = SnackbarDuration.Long
@@ -219,12 +220,11 @@ fun HomeScreen(
                 }
 
                 is Resource.Error -> {
+                    viewModel.setExecutionState(Stop)
                     snackBarHostState.showSnackbar(
                         message = saveCheatsheetsListResult.error?.errorMsg.toString(),
                         duration = SnackbarDuration.Long
                     )
-
-                    viewModel.setExecutionState(Stop)
                 }
             }
         }
