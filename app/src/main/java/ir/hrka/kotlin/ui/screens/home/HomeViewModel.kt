@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.core.Constants.TAG
+import ir.hrka.kotlin.core.ExecutionState
+import ir.hrka.kotlin.core.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractMajorFromVersionName
 import ir.hrka.kotlin.core.utilities.extractMinorFromVersionName
@@ -41,8 +43,8 @@ class HomeViewModel @Inject constructor(
     private val _cheatSheets: MutableStateFlow<Resource<List<Cheatsheet>?>> =
         MutableStateFlow(Resource.Initial())
     val cheatSheets: StateFlow<Resource<List<Cheatsheet>?>> = _cheatSheets
-    private val _progressBarState: MutableStateFlow<Boolean?> = MutableStateFlow(true)
-    val progressBarState: MutableStateFlow<Boolean?> = _progressBarState
+    private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
+    val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _hasUpdateForCheatSheetsList: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     val hasUpdateForCheatSheetsList: StateFlow<Boolean?> = _hasUpdateForCheatSheetsList
     private val _hasUpdateForCheatSheetsContent: MutableStateFlow<Boolean?> = MutableStateFlow(null)
@@ -57,8 +59,8 @@ class HomeViewModel @Inject constructor(
     private lateinit var currentVersionName: String
 
 
-    fun setProgressBarState(state: Boolean?) {
-        _progressBarState.value = state
+    fun setExecutionState(state: ExecutionState) {
+        _executionState.value = state
     }
 
     fun getCheatSheetsFromGithub() {

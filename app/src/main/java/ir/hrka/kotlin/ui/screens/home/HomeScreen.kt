@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.ui.screens.home
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,6 +50,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.TAG
+import ir.hrka.kotlin.core.ExecutionState.Start
+import ir.hrka.kotlin.core.ExecutionState.Loading
+import ir.hrka.kotlin.core.ExecutionState.Stop
 import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.Point
@@ -67,7 +72,7 @@ fun HomeScreen(
     val viewModel: HomeViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
     val cheatSheets by viewModel.cheatSheets.collectAsState()
-    val progressBarState by viewModel.progressBarState.collectAsState()
+    val executionState by viewModel.executionState.collectAsState()
     val hasUpdateForCheatSheetsList by viewModel.hasUpdateForCheatSheetsList.collectAsState()
     val hasUpdateForCheatSheetsContent by viewModel.hasUpdateForCheatSheetsContent.collectAsState()
     val saveCheatsheetsListResult by viewModel.saveCheatsheetsListResult.collectAsState()
@@ -112,32 +117,30 @@ fun HomeScreen(
                 modifier = Modifier
                     .width(50.dp)
                     .height(50.dp)
-                    .alpha(if (progressBarState == true) 1f else 0f),
+                    .alpha(if (executionState == Loading) 1f else 0f),
                 strokeWidth = 2.dp
             )
         }
     }
 
     LaunchedEffect(Unit) {
-        if (hasUpdateForCheatSheetsList == null)
+        if (executionState == Start) {
+            viewModel.setExecutionState(Loading)
             viewModel.checkNewUpdateForCheatsheetsList(githubVersionName)
+        }
     }
 
     LaunchedEffect(hasUpdateForCheatSheetsList) {
-        if (cheatSheets is Resource.Initial) {
-            if (hasUpdateForCheatSheetsList == true) {
+        if (executionState != Stop) {
+            if (hasUpdateForCheatSheetsList == true)
                 viewModel.getCheatSheetsFromGithub()
-                snackBarHostState.showSnackbar(
-                    message = activity.getString(R.string.fetching_new_cheatsheets_list_msg),
-                    duration = SnackbarDuration.Short
-                )
-            } else if (hasUpdateForCheatSheetsList == false)
+            else if (hasUpdateForCheatSheetsList == false)
                 viewModel.checkNewUpdateForCheatsheetsContent(githubVersionName)
         }
     }
 
     LaunchedEffect(hasUpdateForCheatSheetsContent) {
-        if (cheatSheets is Resource.Initial) {
+        if (executionState != Stop) {
             if (hasUpdateForCheatSheetsContent == true)
                 viewModel.updateCheatsheetsInDatabase(githubVersionSuffix)
             else if (hasUpdateForCheatSheetsContent == false)
@@ -146,68 +149,83 @@ fun HomeScreen(
     }
 
     LaunchedEffect(updateCheatsheetsOnDBResult) {
-        when (updateCheatsheetsOnDBResult) {
-            is Resource.Initial -> {}
-            is Resource.Loading -> {}
-            is Resource.Success -> {
-                viewModel.saveVersionName(githubVersionName!!)
-                viewModel.getCheatSheetFromDatabase()
-            }
+        if (executionState != Stop) {
+            when (updateCheatsheetsOnDBResult) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    viewModel.saveVersionName(githubVersionName!!)
+                    viewModel.getCheatSheetFromDatabase()
+                }
 
-            is Resource.Error -> {
-                snackBarHostState.showSnackbar(
-                    message = updateCheatsheetsOnDBResult.error?.errorMsg ?: "",
-                    duration = SnackbarDuration.Short
-                )
+                is Resource.Error -> {
+                    snackBarHostState.showSnackbar(
+                        message = updateCheatsheetsOnDBResult.error?.errorMsg ?: "",
+                        duration = SnackbarDuration.Short
+                    )
+                    viewModel.setExecutionState(Stop)
+                }
             }
         }
     }
 
     LaunchedEffect(cheatSheets) {
-        when (cheatSheets) {
-            is Resource.Initial -> {}
-            is Resource.Loading -> {
-                viewModel.setProgressBarState(true)
-            }
-
-            is Resource.Success -> {
-                viewModel.setProgressBarState(false)
-
-                if (cheatSheets.data?.isEmpty() != false) {
-                    snackBarHostState.showSnackbar(
-                        message = activity.getString(R.string.no_cheatsheets_msg),
-                        duration = SnackbarDuration.Long
-                    )
-                    return@LaunchedEffect
+        if (executionState != Stop) {
+            when (cheatSheets) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {
+                    if (hasUpdateForCheatSheetsList == true) {
+                        snackBarHostState.showSnackbar(
+                            message = activity.getString(R.string.fetching_new_cheatsheets_list_msg),
+                            duration = SnackbarDuration.Long
+                        )
+                    }
                 }
 
-                if (hasUpdateForCheatSheetsList == true && saveCheatsheetsListResult is Resource.Initial)
-                    viewModel.saveCheatsheetsOnDB(githubVersionName!!)
-            }
+                is Resource.Success -> {
+                    if (cheatSheets.data?.isEmpty() != false) {
+                        snackBarHostState.showSnackbar(
+                            message = activity.getString(R.string.no_cheatsheets_msg),
+                            duration = SnackbarDuration.Long
+                        )
+                        return@LaunchedEffect
+                    }
 
-            is Resource.Error -> {
-                viewModel.setProgressBarState(null)
-                snackBarHostState.showSnackbar(
-                    message = cheatSheets.error?.errorMsg.toString(),
-                    duration = SnackbarDuration.Long
-                )
+                    if (hasUpdateForCheatSheetsList == true)
+                        viewModel.saveCheatsheetsOnDB(githubVersionName!!)
+                    else
+                        viewModel.setExecutionState(Stop)
+                }
+
+                is Resource.Error -> {
+                    viewModel.setExecutionState(Stop)
+                    snackBarHostState.showSnackbar(
+                        message = cheatSheets.error?.errorMsg.toString(),
+                        duration = SnackbarDuration.Long
+                    )
+                }
             }
         }
     }
 
     LaunchedEffect(saveCheatsheetsListResult) {
-        when (saveCheatsheetsListResult) {
-            is Resource.Initial -> {}
-            is Resource.Loading -> {}
-            is Resource.Success -> {
-                viewModel.saveVersionName(githubVersionName!!)
-            }
+        if (executionState != Stop) {
+            when (saveCheatsheetsListResult) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    viewModel.saveVersionName(githubVersionName!!)
+                    viewModel.setExecutionState(Stop)
+                }
 
-            is Resource.Error -> {
-                snackBarHostState.showSnackbar(
-                    message = saveCheatsheetsListResult.error?.errorMsg.toString(),
-                    duration = SnackbarDuration.Long
-                )
+                is Resource.Error -> {
+                    snackBarHostState.showSnackbar(
+                        message = saveCheatsheetsListResult.error?.errorMsg.toString(),
+                        duration = SnackbarDuration.Long
+                    )
+
+                    viewModel.setExecutionState(Stop)
+                }
             }
         }
     }
