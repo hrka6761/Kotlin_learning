@@ -24,4 +24,6 @@
     <string name="profile_screen_linkedin_address">https://www.linkedin.com/in/hamidrezaka</string>
     <string name="profile_screen_author_email">hrk6761@gmail.com</string>
     <string name="home_app_bar_title">Kotlin Learning</string>
+    <string name="saving_points_on_the_database_msg">Saving points on the database.</string>
+    <string name="failed_to_save_points_on_the_database_msg">Failed to Save points on the database.</string>
 </resources>

@@ -40,10 +40,16 @@ class PointViewModel @Inject constructor(
         MutableStateFlow(Resource.Initial())
     val updateCheatsheetsOnDBResult: MutableStateFlow<Resource<Boolean>> =
         _updateCheatsheetsOnDBResult
+    private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val failedState: StateFlow<Boolean> = _failedState
 
 
     fun setExecutionState(state: ExecutionState) {
         _executionState.value = state
+    }
+
+    fun setFailedState(state: Boolean) {
+        _failedState.value = state
     }
 
     fun getPointsFromGithub(fileName: String) {

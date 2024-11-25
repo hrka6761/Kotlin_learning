@@ -3,6 +3,7 @@ package ir.hrka.kotlin.ui.screens.points
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,6 +72,7 @@ fun PointsScreen(
     val viewModel: PointViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
     val points by viewModel.points.collectAsState()
+    val failedState by viewModel.failedState.collectAsState()
     val executionState by viewModel.executionState.collectAsState()
     val saveCheatsheetPointsResult by viewModel.saveCheatsheetPointsResult.collectAsState()
     val updateCheatsheetsOnDBResult by viewModel.updateCheatsheetsOnDBResult.collectAsState()
@@ -90,6 +93,31 @@ fun PointsScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .alpha(if (failedState) 1f else 0f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp),
+                    painter = painterResource(R.drawable.error),
+                    contentDescription = null
+                )
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    text = "Failed to fetch the data",
+                    textAlign = TextAlign.Center
+                )
+            }
+
             LazyVerticalStaggeredGrid(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -148,6 +176,7 @@ fun PointsScreen(
                 }
 
                 is Resource.Error -> {
+                    viewModel.setFailedState(true)
                     viewModel.setExecutionState(Stop)
                     snackBarHostState.showSnackbar(
                         message = points.error?.errorMsg.toString(),
@@ -164,7 +193,7 @@ fun PointsScreen(
                 is Resource.Initial -> {}
                 is Resource.Loading -> {
                     snackBarHostState.showSnackbar(
-                        message = "Saving points on the database.",
+                        message = activity.getString(R.string.saving_points_on_the_database_msg),
                         duration = SnackbarDuration.Long
                     )
                 }
@@ -176,7 +205,7 @@ fun PointsScreen(
                 is Resource.Error -> {
                     viewModel.setExecutionState(Stop)
                     snackBarHostState.showSnackbar(
-                        message = "Failed to Save points on the database.",
+                        message = activity.getString(R.string.failed_to_save_points_on_the_database_msg),
                         duration = SnackbarDuration.Long
                     )
                 }
@@ -199,7 +228,7 @@ fun PointsScreen(
 
                 is Resource.Error -> {
                     snackBarHostState.showSnackbar(
-                        message = "Failed to Save points on the database.",
+                        message = activity.getString(R.string.failed_to_save_points_on_the_database_msg),
                         duration = SnackbarDuration.Long
                     )
                     viewModel.setExecutionState(Stop)
