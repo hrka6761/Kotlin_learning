@@ -286,7 +286,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
 
     LaunchedEffect(newVersionState) {
         if (newVersionState == NEW_VERSION_NOT_AVAILABLE) {
-            delay(1000)
+            delay(500)
             navHostController.navigate(Home.appendArg(appInfo.data?.versionName ?: "", appInfo.data?.versionNameSuffix ?: ""))
         } else if (newVersionState == NEW_VERSION_UNKNOWN_STATE) {
             snackBarHostState.showSnackbar(
@@ -306,7 +306,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 message = activity.getString(R.string.new_version_download_failed_msg),
                 duration = SnackbarDuration.Long
             )
-            delay(1000)
+            delay(500)
             navHostController.navigate(Home.appendArg(appInfo.data?.versionName ?: "", appInfo.data?.versionNameSuffix ?: ""))
         } else if (newVersionState == NEW_VERSION_DOWNLOADED) {
             if (viewModel.hasUnknownSourceInstallPermission(activity))
