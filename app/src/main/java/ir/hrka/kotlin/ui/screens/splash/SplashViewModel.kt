@@ -1,29 +1,20 @@
 package ir.hrka.kotlin.ui.screens.splash
 
-import android.app.DownloadManager
 import android.content.Context
-import android.content.Context.RECEIVER_EXPORTED
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageInfo
 import android.net.Uri
-import android.os.Environment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.MainActivity
-import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.DownloadReceiver
-import ir.hrka.kotlin.core.Constants.BASE_APK_PATH_URL
 import ir.hrka.kotlin.core.Constants.BAZAAR_URL
-import ir.hrka.kotlin.core.Constants.MYKET_URL
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_NOT_AVAILABLE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_NO_STATE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_AVAILABLE
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_DOWNLOADED
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_DOWNLOADING
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_DOWNLOAD_FAILED
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_UNKNOWN_STATE
+import ir.hrka.kotlin.core.ExecutionState
+import ir.hrka.kotlin.core.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.AppInfoModel
 import ir.hrka.kotlin.domain.usecases.github.GetAppInfoUseCase
@@ -31,7 +22,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -39,20 +29,21 @@ import javax.inject.Named
 class SplashViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val getAppInfoUseCase: GetAppInfoUseCase,
-    private val downloadManager: DownloadManager
 ) : ViewModel() {
 
     private val _appInfo: MutableStateFlow<Resource<AppInfoModel?>> =
         MutableStateFlow(Resource.Initial())
     val appInfo: StateFlow<Resource<AppInfoModel?>> = _appInfo
+    private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
+    val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _newVersionState: MutableStateFlow<Int> =
         MutableStateFlow(NEW_VERSION_NO_STATE)
     val newVersionState: StateFlow<Int> = _newVersionState
-    private lateinit var downloadReceiver: DownloadReceiver
-    private val filter = IntentFilter().apply {
-        addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-    }
 
+
+    fun setExecutionState(state: ExecutionState) {
+        _executionState.value = state
+    }
 
     fun setNewVersionDialogState(state: Int) {
         _newVersionState.value = state
@@ -80,58 +71,8 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    fun downloadNewVersion(activity: MainActivity) {
-        if (getNewVersionApkFile().exists()) {
-            setNewVersionDialogState(NEW_VERSION_DOWNLOADED)
-            return
-        }
-
-        val request = DownloadManager.Request(Uri.parse(getNewVersionApkFileUrl()))
-
-        downloadReceiver = DownloadReceiver(
-            downloadManager,
-            successCallback = {
-                activity.unregisterReceiver(downloadReceiver)
-                setNewVersionDialogState(NEW_VERSION_DOWNLOADED)
-            },
-            failCallback = {
-                activity.unregisterReceiver(downloadReceiver)
-                setNewVersionDialogState(NEW_VERSION_DOWNLOAD_FAILED)
-            }
-        )
-        activity.registerReceiver(downloadReceiver, filter, RECEIVER_EXPORTED)
-        request
-            .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-            .setTitle(activity.getString(R.string.downloading_notification_title))
-            .setDescription(activity.getString(R.string.downloading_notification_desc))
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(
-                Environment.DIRECTORY_DOWNLOADS,
-                getNewVersionApkFileName()
-            )
-
-        setNewVersionDialogState(NEW_VERSION_DOWNLOADING)
-        downloadManager.enqueue(request)
-    }
-
-    fun hasUnknownSourceInstallPermission(activity: MainActivity) =
-        activity.packageManager.canRequestPackageInstalls()
-
-    fun getNewVersionApkFile(): File =
-        File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-            getNewVersionApkFileName()
-        )
-
     fun goToUpdate(activity: MainActivity) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BAZAAR_URL))
         activity.startActivity(intent)
     }
-
-
-    private fun getNewVersionApkFileName(): String =
-        "Kotlin_Cheat_Sheet_V${_appInfo.value.data?.versionName}.apk"
-
-    private fun getNewVersionApkFileUrl(): String =
-        BASE_APK_PATH_URL + "V" + _appInfo.value.data?.versionName + getNewVersionApkFileName()
 }

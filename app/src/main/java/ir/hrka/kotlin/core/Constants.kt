@@ -14,8 +14,6 @@ object Constants {
     const val HOME_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
     const val TOKEN = "This is a secret."
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
-    const val BASE_APK_PATH_URL =
-        "https://github.com/hrka6761/Kotlin_cheat_sheet/releases/download/"
     const val RETROFIT_ERROR_CODE = 1000
     const val READ_FILE_ERROR_CODE = 1001
     const val LOCAL_DATA_READ_ERROR_CODE = 2000
@@ -39,11 +37,6 @@ object Constants {
     const val NEW_VERSION_NOT_AVAILABLE = 4
     const val NEW_VERSION_CONTINUE = 5
     const val NEW_VERSION_CANCEL = 6
-    const val NEW_VERSION_DOWNLOADING = 7
-    const val NEW_VERSION_DOWNLOADED = 8
-    const val NEW_VERSION_NOT_INSTALL_PERMISSION = 9
-    const val NEW_VERSION_INSTALLING = 10
-    const val NEW_VERSION_DOWNLOAD_FAILED = 11
     const val DATABASE_NAME = "cheatsheet-database"
     const val VERSION_NAME_KEY = "version_name_key"
     const val UPDATED_ID_KEY = "updatedId"

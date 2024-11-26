@@ -1,12 +1,7 @@
 package ir.hrka.kotlin.ui.screens.splash
 
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
-import androidx.activity.compose.rememberLauncherForActivityResult
+import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,7 +20,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
@@ -44,37 +38,26 @@ import ir.hrka.kotlin.core.Constants.NEW_VERSION_CANCEL
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_NOT_AVAILABLE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_CONTINUE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_AVAILABLE
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_DOWNLOADING
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_DOWNLOAD_FAILED
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_INSTALLING
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_NOT_INSTALL_PERMISSION
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import kotlinx.coroutines.delay
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.FileProvider
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_DOWNLOADED
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_NO_STATE
+import ir.hrka.kotlin.core.Constants.TAG
+import ir.hrka.kotlin.core.ExecutionState.Loading
+import ir.hrka.kotlin.core.ExecutionState.Start
+import ir.hrka.kotlin.core.ExecutionState.Stop
 
 @Composable
 fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
 
     val viewModel: SplashViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
+    val executionState by viewModel.executionState.collectAsState()
     val appInfo by viewModel.appInfo.collectAsState()
     val newVersionState by viewModel.newVersionState.collectAsState()
-    val installPermissionLauncher = rememberLauncherForActivityResult(
-        StartActivityForResult()
-    ) {
-        if (viewModel.hasUnknownSourceInstallPermission(activity))
-            viewModel.setNewVersionDialogState(NEW_VERSION_INSTALLING)
-    }
-    val installLauncher = rememberLauncherForActivityResult(StartActivityForResult()) {}
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -134,10 +117,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                     .height(35.dp)
                     .alpha(
                         if (newVersionState == NEW_VERSION_AVAILABLE ||
-                            newVersionState == NEW_VERSION_CONTINUE ||
-                            newVersionState == NEW_VERSION_DOWNLOADING ||
-                            newVersionState == NEW_VERSION_NOT_INSTALL_PERMISSION ||
-                            newVersionState == NEW_VERSION_INSTALLING
+                            newVersionState == NEW_VERSION_CONTINUE
                         ) 0f else 1f
                     )
                     .constrainAs(progressBar) {
@@ -161,107 +141,42 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 contentDescription = null,
             )
 
-            if (newVersionState == NEW_VERSION_AVAILABLE ||
-                newVersionState == NEW_VERSION_CONTINUE ||
-                newVersionState == NEW_VERSION_DOWNLOADING ||
-                newVersionState == NEW_VERSION_NOT_INSTALL_PERMISSION
-            )
+            if (newVersionState == NEW_VERSION_AVAILABLE || newVersionState == NEW_VERSION_CONTINUE)
                 AlertDialog(
                     modifier = Modifier.fillMaxWidth(),
                     onDismissRequest = {},
                     confirmButton = {
-                        when (newVersionState) {
-                            NEW_VERSION_AVAILABLE -> {
-                                TextButton(
-                                    onClick = {
-                                        viewModel.goToUpdate(activity)
-                                    }
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.new_version_dialog_update_btn),
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 16.sp
-                                    )
-                                }
-                            }
-
-                            NEW_VERSION_NOT_INSTALL_PERMISSION -> {
-                                TextButton(
-                                    onClick = {
-                                        val intent =
-                                            Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
-                                                .apply {
-                                                    data =
-                                                        Uri.parse("package:${activity.packageName}")
-                                                }
-                                        installPermissionLauncher.launch(intent)
-                                    }
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.new_version_dialog_allow_btn),
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 16.sp
-                                    )
-                                }
-                            }
+                        TextButton(
+                            onClick = { viewModel.setNewVersionDialogState(NEW_VERSION_CONTINUE) }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.new_version_dialog_update_btn),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
                         }
                     },
                     dismissButton = {
-                        if (newVersionState == NEW_VERSION_AVAILABLE ||
-                            newVersionState == NEW_VERSION_NOT_INSTALL_PERMISSION
-                        )
-                            TextButton(
-                                onClick = {
-                                    viewModel.setNewVersionDialogState(NEW_VERSION_CANCEL)
-                                }
-                            ) { Text(text = stringResource(R.string.new_version_dialog_cancel_btn)) }
+                        TextButton(
+                            onClick = {
+                                viewModel.setNewVersionDialogState(NEW_VERSION_CANCEL)
+                            }
+                        ) { Text(text = stringResource(R.string.new_version_dialog_cancel_btn)) }
                     },
                     icon = { Icon(painterResource(R.drawable.update), contentDescription = null) },
                     title = {
-                        when (newVersionState) {
-                            NEW_VERSION_AVAILABLE -> Text(text = stringResource(R.string.new_version_dialog_title_update))
-                            NEW_VERSION_DOWNLOADING -> Text(text = stringResource(R.string.new_version_dialog_title_downloading))
-                            NEW_VERSION_NOT_INSTALL_PERMISSION -> Text(text = stringResource(R.string.new_version_dialog_title_install_permission))
-                        }
+                        Text(text = stringResource(R.string.new_version_dialog_title_update))
                     },
                     text = {
-                        when (newVersionState) {
-                            NEW_VERSION_AVAILABLE -> {
-                                Text(
-                                    stringResource(
-                                        R.string.new_version_dialog_desc_available,
-                                        if (appInfo.data?.versionNameSuffix == MANDATORY)
-                                            stringResource(R.string.new_version_dialog_desc_available_mandatory_update)
-                                        else
-                                            ""
-                                    )
-                                )
-                            }
-
-                            NEW_VERSION_DOWNLOADING -> {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(40.dp),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    CircularProgressIndicator(strokeWidth = 2.dp)
-                                }
-                            }
-
-                            NEW_VERSION_NOT_INSTALL_PERMISSION -> {
-                                Text(
-                                    stringResource(
-                                        R.string.new_version_dialog_desc_install_permission,
-                                        if (appInfo.data?.versionNameSuffix == MANDATORY)
-                                            stringResource(R.string.new_version_dialog_desc_available_mandatory_update)
-                                        else
-                                            ""
-                                    )
-                                )
-                            }
-                        }
+                        Text(
+                            stringResource(
+                                R.string.new_version_dialog_desc_available,
+                                if (appInfo.data?.versionNameSuffix == MANDATORY)
+                                    stringResource(R.string.new_version_dialog_desc_available_mandatory_update)
+                                else
+                                    ""
+                            )
+                        )
                     },
                     shape = RoundedCornerShape(16.dp),
                     tonalElevation = 16.dp
@@ -269,10 +184,18 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
         }
     }
 
+    LaunchedEffect(Unit) {
+        if (executionState == Start)
+            viewModel.getAppInfo()
+    }
+
     LaunchedEffect(appInfo) {
-        if (newVersionState == NEW_VERSION_NO_STATE)
+        if (executionState != Stop)
             when (appInfo) {
-                is Resource.Initial -> {}
+                is Resource.Initial -> {
+                    viewModel.setExecutionState(Loading)
+                }
+
                 is Resource.Loading -> {}
                 is Resource.Success -> {
                     viewModel.checkNewVersion(activity)
@@ -285,53 +208,44 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     }
 
     LaunchedEffect(newVersionState) {
-        if (newVersionState == NEW_VERSION_NOT_AVAILABLE) {
-            delay(500)
-            navHostController.navigate(Home.appendArg(appInfo.data?.versionName ?: "", appInfo.data?.versionNameSuffix ?: ""))
-        } else if (newVersionState == NEW_VERSION_UNKNOWN_STATE) {
-            snackBarHostState.showSnackbar(
-                message = appInfo.error?.errorMsg.toString(),
-                duration = SnackbarDuration.Short
-            )
-            navHostController.navigate(Home.appendArg(appInfo.data?.versionName ?: "", appInfo.data?.versionNameSuffix ?: ""))
-        } else if (newVersionState == NEW_VERSION_CANCEL) {
-            if (appInfo.data?.versionNameSuffix == MANDATORY)
-                activity.finish()
-            else
-                navHostController.navigate(Home.appendArg(appInfo.data?.versionName ?: "", appInfo.data?.versionNameSuffix ?: ""))
-        } else if (newVersionState == NEW_VERSION_CONTINUE) {
-            viewModel.downloadNewVersion(activity)
-        } else if (newVersionState == NEW_VERSION_DOWNLOAD_FAILED) {
-            snackBarHostState.showSnackbar(
-                message = activity.getString(R.string.new_version_download_failed_msg),
-                duration = SnackbarDuration.Long
-            )
-            delay(500)
-            navHostController.navigate(Home.appendArg(appInfo.data?.versionName ?: "", appInfo.data?.versionNameSuffix ?: ""))
-        } else if (newVersionState == NEW_VERSION_DOWNLOADED) {
-            if (viewModel.hasUnknownSourceInstallPermission(activity))
-                viewModel.setNewVersionDialogState(NEW_VERSION_INSTALLING)
-            else
-                viewModel.setNewVersionDialogState(NEW_VERSION_NOT_INSTALL_PERMISSION)
-        } else if (newVersionState == NEW_VERSION_INSTALLING) {
-            val apkUri: Uri = FileProvider.getUriForFile(
-                activity,
-                "${activity.packageName}.provider",
-                viewModel.getNewVersionApkFile()
-            )
-
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(apkUri, "application/vnd.android.package-archive")
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+        if (executionState != Stop) {
+            if (newVersionState == NEW_VERSION_NOT_AVAILABLE) {
+                viewModel.setExecutionState(Stop)
+                delay(500)
+                navHostController.navigate(
+                    Home.appendArg(
+                        appInfo.data?.versionName ?: "",
+                        appInfo.data?.versionNameSuffix ?: ""
+                    )
+                )
+            } else if (newVersionState == NEW_VERSION_UNKNOWN_STATE) {
+                snackBarHostState.showSnackbar(
+                    message = appInfo.error?.errorMsg.toString(),
+                    duration = SnackbarDuration.Short
+                )
+                viewModel.setExecutionState(Stop)
+                navHostController.navigate(
+                    Home.appendArg(
+                        appInfo.data?.versionName ?: "",
+                        appInfo.data?.versionNameSuffix ?: ""
+                    )
+                )
+            } else if (newVersionState == NEW_VERSION_CANCEL) {
+                viewModel.setExecutionState(Stop)
+                if (appInfo.data?.versionNameSuffix == MANDATORY)
+                    activity.finish()
+                else
+                    navHostController.navigate(
+                        Home.appendArg(
+                            appInfo.data?.versionName ?: "",
+                            appInfo.data?.versionNameSuffix ?: ""
+                        )
+                    )
+            } else if (newVersionState == NEW_VERSION_CONTINUE) {
+                viewModel.setNewVersionDialogState(NEW_VERSION_AVAILABLE)
+                viewModel.goToUpdate(activity)
             }
-
-            installLauncher.launch(intent)
         }
-    }
-
-    LaunchedEffect(Unit) {
-        if (newVersionState == NEW_VERSION_NO_STATE)
-            viewModel.getAppInfo()
     }
 }
 
