@@ -19,7 +19,7 @@ import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.core.utilities.Screen.Profile
-import ir.hrka.kotlin.ui.screens.about.ProfileScreen
+import ir.hrka.kotlin.ui.screens.profile.ProfileScreen
 import ir.hrka.kotlin.ui.screens.points.PointsScreen
 import ir.hrka.kotlin.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.ui.screens.splash.SplashScreen

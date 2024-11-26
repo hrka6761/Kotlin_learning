@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.ui.screens.about
+package ir.hrka.kotlin.ui.screens.profile
 
 import android.content.Context
 import android.content.Intent
