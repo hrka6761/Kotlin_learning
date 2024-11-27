@@ -114,4 +114,6 @@ open class Class(val int: Int = 1) {
         if (this::topLevelClassA.isInitialized)
             topLevelClassA = TopLevelClassA()
     }
+
+    protected open fun fun9(){}
 }

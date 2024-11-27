@@ -192,7 +192,7 @@ class SampleCLass {
  * * Smart casts occurred after using `is` and `!is` operators in a control flow like `if` and `when`.
  * * To cast, you must use `as` operator:
  * ```
- * val casted = fl as? Float
+ * val casted = fl as Float
  * ```
  * * To safe casting on nullable use `as?`:
  * ```
