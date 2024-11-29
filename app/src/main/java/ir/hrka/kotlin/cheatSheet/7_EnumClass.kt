@@ -9,7 +9,43 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * * An enum class cannot derive from a class.
  * * We can override members (implemented by enum class) can be implemented
  * in every instance or by own enum class.
- * * Enum class can contain abstract member that must be implemented by all instances.
+ * * Enum class can contain abstract member that must be implemented by all instances:
+ * ```
+ * interface KotlinInterface1 {
+ *     fun fun1()
+ * }
+ * ```
+ * ```
+ * interface KotlinInterface2 {
+ *     fun fun2()
+ * }
+ * ```
+ * ```
+ * enum class EnumClass(val value: Int) :
+ *     KotlinInterface1,
+ *     KotlinInterface2 {
+ *
+ *     Instance1(1) {
+ *         override val absValue: Int
+ *             get() = { ... }
+ *
+ *         override fun absFun() { ... }
+ *         override fun fun2() { ... }
+ *     },
+ *     Instance2(2) {
+ *         override val absValue: Int
+ *             get() = { ... }
+ *
+ *         override fun absFun() { ... }
+ *         override fun fun2() { ... }
+ *     }, ...
+ *
+ *     override fun fun2() { ... }
+ *
+ *     abstract val absValue: Int
+ *     abstract fun absFun()
+ * }
+ * ```
  * * Primary constructor of enum class is private:
  *    * we cannot instantiate it outside the class body.
  * * No class can derive from the enum class:
@@ -23,9 +59,17 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * EnumClass.entries: // return EnumEntries<EnumClass>
  * ```
  * * Every enum constant also has properties: name and ordinal,
- * for obtaining its name and position (starting from 0) in the enum class declaration.
+ * for obtaining its name and position (starting from 0) in the enum class declaration:
+ * ```
+ * val name: String = Instance1.name
+ * val index: Int = Instance1.ordinal
+ * ```
  * * The valueOf() method throws an `IllegalArgumentException` if
  * the specified name does not match any of the enum constants defined in the class.
+ * ```
+ * val enums: Array<EnumClass> = EnumClass.values()
+ * val enum: EnumClass =  EnumClass.valueOf("Instance1")
+ * ```
  */
 
 

@@ -12,11 +12,81 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  *    * Protected (by default).
  *    * Private.
  * * We can override function of interface that implemented by sealed class, can be implemented in every sub class or by own sealed class.
- * * Sealed class can contain abstract member that must be implemented by all instances.
- * * A sealed interface can be derived from another interface then sub classes must be implemented its members.
+ * * Sealed class can contain abstract member that must be implemented by all instances:
+ * ```
+ * interface KotlinInterface1 {
+ *     fun fun1()
+ * }
+ * ```
+ * ```
+ * interface KotlinInterface2 {
+ *     fun fun2()
+ * }
+ * ```
+ * ```
+ * sealed class sealedClass(val value: Int) :
+ *     KotlinInterface1,
+ *     KotlinInterface2 {
+ *
+ *     class Child1(value: Int) : SealedClass(value) {
+ *         override val absValue: Int
+ *             get() = { ... }
+ *
+ *         override fun absFun() { ... }
+ *         override fun fun2() { ... }
+ *     }
+ *     class Child2(value: Int) : SealedClass(value) {
+ *         override val absValue: Int
+ *             get() = { ... }
+ *
+ *         override fun absFun() { ... }
+ *         override fun fun2() { ... }
+ *     }
+ *     data class Child3(value: Int) : SealedClass(value) {
+ *         override val absValue: Int
+ *             get() = { ... }
+ *
+ *         override fun absFun() { ... }
+ *         override fun fun2() { ... }
+ *     }
+ *
+ *     override fun fun2() { ... }
+ *
+ *     abstract val absValue: Int
+ *     abstract fun absFun()
+ * }
+ * ```
+ * * A sealed interface can be derived from another interface then sub classes must be implemented its members:
+ * ```
+ * sealed interface sealedInterface {
+ *     data object Impl1 : sealedInterface {
+ *         override fun fun3() { ... }
+ *     }
+ *
+ *     data class Impl2(val value: Int) : sealedInterface {
+ *         override fun fun3() { ... }
+ *     }
+ *
+ *     class Impl3(val value: Int) : sealedInterface {
+ *         override fun fun3() { ... }
+ *     }
+ *
+ *
+ *     fun fun3()
+ * }
+ * ```
  * * When you combine sealed classes or interfaces with the when expression,
  * you can cover the behavior of all possible subclasses and ensure that no new subclasses
- * are created to affect your code adversely (you don't need to add an else clause).
+ * are created to affect your code adversely (you don't need to add an else clause):
+ * ```
+ * val instance: SealedClass
+ *
+ * when(instance) {
+ *     is SealedClass.Child1 -> { ... }
+ *     is SealedClass.Child2 -> { ... }
+ *     is SealedClass.Child3 -> { ... }
+ * }
+ * ```
  */
 
 sealed class SealedClass(val int: Int, val string: String) : A {
