@@ -5,9 +5,12 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
 /**
  * * Data classes in Kotlin are primarily used to hold data.
  * * The primary constructor must have at least one parameter.
- * * All primary constructor parameters must be marked as val or var.
+ * * All primary constructor parameters must be marked as val or var:
+ * ```
+ * data class DataClass(val value: Int, var variable: String, ...)
+ * ```
  * * Data classes can't be abstract, open, sealed, or inner.
- * * Compiler generates following members:
+ * * Compiler generates following members for data class:
  *    * `equals()`.
  *    * `hashCode()`.
  *    * `toString()`.
