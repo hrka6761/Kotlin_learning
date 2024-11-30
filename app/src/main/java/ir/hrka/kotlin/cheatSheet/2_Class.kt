@@ -18,8 +18,9 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * }
  * ```
  * * A class is public and final and with a public zero-param constructor by default.
- * * Functions of a class are final by default and must be open to overriding:
- *   * an open member can not be private.
+ * * The Functions of a class are final by default and must be open to overriding.
+ * * The Properties of a class must be open to overriding.
+ * * An open member can not be private.
  * * If a class has a primary constructor, secondary constructors must be invoke primary constructor,
  * directly or indirectly by calling another secondary constructor that the primary constructor calls.
  * * During the initialization of an instance, the initializer blocks are executed in the same order

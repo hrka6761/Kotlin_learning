@@ -182,7 +182,7 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  *         // DerivedClass implementation
  *     }
  *
- *     fun fun2() {
+ *     override fun fun2() {
  *        // DerivedClass implementation
  *     }
  * }

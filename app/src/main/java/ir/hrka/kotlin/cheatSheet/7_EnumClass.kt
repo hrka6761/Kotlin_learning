@@ -7,8 +7,7 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * * The most basic use case for enum classes is the implementation of type-safe enums.
  * * An enum class can implement interfaces.
  * * An enum class cannot derive from a class.
- * * We can override members (implemented by enum class) can be implemented
- * in every instance or by own enum class.
+ * * We can override members in every instance or by own enum class.
  * * Enum class can contain abstract member that must be implemented by all instances:
  * ```
  * interface KotlinInterface1 {

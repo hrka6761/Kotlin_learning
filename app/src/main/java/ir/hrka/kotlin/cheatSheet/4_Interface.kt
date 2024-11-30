@@ -36,7 +36,7 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * * What makes them different from abstract classes is that interfaces cannot store state.
  * * Properties declared in interfaces can't have backing fields,
  * and therefore accessors declared in interfaces can't reference them.
- * * Concrete member is open by default.
+ * * Concrete member is open by default in an interface.
  * * We can't use `final` keyword in an interface.
  */
 

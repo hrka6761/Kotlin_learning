@@ -5,14 +5,15 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
 /**
  * * Sealed classes and interfaces provide controlled inheritance of a class hierarchies.
  * * All direct subclasses of a sealed class are known at compile time.
+ *    * Direct subclasses are classes that are derived at the first level.
  * * A sealed class itself is always an abstract class,
  * and as a result, can't be instantiated directly.
  * * Each enum constant exists only as a single instance, while subclasses of a sealed class may have multiple instances.
  * * Constructors of sealed classes can have one of two visibilities:
  *    * Protected (by default).
  *    * Private.
- * * We can override function of interface that implemented by sealed class, can be implemented in every sub class or by own sealed class.
- * * Sealed class can contain abstract member that must be implemented by all instances:
+ * * We can override function of interface that implemented by sealed class in every sub class or by own sealed class.
+ * * Sealed class can contain abstract member that must be implemented by all sub classes:
  * ```
  * interface KotlinInterface1 {
  *     fun fun1()
@@ -49,8 +50,6 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  *         override fun absFun() { ... }
  *         override fun fun2() { ... }
  *     }
- *
- *     override fun fun2() { ... }
  *
  *     abstract val absValue: Int
  *     abstract fun absFun()
