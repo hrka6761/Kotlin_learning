@@ -6,18 +6,6 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * * We can nest classes in classes, interfaces in classes, classes in interfaces, and interfaces in interfaces:
  * ```
  * class KotlinClass {
- *     val outerProperty = 1
- *
- *     fun outerFun() {
- *
- *     }
- *
- *     class NestedClass {
- *     }
- * }
- * ```
- * ```
- * class KotlinClass {
  *     class NestedClass { ... }
  * }
  * ```
@@ -38,28 +26,21 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * ```
  * * A nested class marked as inner can access the members of its outer class.
  * * Inner classes carry a reference to an object of an outer class:
+ *    * We can access the member of outer class in the inner class.
+ *    * We cannot access the member of outer class in the nested class.
  * ```
  * class KotlinClass {
- *     inner class InnerClass { ... }
+ *     val outerProperty: Int = 1
+ *
+ *     fun outerFun(value: Int) { ... }
+ *
+ *     class NestedClass {
+ *          outerFun(outerProperty)
+ *     }
  * }
  * ```
  * * An inner class is like a regular nested class in java, but a nested class is like static nested class in java.
  * * A nested class in an interface is like static nested class in java.
- * * We can access the member of outer class in the inner class:
- * ```
- * class KotlinClass {
- *     val outerProperty = 1
- *
- *     fun outerFun() {
- *
- *     }
- *
- *     class NestedClass {
- *     }
- * }
- * ```
- * * We cannot access the member of outer class in the nested class.
- * * we can access an instance of outer class in the inner class but not in the nested class.
  */
 
 class OuterClass() {
