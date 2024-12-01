@@ -11,7 +11,7 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * ```
  * var KotlinClass.extensionProperty: Int
  *     get { ... }
- *     set { ... }
+ *     set(value) { ... }
  * ```
  * ```
  * infix fun Int.plus(int: Int): Int = this + int
@@ -40,7 +40,7 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * fun SuperClass.extensionFun(val str: String) { ... }
  * val SuperClass.extensionProperty: Int
  *     get { ... }
- *     set { ... }
+ *     set(value) { ... }
  * ```
  * ```
  * val sub: SubClass = SubClass()
@@ -60,7 +60,7 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * fun KotlinClass.Companion.extensionFun() { ... }
  * var KotlinClass.Companion.extensionProperty: Int
  *     get { ... }
- *     set { ... }
+ *     set(value) { ... }
  * ```
  * * To use an extension outside its declaring package, import it at the call site:
  * ```
