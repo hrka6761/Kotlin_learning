@@ -21,7 +21,7 @@ import kotlin.time.measureTime
  * val intArray = [1,2,3]
  * fun1(intArray)
  * ```
- * * `Infix` functions must meet the following requirements:
+ * * `Infix` functions:
  *    * They must be member functions or extension functions.
  *    * They must have a single parameter.
  *    * The parameter must not accept variable number of arguments and must have no default value.
@@ -41,7 +41,8 @@ import kotlin.time.measureTime
  *    * Top level function (in a file).
  *    * local function (in a function).
  *    * member function (in a class).
- * * A `tailrec` function is a recursive function that is optimized by the compiler to prevent stack overflow errors by reusing the same stack frame for recursive calls:
+ * * `tailrec` function:
+ *    * It is a recursive function that is optimized by the compiler to prevent stack overflow errors by reusing the same stack frame for recursive calls.
  * ```
  * tailrec fun factorial(n: Int, acc: Int = 1): Int {
  *     return if (n <= 1) acc else factorial(n - 1, acc * n)
@@ -51,7 +52,8 @@ import kotlin.time.measureTime
  * * You cannot use tail recursion when there is more code after the recursive call, within try/catch/finally blocks, or on open functions.
  * * Kotlin functions are first-class, which means they can be stored in variables and data structures,
  * and can be passed as arguments to and returned from other higher-order functions.
- * * A `higher-order function` is a function that takes functions as parameters, or returns a function:
+ * * higher-order function:
+ *    * It is a function that takes functions as parameters, or returns a function.
  * ```
  * fun highOrderFunction(function1: (String) -> Unit):
  *             (str: String, Int) -> Boolean {
@@ -61,7 +63,8 @@ import kotlin.time.measureTime
  *     return returnedFun
  * }
  * ```
- * * Function literals are functions that are not declared but are passed immediately as an expression:
+ * * Function literals:
+ *    * They are functions that are not declared but are passed immediately as an expression.
  * ```
  * fun highOrderFunction1(
  *      function1: () -> Unit,
@@ -104,9 +107,15 @@ import kotlin.time.measureTime
  * ```
  * * If an exception is thrown from an lambda passed into high order function rest of the code after it dose not execute.
  * * We can use a `callable reference` to an existing declaration:
- *    * a top-level, local, member, or extension function (::isOdd, String::toInt).
- *    * a top-level, member, or extension property (List<Int>::size).
- *    * a constructor (::Regex).
+ * ```
+ * //a top-level, local, member, or extension function
+ * ::isOdd
+ * String::toInt
+ * //a top-level, member, or extension property
+ * List<Int>::size
+ * // a constructor
+ * ::Regex
+ * ```
  * ```
  * val callableReferenceFunction1 = ::anonymousFunction1
  * val callableReferenceFunction2 = List<String>::size
@@ -122,7 +131,7 @@ import kotlin.time.measureTime
  *    * each function is an object.
  *    * each function captures a closure.
  * * A closure is a scope of variables that can be accessed in the body of the function.
- * * Benefits of `Inline` functions:
+ * * `Inline` functions:
  *    * When you mark a function as inline, the Kotlin compiler replaces the function call with the actual function body.
  *    This avoids creating a function object and stack frame for each call, which reduces overhead and can improve performance.
  *    * This is particularly beneficial for short and frequently called functions.
@@ -166,13 +175,15 @@ import kotlin.time.measureTime
  *     set(value) { ... }
  * ```
  * * At the call site, inline accessors are inlined as regular inline functions.
- * * To implement an `operator` function, provide a member function or an extension function
- * with a specific name for the corresponding type:
+ * * `operator` functions:
+ *    * To implement an `operator` function, provide a member function or an extension function
+ *     with a specific name for the corresponding type.
  * ```
  * // Int function
  * public operator fun plus(other: Int): Int
  * ```
- * * When we mark a function with `suspend`, we can only use this function in coroutines or another suspend function:
+ * * `suspend` functions:
+ *    * When we mark a function with `suspend`, we can only use this function in coroutines or another suspend function.
  * ```
  * suspend fun suspendFun() { ... }
  * ```
