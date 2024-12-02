@@ -1,11 +1,11 @@
-package ir.hrka.kotlin.data.repositories
+package ir.hrka.kotlin.data.repositories.github
 
 import ir.hrka.kotlin.core.Constants.RETROFIT_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.github.GithubAPI
 import ir.hrka.kotlin.domain.entities.RepoFileModel
 import ir.hrka.kotlin.domain.entities.ErrorModel
-import ir.hrka.kotlin.domain.repositories.AppInfoRepo
+import ir.hrka.kotlin.domain.repositories.github.AppInfoRepo
 import javax.inject.Inject
 
 class AppInfoRepoImpl @Inject constructor(

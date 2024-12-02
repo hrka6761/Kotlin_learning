@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.domain.repositories
+package ir.hrka.kotlin.domain.repositories.db
 
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.PointDataModel

@@ -4,8 +4,8 @@ import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.decodeBase64
 import ir.hrka.kotlin.core.utilities.extractVersionNameFromGradleContent
 import ir.hrka.kotlin.domain.entities.db.Cheatsheet
-import ir.hrka.kotlin.domain.repositories.AppInfoRepo
-import ir.hrka.kotlin.domain.repositories.ReadGithubCheatSheetRepo
+import ir.hrka.kotlin.domain.repositories.github.AppInfoRepo
+import ir.hrka.kotlin.domain.repositories.github.ReadGithubCheatSheetRepo
 import javax.inject.Inject
 
 class GetGithubCheatSheetsUseCase @Inject constructor(

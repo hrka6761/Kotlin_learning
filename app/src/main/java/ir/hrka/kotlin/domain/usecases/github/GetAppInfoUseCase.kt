@@ -8,7 +8,7 @@ import ir.hrka.kotlin.core.utilities.extractVersionNameFromGradleContent
 import ir.hrka.kotlin.core.utilities.extractVersionSuffixFromGradleContent
 import ir.hrka.kotlin.domain.entities.AppInfoModel
 import ir.hrka.kotlin.domain.entities.ErrorModel
-import ir.hrka.kotlin.domain.repositories.AppInfoRepo
+import ir.hrka.kotlin.domain.repositories.github.AppInfoRepo
 import javax.inject.Inject
 
 class GetAppInfoUseCase @Inject constructor(private val appInfoRepo: AppInfoRepo) {

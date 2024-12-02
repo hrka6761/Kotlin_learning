@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.domain.repositories
+package ir.hrka.kotlin.domain.repositories.preference
 
 import ir.hrka.kotlin.core.utilities.Resource
 

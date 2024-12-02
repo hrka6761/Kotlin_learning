@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.domain.usecases.github
 
-import ir.hrka.kotlin.domain.repositories.ReadGithubCheatSheetRepo
+import ir.hrka.kotlin.domain.repositories.github.ReadGithubCheatSheetRepo
 import javax.inject.Inject
 
 class GetGithubCheatSheetPointsUseCase @Inject constructor(private val readGithubCheatSheetRepo: ReadGithubCheatSheetRepo) {

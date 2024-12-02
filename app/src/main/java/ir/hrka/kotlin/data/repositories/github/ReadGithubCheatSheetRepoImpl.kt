@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.data.repositories
+package ir.hrka.kotlin.data.repositories.github
 
 import ir.hrka.kotlin.core.Constants.READ_FILE_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.RETROFIT_ERROR_CODE
@@ -14,7 +14,7 @@ import ir.hrka.kotlin.data.datasource.github.GithubAPI
 import ir.hrka.kotlin.domain.entities.ErrorModel
 import ir.hrka.kotlin.domain.entities.PointDataModel
 import ir.hrka.kotlin.domain.entities.RepoFileModel
-import ir.hrka.kotlin.domain.repositories.ReadGithubCheatSheetRepo
+import ir.hrka.kotlin.domain.repositories.github.ReadGithubCheatSheetRepo
 import javax.inject.Inject
 
 class ReadGithubCheatSheetRepoImpl @Inject constructor(

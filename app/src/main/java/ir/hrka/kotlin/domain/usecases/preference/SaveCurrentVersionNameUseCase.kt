@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.domain.usecases.preference
 
-import ir.hrka.kotlin.domain.repositories.VersionDataRepo
+import ir.hrka.kotlin.domain.repositories.preference.VersionDataRepo
 import javax.inject.Inject
 
 class SaveCurrentVersionNameUseCase @Inject constructor(private val versionDataRepo: VersionDataRepo) {

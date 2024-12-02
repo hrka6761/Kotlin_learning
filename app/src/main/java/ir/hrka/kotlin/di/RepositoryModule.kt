@@ -4,16 +4,16 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ir.hrka.kotlin.data.repositories.AppInfoRepoImpl
-import ir.hrka.kotlin.data.repositories.ReadDBCheatSheetRepoImpl
-import ir.hrka.kotlin.data.repositories.ReadGithubCheatSheetRepoImpl
-import ir.hrka.kotlin.data.repositories.WriteDBCheatsheetRepoImpl
-import ir.hrka.kotlin.data.repositories.VersionDataRepoImpl
-import ir.hrka.kotlin.domain.repositories.AppInfoRepo
-import ir.hrka.kotlin.domain.repositories.ReadGithubCheatSheetRepo
-import ir.hrka.kotlin.domain.repositories.WriteDBCheatsheetRepo
-import ir.hrka.kotlin.domain.repositories.VersionDataRepo
-import ir.hrka.kotlin.domain.repositories.ReadDBCheatSheetRepo
+import ir.hrka.kotlin.data.repositories.github.AppInfoRepoImpl
+import ir.hrka.kotlin.data.repositories.db.ReadDBCheatSheetRepoImpl
+import ir.hrka.kotlin.data.repositories.github.ReadGithubCheatSheetRepoImpl
+import ir.hrka.kotlin.data.repositories.db.WriteDBCheatsheetRepoImpl
+import ir.hrka.kotlin.data.repositories.preference.VersionDataRepoImpl
+import ir.hrka.kotlin.domain.repositories.github.AppInfoRepo
+import ir.hrka.kotlin.domain.repositories.github.ReadGithubCheatSheetRepo
+import ir.hrka.kotlin.domain.repositories.db.WriteDBCheatsheetRepo
+import ir.hrka.kotlin.domain.repositories.preference.VersionDataRepo
+import ir.hrka.kotlin.domain.repositories.db.ReadDBCheatSheetRepo
 
 @InstallIn(SingletonComponent::class)
 @Module

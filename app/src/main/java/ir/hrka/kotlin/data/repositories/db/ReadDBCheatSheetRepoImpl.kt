@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.data.repositories
+package ir.hrka.kotlin.data.repositories.db
 
 import ir.hrka.kotlin.core.Constants.DB_READ_CHEATSHEETS_LIST_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.DB_READ_CHEATSHEET_POINTS_ERROR_CODE
@@ -10,7 +10,7 @@ import ir.hrka.kotlin.data.datasource.db.dbinteractions.SubPointDao
 import ir.hrka.kotlin.domain.entities.ErrorModel
 import ir.hrka.kotlin.domain.entities.PointDataModel
 import ir.hrka.kotlin.domain.entities.db.Cheatsheet
-import ir.hrka.kotlin.domain.repositories.ReadDBCheatSheetRepo
+import ir.hrka.kotlin.domain.repositories.db.ReadDBCheatSheetRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async

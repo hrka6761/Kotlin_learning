@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.data.repositories
+package ir.hrka.kotlin.data.repositories.db
 
 import ir.hrka.kotlin.core.Constants.DB_CLEAR_CHEATSHEET_TABLE_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.DB_DELETE_CHEATSHEET_POINTS_ERROR_CODE
@@ -19,7 +19,7 @@ import ir.hrka.kotlin.domain.entities.db.Cheatsheet
 import ir.hrka.kotlin.domain.entities.db.Point
 import ir.hrka.kotlin.domain.entities.db.SnippetCode
 import ir.hrka.kotlin.domain.entities.db.SubPoint
-import ir.hrka.kotlin.domain.repositories.WriteDBCheatsheetRepo
+import ir.hrka.kotlin.domain.repositories.db.WriteDBCheatsheetRepo
 import javax.inject.Inject
 
 class WriteDBCheatsheetRepoImpl @Inject constructor(
