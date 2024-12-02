@@ -19,7 +19,7 @@ import ir.hrka.kotlin.domain.entities.db.Cheatsheet
 import ir.hrka.kotlin.domain.entities.db.Point
 import ir.hrka.kotlin.domain.entities.db.SnippetCode
 import ir.hrka.kotlin.domain.entities.db.SubPoint
-import ir.hrka.kotlin.domain.repositories.WriteCheatsheetRepo
+import ir.hrka.kotlin.domain.repositories.WriteDBCheatsheetRepo
 import javax.inject.Inject
 
 class WriteDBCheatsheetRepoImpl @Inject constructor(
@@ -27,7 +27,7 @@ class WriteDBCheatsheetRepoImpl @Inject constructor(
     private val pointDao: PointDao,
     private val subPointDao: SubPointDao,
     private val snippetCodeDao: SnippetCodeDao
-) : WriteCheatsheetRepo {
+) : WriteDBCheatsheetRepo {
 
     override suspend fun saveCheatSheetsOnDB(cheatsheets: List<Cheatsheet>): Resource<Boolean> {
         return try {

@@ -6,7 +6,7 @@ import ir.hrka.kotlin.domain.entities.db.Point
 import ir.hrka.kotlin.domain.entities.db.SnippetCode
 import ir.hrka.kotlin.domain.entities.db.SubPoint
 
-interface WriteCheatsheetRepo {
+interface WriteDBCheatsheetRepo {
 
     suspend fun saveCheatSheetsOnDB(cheatsheets: List<Cheatsheet>): Resource<Boolean>
     suspend fun clearCheatsheetTable(): Resource<Boolean>

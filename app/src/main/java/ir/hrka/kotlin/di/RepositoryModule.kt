@@ -8,11 +8,11 @@ import ir.hrka.kotlin.data.repositories.AppInfoRepoImpl
 import ir.hrka.kotlin.data.repositories.ReadDBCheatSheetRepoImpl
 import ir.hrka.kotlin.data.repositories.ReadGithubCheatSheetRepoImpl
 import ir.hrka.kotlin.data.repositories.WriteDBCheatsheetRepoImpl
-import ir.hrka.kotlin.data.repositories.LocalDataRepoImpl
+import ir.hrka.kotlin.data.repositories.VersionDataRepoImpl
 import ir.hrka.kotlin.domain.repositories.AppInfoRepo
 import ir.hrka.kotlin.domain.repositories.ReadGithubCheatSheetRepo
-import ir.hrka.kotlin.domain.repositories.WriteCheatsheetRepo
-import ir.hrka.kotlin.domain.repositories.LocalDataRepo
+import ir.hrka.kotlin.domain.repositories.WriteDBCheatsheetRepo
+import ir.hrka.kotlin.domain.repositories.VersionDataRepo
 import ir.hrka.kotlin.domain.repositories.ReadDBCheatSheetRepo
 
 @InstallIn(SingletonComponent::class)
@@ -29,8 +29,8 @@ interface RepositoryModule {
     fun bindDBCheatSheetsListRepo(readDBCheatSheetsRepoImpl: ReadDBCheatSheetRepoImpl): ReadDBCheatSheetRepo
 
     @Binds
-    fun bindLocalDataRepo(localDataRepoImpl: LocalDataRepoImpl): LocalDataRepo
+    fun bindLocalDataRepo(localDataRepoImpl: VersionDataRepoImpl): VersionDataRepo
 
     @Binds
-    fun bindDBRepo(writeDbCheatSheetsRepoImpl: WriteDBCheatsheetRepoImpl): WriteCheatsheetRepo
+    fun bindDBRepo(writeDbCheatSheetsRepoImpl: WriteDBCheatsheetRepoImpl): WriteDBCheatsheetRepo
 }

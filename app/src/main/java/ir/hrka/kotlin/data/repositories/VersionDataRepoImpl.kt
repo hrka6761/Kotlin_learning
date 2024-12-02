@@ -6,12 +6,12 @@ import ir.hrka.kotlin.core.Constants.VERSION_NAME_KEY
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.preference.LocalDataSource
 import ir.hrka.kotlin.domain.entities.ErrorModel
-import ir.hrka.kotlin.domain.repositories.LocalDataRepo
+import ir.hrka.kotlin.domain.repositories.VersionDataRepo
 import javax.inject.Inject
 
-class LocalDataRepoImpl @Inject constructor(
+class VersionDataRepoImpl @Inject constructor(
     private val localDataSource: LocalDataSource
-) : LocalDataRepo {
+) : VersionDataRepo {
 
     override suspend fun saveCurrentVersionName(versionName: String): Resource<Boolean> {
         return try {
