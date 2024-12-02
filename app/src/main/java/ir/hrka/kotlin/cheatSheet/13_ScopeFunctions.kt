@@ -9,11 +9,11 @@ package ir.hrka.kotlin.cheatSheet
  *    * The way they refer to the context object.
  *    * Their return value.
  * * Each scope function uses one of two ways to reference the context object:
- *    * as a lambda receiver (this) --> `run` `with` `apply`
- *    * as a lambda argument (it)   --> `also` `let`
+ *    * as a lambda receiver (this) --> `run` `with` `apply`.
+ *    * as a lambda argument (it)   --> `also` `let`.
  * * Each scope function returns one of the following two items:
- *    * context object --> `apply` `also`
- *    * lambda result  --> `let` `run` `with`
+ *    * context object --> `apply` `also`.
+ *    * lambda result  --> `let` `run` `with`.
  * * `takeIf`:
  *    * When called on an object along with a predicate, takeIf returns this object if it satisfies the
  *    given predicate Otherwise, it returns null So, takeIf is a filtering function for a single object.
