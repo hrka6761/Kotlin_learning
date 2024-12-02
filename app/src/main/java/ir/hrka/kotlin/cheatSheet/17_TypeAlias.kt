@@ -1,7 +1,21 @@
 package ir.hrka.kotlin.cheatSheet
 
 /**
- * * Type aliases provide alternative names for existing types.
+ * * Type aliases provide alternative names for existing types:
+ * ```
+ * typealias FI = FunctionalInterface
+ * typealias lambda = (String, Int) -> Boolean
+ * typealias Generic = GenericClass<String, Int, Long>
+ * typealias NestedClass = OuterClass.NestedClass
+ * typealias Inner = OuterClass.InnerClass
+ * ```
+ * ```
+ * val fi: FI = FI()
+ * val lambda: lambda = {str, int -> false}
+ * val generic: Generic = Generic()
+ * val nestedClass: NestedClass = NestedClass()
+ * val inner: Inner = Inner()
+ * ```
  * * Type aliases do not introduce new types. They are equivalent to the corresponding underlying types.
  * * If the type name is too long you can introduce a different shorter name and use the new one instead.
  * * It's useful to shorten long generic types.
