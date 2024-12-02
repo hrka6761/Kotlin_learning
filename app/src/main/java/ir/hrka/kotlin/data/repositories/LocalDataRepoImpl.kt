@@ -4,7 +4,7 @@ import ir.hrka.kotlin.core.Constants.LOCAL_DATA_READ_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.LOCAL_DATA_WRITE_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.VERSION_NAME_KEY
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.data.datasource.LocalDataSource
+import ir.hrka.kotlin.data.datasource.preference.LocalDataSource
 import ir.hrka.kotlin.domain.entities.ErrorModel
 import ir.hrka.kotlin.domain.repositories.LocalDataRepo
 import javax.inject.Inject

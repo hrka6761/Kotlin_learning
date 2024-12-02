@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.data.datasource
+package ir.hrka.kotlin.data.datasource.db.dbinteractions
 
 import androidx.room.Dao
 import androidx.room.Insert

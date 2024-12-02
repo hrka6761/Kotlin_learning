@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ir.hrka.kotlin.core.Constants.BASE_URL
-import ir.hrka.kotlin.data.datasource.GithubAPI
+import ir.hrka.kotlin.data.datasource.github.GithubAPI
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.data.datasource
+package ir.hrka.kotlin.data.datasource.github
 
 import ir.hrka.kotlin.core.Constants.TOKEN
 import ir.hrka.kotlin.domain.entities.RepoFileModel

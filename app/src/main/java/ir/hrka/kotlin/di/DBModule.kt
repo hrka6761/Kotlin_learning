@@ -8,11 +8,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ir.hrka.kotlin.core.Constants.DATABASE_NAME
-import ir.hrka.kotlin.data.datasource.AppDatabase
-import ir.hrka.kotlin.data.datasource.CheatsheetDao
-import ir.hrka.kotlin.data.datasource.PointDao
-import ir.hrka.kotlin.data.datasource.SnippetCodeDao
-import ir.hrka.kotlin.data.datasource.SubPointDao
+import ir.hrka.kotlin.data.datasource.db.AppDatabase
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.CheatsheetDao
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.PointDao
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.SnippetCodeDao
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.SubPointDao
 import javax.inject.Singleton
 
 

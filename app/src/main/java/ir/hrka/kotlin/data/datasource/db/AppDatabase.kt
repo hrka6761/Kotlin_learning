@@ -1,7 +1,11 @@
-package ir.hrka.kotlin.data.datasource
+package ir.hrka.kotlin.data.datasource.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.CheatsheetDao
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.PointDao
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.SnippetCodeDao
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.SubPointDao
 import ir.hrka.kotlin.domain.entities.db.Cheatsheet
 import ir.hrka.kotlin.domain.entities.db.Point
 import ir.hrka.kotlin.domain.entities.db.SnippetCode

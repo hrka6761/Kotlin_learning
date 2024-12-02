@@ -3,10 +3,10 @@ package ir.hrka.kotlin.data.repositories
 import ir.hrka.kotlin.core.Constants.DB_READ_CHEATSHEETS_LIST_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.DB_READ_CHEATSHEET_POINTS_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.data.datasource.CheatsheetDao
-import ir.hrka.kotlin.data.datasource.PointDao
-import ir.hrka.kotlin.data.datasource.SnippetCodeDao
-import ir.hrka.kotlin.data.datasource.SubPointDao
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.CheatsheetDao
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.PointDao
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.SnippetCodeDao
+import ir.hrka.kotlin.data.datasource.db.dbinteractions.SubPointDao
 import ir.hrka.kotlin.domain.entities.ErrorModel
 import ir.hrka.kotlin.domain.entities.PointDataModel
 import ir.hrka.kotlin.domain.entities.db.Cheatsheet

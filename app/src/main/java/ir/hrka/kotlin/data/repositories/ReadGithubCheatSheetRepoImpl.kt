@@ -10,7 +10,7 @@ import ir.hrka.kotlin.core.utilities.extractJavaDocsFromCheatSheetFileContent
 import ir.hrka.kotlin.core.utilities.extractRawPointsFromJavaDocContent
 import ir.hrka.kotlin.core.utilities.extractSnippetCodeFromPoint
 import ir.hrka.kotlin.core.utilities.extractSubPointsFromPointContent
-import ir.hrka.kotlin.data.datasource.GithubAPI
+import ir.hrka.kotlin.data.datasource.github.GithubAPI
 import ir.hrka.kotlin.domain.entities.ErrorModel
 import ir.hrka.kotlin.domain.entities.PointDataModel
 import ir.hrka.kotlin.domain.entities.RepoFileModel
