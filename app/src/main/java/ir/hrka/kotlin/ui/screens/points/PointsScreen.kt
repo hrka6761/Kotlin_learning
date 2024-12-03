@@ -59,6 +59,7 @@ import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
 import ir.hrka.kotlin.domain.entities.PointDataModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun PointsScreen(
@@ -146,9 +147,16 @@ fun PointsScreen(
 
     LaunchedEffect(Unit) {
         if (executionState == Start) {
-            if (hasContentUpdated)
+            viewModel.setExecutionState(Loading)
+            if (hasContentUpdated) {
+                launch {
+                    snackBarHostState.showSnackbar(
+                        message = activity.getString(R.string.fetching_new_points_list_msg),
+                        duration = SnackbarDuration.Short
+                    )
+                }
                 viewModel.getPointsFromGithub(cheatsheetFileName)
-            else
+            } else
                 viewModel.getPointsFromDatabase(cheatsheetFileName)
         }
     }
@@ -156,18 +164,8 @@ fun PointsScreen(
     LaunchedEffect(points) {
         if (executionState != Stop) {
             when (points) {
-                is Resource.Initial -> {
-                    viewModel.setExecutionState(Loading)
-                }
-
-                is Resource.Loading -> {
-                    if (hasContentUpdated)
-                        snackBarHostState.showSnackbar(
-                            message = activity.getString(R.string.fetching_new_points_list_msg),
-                            duration = SnackbarDuration.Long
-                        )
-                }
-
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
                 is Resource.Success -> {
                     if (hasContentUpdated)
                         viewModel.saveCheatsheetPointsOnDB(cheatsheetFileName)
