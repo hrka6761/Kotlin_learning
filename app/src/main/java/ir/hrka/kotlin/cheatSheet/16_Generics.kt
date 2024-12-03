@@ -119,6 +119,12 @@ import java.io.Serializable
  * val list: MutableList<+> = mutableListOf(1, "", false, Class())
  * list.add(1)
  * ```
+ * * When we want to constraint type params in generic function we can use `where` keyword:
+ *    * When we use "where" for a parameter, that parameter must be of the same type or subclasses.
+ * ```
+ * fun <T, U, V> genericFunction(t: T, u: U, v: V): V
+ *   where T: AnyType, U:AnyType { ... }
+ * ```
  */
 
 class GenericClass<T : Serializable, U, V>
@@ -173,6 +179,13 @@ class ConsumeInt : ContravariantGenerics<Int> {
 
 fun <T, U, V> genericFunction(value1: T, value2: U, value3: V): V {
     printYellow("value1 = ${value1!!::class.java}\nvalue2 = ${value2!!::class.java}\nvalue3 = ${value3!!::class.java}")
+
+    return value3
+}
+
+fun <T, U, V> constraintGenericFunction(value1: T, value2: U, value3: V): V
+ where T: Class, U: Interface, V: AbstractClass{
+    printYellow("value1 = ${value1::class.java}\nvalue2 = ${value2::class.java}\nvalue3 = ${value3::class.java}")
 
     return value3
 }
