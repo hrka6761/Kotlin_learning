@@ -87,7 +87,7 @@ fun CheatSheetScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { HomeAppBar(navHostController) },
+        topBar = { CheatSheetsAppBar(navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -258,15 +258,11 @@ fun CheatSheetScreen(
             }
         }
     }
-
-    BackHandler {
-        activity.finish()
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeAppBar(navHostController: NavHostController) {
+fun CheatSheetsAppBar(navHostController: NavHostController) {
     CenterAlignedTopAppBar(
         title = { Text(stringResource(R.string.home_app_bar_title)) },
         navigationIcon = {
