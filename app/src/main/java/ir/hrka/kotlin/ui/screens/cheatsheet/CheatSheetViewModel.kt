@@ -1,10 +1,8 @@
-package ir.hrka.kotlin.ui.screens.home
+package ir.hrka.kotlin.ui.screens.cheatsheet
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.ExecutionState
 import ir.hrka.kotlin.core.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
@@ -29,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class CheatSheetViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val getGithubCheatSheetsUseCase: GetGithubCheatSheetsUseCase,
     private val getDBCheatsheetsUseCase: GetDBCheatSheetsUseCase,

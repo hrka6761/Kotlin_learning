@@ -1,6 +1,5 @@
-package ir.hrka.kotlin.ui.screens.home
+package ir.hrka.kotlin.ui.screens.cheatsheet
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -52,7 +51,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.ExecutionState.Start
 import ir.hrka.kotlin.core.ExecutionState.Loading
 import ir.hrka.kotlin.core.ExecutionState.Stop
@@ -65,14 +63,14 @@ import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
 import ir.hrka.kotlin.domain.entities.db.Cheatsheet
 
 @Composable
-fun HomeScreen(
+fun CheatSheetScreen(
     activity: MainActivity,
     navHostController: NavHostController,
     githubVersionName: String?,
     githubVersionSuffix: String?
 ) {
 
-    val viewModel: HomeViewModel = hiltViewModel()
+    val viewModel: CheatSheetViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
     val cheatSheets by viewModel.cheatSheets.collectAsState()
     val executionState by viewModel.executionState.collectAsState()
@@ -383,6 +381,6 @@ fun CheatSheetItem(
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreenPreview() {
-    HomeScreen(MainActivity(), rememberNavController(), "", "")
+fun CheatSheetScreenPreview() {
+    CheatSheetScreen(MainActivity(), rememberNavController(), "", "")
 }

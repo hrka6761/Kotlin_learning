@@ -16,12 +16,12 @@ import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_ID
 import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME
 import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME
 import ir.hrka.kotlin.core.utilities.Screen.Splash
-import ir.hrka.kotlin.core.utilities.Screen.Home
+import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
 import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.core.utilities.Screen.Profile
 import ir.hrka.kotlin.ui.screens.profile.ProfileScreen
 import ir.hrka.kotlin.ui.screens.points.PointsScreen
-import ir.hrka.kotlin.ui.screens.home.HomeScreen
+import ir.hrka.kotlin.ui.screens.cheatsheet.CheatSheetScreen
 import ir.hrka.kotlin.ui.screens.splash.SplashScreen
 import ir.hrka.kotlin.ui.theme.KotlinTheme
 
@@ -40,7 +40,7 @@ fun AppContent() {
                 SplashScreen(activity, navHostController)
             }
             composable(
-                route = "${Home()}/{${HOME_SCREEN_ARGUMENT_VERSION_NAME}}/{${HOME_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
+                route = "${CheatSheet()}/{${HOME_SCREEN_ARGUMENT_VERSION_NAME}}/{${HOME_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
                 arguments = listOf(
                     navArgument(HOME_SCREEN_ARGUMENT_VERSION_NAME) { type = NavType.StringType },
                     navArgument(HOME_SCREEN_ARGUMENT_VERSION_SUFFIX) { type = NavType.StringType },
@@ -50,7 +50,7 @@ fun AppContent() {
                     backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_VERSION_NAME)
                 val githubVersionSuffix =
                     backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_VERSION_SUFFIX)
-                HomeScreen(activity, navHostController, githubVersionName, githubVersionSuffix)
+                CheatSheetScreen(activity, navHostController, githubVersionName, githubVersionSuffix)
             }
             composable(
                 route = "${Point()}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME}}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME}}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_ID}}",
