@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.ui.screens.cheatsheet
+package ir.hrka.kotlin.ui.screens.cheatsheets
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -70,7 +70,7 @@ fun CheatSheetScreen(
     githubVersionSuffix: String?
 ) {
 
-    val viewModel: CheatSheetViewModel = hiltViewModel()
+    val viewModel: CheatSheetsViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
     val cheatSheets by viewModel.cheatSheets.collectAsState()
     val executionState by viewModel.executionState.collectAsState()

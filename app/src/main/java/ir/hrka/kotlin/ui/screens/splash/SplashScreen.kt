@@ -39,7 +39,7 @@ import ir.hrka.kotlin.core.Constants.NEW_VERSION_CONTINUE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_AVAILABLE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
+import ir.hrka.kotlin.core.utilities.Screen.Home
 import kotlinx.coroutines.delay
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -211,7 +211,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 viewModel.setExecutionState(Stop)
                 delay(500)
                 navHostController.navigate(
-                    CheatSheet.appendArg(
+                    Home.appendArg(
                         appInfo.data?.versionName ?: "",
                         appInfo.data?.versionNameSuffix ?: ""
                     )
@@ -223,7 +223,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 )
                 viewModel.setExecutionState(Stop)
                 navHostController.navigate(
-                    CheatSheet.appendArg(
+                    Home.appendArg(
                         appInfo.data?.versionName ?: "",
                         appInfo.data?.versionNameSuffix ?: ""
                     )
@@ -234,7 +234,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                     activity.finish()
                 else
                     navHostController.navigate(
-                        CheatSheet.appendArg(
+                        Home.appendArg(
                             appInfo.data?.versionName ?: "",
                             appInfo.data?.versionNameSuffix ?: ""
                         )

@@ -10,18 +10,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ir.hrka.kotlin.core.Constants.CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME
+import ir.hrka.kotlin.core.Constants.CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN_ARGUMENT_VERSION_NAME
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN_ARGUMENT_VERSION_SUFFIX
 import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_ID
 import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME
 import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME
 import ir.hrka.kotlin.core.utilities.Screen.Splash
+import ir.hrka.kotlin.core.utilities.Screen.Home
 import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
 import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.core.utilities.Screen.Profile
 import ir.hrka.kotlin.ui.screens.profile.ProfileScreen
 import ir.hrka.kotlin.ui.screens.points.PointsScreen
-import ir.hrka.kotlin.ui.screens.cheatsheet.CheatSheetScreen
+import ir.hrka.kotlin.ui.screens.cheatsheets.CheatSheetScreen
+import ir.hrka.kotlin.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.ui.screens.splash.SplashScreen
 import ir.hrka.kotlin.ui.theme.KotlinTheme
 
@@ -36,11 +40,13 @@ fun AppContent() {
             navController = navHostController,
             startDestination = Splash()
         ) {
-            composable(route = Splash()) {
+            composable(
+                route = Splash()
+            ) {
                 SplashScreen(activity, navHostController)
             }
             composable(
-                route = "${CheatSheet()}/{${HOME_SCREEN_ARGUMENT_VERSION_NAME}}/{${HOME_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
+                route = "${Home()}/{${HOME_SCREEN_ARGUMENT_VERSION_NAME}}/{${HOME_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
                 arguments = listOf(
                     navArgument(HOME_SCREEN_ARGUMENT_VERSION_NAME) { type = NavType.StringType },
                     navArgument(HOME_SCREEN_ARGUMENT_VERSION_SUFFIX) { type = NavType.StringType },
@@ -50,6 +56,19 @@ fun AppContent() {
                     backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_VERSION_NAME)
                 val githubVersionSuffix =
                     backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_VERSION_SUFFIX)
+                HomeScreen(activity, navHostController, githubVersionName, githubVersionSuffix)
+            }
+            composable(
+                route = "${CheatSheet()}/{${CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME}}/{${CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
+                arguments = listOf(
+                    navArgument(CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME) { type = NavType.StringType },
+                    navArgument(CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX) { type = NavType.StringType },
+                )
+            ) { backStackEntry ->
+                val githubVersionName =
+                    backStackEntry.arguments?.getString(CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME)
+                val githubVersionSuffix =
+                    backStackEntry.arguments?.getString(CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX)
                 CheatSheetScreen(activity, navHostController, githubVersionName, githubVersionSuffix)
             }
             composable(

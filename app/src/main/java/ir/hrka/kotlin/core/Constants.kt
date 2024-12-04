@@ -4,7 +4,8 @@ object Constants {
 
     const val TAG = "KotlinCheatSheetProject"
     const val SPLASH_SCREEN = "splash"
-    const val CHEATSHEET_SCREEN = "home"
+    const val HOME_SCREEN = "home"
+    const val CHEATSHEETS_SCREEN = "cheatsheets"
     const val POINT_SCREEN = "pointSheet"
     const val PROFILE_SCREEN = "profileSheet"
     const val POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME = "CheatSheetName"
@@ -12,6 +13,8 @@ object Constants {
     const val POINT_SCREEN_ARGUMENT_CHEATSHEET_ID = "cheatsheetId"
     const val CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
     const val CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
+    const val HOME_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
+    const val HOME_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
     const val TOKEN = "This is a secret."
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
     const val RETROFIT_ERROR_CODE = 1000

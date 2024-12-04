@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.ui.screens.cheatsheet
+package ir.hrka.kotlin.ui.screens.cheatsheets
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class CheatSheetViewModel @Inject constructor(
+class CheatSheetsViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val getGithubCheatSheetsUseCase: GetGithubCheatSheetsUseCase,
     private val getDBCheatsheetsUseCase: GetDBCheatSheetsUseCase,
