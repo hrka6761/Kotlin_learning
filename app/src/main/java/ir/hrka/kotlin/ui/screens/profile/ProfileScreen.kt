@@ -50,6 +50,7 @@ import ir.hrka.kotlin.core.Constants.LINKEDIN_URL
 import ir.hrka.kotlin.core.Constants.SOURCE_URL
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 
 @SuppressLint("SwitchIntDef")
@@ -78,6 +79,10 @@ fun ProfileScreen(activity: MainActivity, navHostController: NavHostController) 
             ORIENTATION_PORTRAIT -> PortraitScreen(viewModel, activity, innerPaddings)
             ORIENTATION_LANDSCAPE -> LandscapeScreen(viewModel, activity, innerPaddings)
         }
+    }
+
+    BackHandler {
+        navHostController.popBackStack()
     }
 }
 
@@ -419,7 +424,7 @@ fun LandscapeScreen(
 
 @Preview(
     showBackground = true,
-    device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
+//    device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
 )
 @Composable
 fun ProfileScreenPreview() {

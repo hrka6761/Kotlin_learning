@@ -61,15 +61,24 @@ fun AppContent() {
             composable(
                 route = "${CheatSheet()}/{${CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME}}/{${CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
                 arguments = listOf(
-                    navArgument(CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME) { type = NavType.StringType },
-                    navArgument(CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX) { type = NavType.StringType },
+                    navArgument(CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME) {
+                        type = NavType.StringType
+                    },
+                    navArgument(CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX) {
+                        type = NavType.StringType
+                    },
                 )
             ) { backStackEntry ->
                 val githubVersionName =
                     backStackEntry.arguments?.getString(CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME)
                 val githubVersionSuffix =
                     backStackEntry.arguments?.getString(CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX)
-                CheatSheetScreen(activity, navHostController, githubVersionName, githubVersionSuffix)
+                CheatSheetScreen(
+                    activity,
+                    navHostController,
+                    githubVersionName,
+                    githubVersionSuffix
+                )
             }
             composable(
                 route = "${Point()}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME}}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME}}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_ID}}",
@@ -93,7 +102,9 @@ fun AppContent() {
                     hasContentUpdated == "true"
                 )
             }
-            composable(route = Profile()) {
+            composable(
+                route = Profile()
+            ) {
                 ProfileScreen(activity, navHostController)
             }
         }

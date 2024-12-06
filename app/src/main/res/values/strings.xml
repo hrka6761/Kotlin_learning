@@ -24,6 +24,7 @@
     <string name="profile_screen_linkedin_address">https://www.linkedin.com/in/hamidrezaka</string>
     <string name="profile_screen_author_email">hrk6761@gmail.com</string>
     <string name="home_app_bar_title">Kotlin Learning</string>
+    <string name="cheatsheet_app_bar_title">Kotlin Language</string>
     <string name="saving_points_on_the_database_msg">Saving points on the database.</string>
     <string name="failed_to_save_points_on_the_database_msg">Failed to Save points on the database.</string>
     <string name="home_screen_kotlin_learning_description">"Using the tips in this section, you will achieve complete mastery of Kotlin syntax. When you start using this section, all the tips are taken from GitHub repository and stored in your phone's database, and in your next uses, the tips are taken from the database. If new tips are created or existing tips are modified, the app will retrieve the new tips from GitHub repository and replace the previous ones. "</string>
@@ -31,4 +32,5 @@
     <string name="home_screen_kotlin_learning_title">Kotlin language</string>
     <string name="home_screen_coroutine_learning_title">Coroutine &amp; Flow</string>
     <string name="home_screen_kotlin_learning_btn_txt">Start Learning</string>
+    <string name="home_screen_coming_soon_msg">coming soon in the next version !!!</string>
 </resources>

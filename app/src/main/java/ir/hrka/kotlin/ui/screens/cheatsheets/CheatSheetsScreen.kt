@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -258,34 +260,22 @@ fun CheatSheetScreen(
             }
         }
     }
+
+    BackHandler {
+        navHostController.popBackStack()
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheatSheetsAppBar(navHostController: NavHostController) {
     CenterAlignedTopAppBar(
-        title = { Text(stringResource(R.string.home_app_bar_title)) },
+        title = { Text(stringResource(R.string.cheatsheet_app_bar_title)) },
         navigationIcon = {
-            Image(
-                modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp)
-                    .padding(start = 12.dp),
-                painter = painterResource(R.drawable.logo),
-                contentDescription = null,
-            )
-        },
-        actions = {
             IconButton(
-                onClick = { navHostController.navigate(Profile()) }
+                onClick = { navHostController.popBackStack() }
             ) {
-                Icon(
-                    modifier = Modifier
-                        .width(25.dp)
-                        .height(25.dp),
-                    painter = painterResource(R.drawable.github),
-                    contentDescription = null
-                )
+                Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
             }
         }
     )
