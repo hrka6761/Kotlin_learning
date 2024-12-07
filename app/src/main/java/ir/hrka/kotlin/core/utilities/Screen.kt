@@ -4,7 +4,7 @@ import ir.hrka.kotlin.core.Constants.POINT_SCREEN
 import ir.hrka.kotlin.core.Constants.SPLASH_SCREEN
 import ir.hrka.kotlin.core.Constants.CHEATSHEETS_SCREEN
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN
-import ir.hrka.kotlin.core.Constants.PROFILE_SCREEN
+import ir.hrka.kotlin.core.Constants.ABOUT_SCREEN
 
 
 enum class Screen(private val destination: String) {
@@ -13,7 +13,7 @@ enum class Screen(private val destination: String) {
     Home(HOME_SCREEN),
     CheatSheet(CHEATSHEETS_SCREEN),
     Point(POINT_SCREEN),
-    Profile(PROFILE_SCREEN);
+    About(ABOUT_SCREEN);
 
 
     operator fun invoke() = destination

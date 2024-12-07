@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.ui.screens.profile
+package ir.hrka.kotlin.ui.screens.about
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor() : ViewModel() {
+class AboutViewModel @Inject constructor() : ViewModel() {
 
     fun openUrl(context: Context, url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))

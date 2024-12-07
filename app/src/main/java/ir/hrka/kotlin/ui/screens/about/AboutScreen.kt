@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.ui.screens.profile
+package ir.hrka.kotlin.ui.screens.about
 
 import android.annotation.SuppressLint
 import android.content.ClipData
@@ -57,9 +57,9 @@ import androidx.compose.ui.layout.ContentScale
 
 @SuppressLint("SwitchIntDef")
 @Composable
-fun ProfileScreen(activity: MainActivity, navHostController: NavHostController) {
+fun AboutScreen(activity: MainActivity, navHostController: NavHostController) {
 
-    val viewModel: ProfileViewModel = hiltViewModel()
+    val viewModel: AboutViewModel = hiltViewModel()
     val configuration = LocalConfiguration.current
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -67,7 +67,7 @@ fun ProfileScreen(activity: MainActivity, navHostController: NavHostController) 
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        topBar = { ProfileAppBar(navHostController) },
+        topBar = { AboutAppBar(navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -90,7 +90,7 @@ fun ProfileScreen(activity: MainActivity, navHostController: NavHostController) 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileAppBar(navHostController: NavHostController) {
+fun AboutAppBar(navHostController: NavHostController) {
     TopAppBar(
         title = {
             Text(
@@ -110,7 +110,7 @@ fun ProfileAppBar(navHostController: NavHostController) {
 
 @Composable
 fun PortraitScreen(
-    viewModel: ProfileViewModel,
+    viewModel: AboutViewModel,
     activity: MainActivity,
     innerPaddings: PaddingValues
 ) {
@@ -313,7 +313,7 @@ fun PortraitScreen(
 
 @Composable
 fun LandscapeScreen(
-    viewModel: ProfileViewModel,
+    viewModel: AboutViewModel,
     activity: MainActivity,
     innerPaddings: PaddingValues
 ) {
@@ -517,6 +517,6 @@ fun LandscapeScreen(
     device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
 )
 @Composable
-fun ProfileScreenPreview() {
-    ProfileScreen(MainActivity(), rememberNavController())
+fun AboutScreenPreview() {
+    AboutScreen(MainActivity(), rememberNavController())
 }

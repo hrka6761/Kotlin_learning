@@ -6,13 +6,11 @@ import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,7 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -55,9 +52,7 @@ import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
-import ir.hrka.kotlin.core.utilities.Screen.Profile
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import ir.hrka.kotlin.core.utilities.Screen.About
 
 @SuppressLint("SwitchIntDef")
 @Composable
@@ -448,7 +443,7 @@ fun HomeAppBar(navHostController: NavHostController) {
         },
         actions = {
             IconButton(
-                onClick = { navHostController.navigate(Profile()) }
+                onClick = { navHostController.navigate(About()) }
             ) {
                 Icon(
                     modifier = Modifier
