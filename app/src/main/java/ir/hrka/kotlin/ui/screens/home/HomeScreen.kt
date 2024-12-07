@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedCard
@@ -47,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -86,24 +88,20 @@ fun HomeScreen(
         when (configuration.orientation) {
             ORIENTATION_PORTRAIT -> PortraitScreen(
                 activity,
-                scope,
                 navHostController,
                 innerPaddings,
                 scrollState,
                 githubVersionName,
                 githubVersionSuffix,
-                snackBarHostState
             )
 
             ORIENTATION_LANDSCAPE -> LandscapeScreen(
                 activity,
-                scope,
                 navHostController,
                 innerPaddings,
                 scrollState,
                 githubVersionName,
                 githubVersionSuffix,
-                snackBarHostState
             )
         }
     }
@@ -116,13 +114,11 @@ fun HomeScreen(
 @Composable
 fun PortraitScreen(
     activity: MainActivity,
-    scope: CoroutineScope,
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
     scrollState: ScrollState,
     githubVersionName: String?,
     githubVersionSuffix: String?,
-    snackBarHostState: SnackbarHostState
 ) {
     Column(
         modifier = Modifier
@@ -135,85 +131,145 @@ fun PortraitScreen(
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp)
-                .clickable {
-                    navHostController.navigate(
-                        CheatSheet.appendArg(
-                            githubVersionName ?: "",
-                            githubVersionSuffix ?: ""
-                        )
-                    )
-                },
-            elevation = CardDefaults.cardElevation(defaultElevation = 20.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                painter = painterResource(R.drawable.kotlin),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-            )
+            ConstraintLayout(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                val (img, title, desc, btn) = createRefs()
 
-            Text(
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
-                text = stringResource(R.string.home_screen_kotlin_learning_title),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .constrainAs(img) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    painter = painterResource(R.drawable.kotlin),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                )
 
-            Text(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                text = stringResource(R.string.home_screen_kotlin_learning_description),
-                style = TextStyle(
-                    fontSize = 10.sp,
-                    lineHeight = 12.sp
-                ),
-                fontWeight = FontWeight.Bold,
-            )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                        .constrainAs(title) {
+                            top.linkTo(img.bottom)
+                            start.linkTo(parent.start)
+                        },
+                    text = stringResource(R.string.home_screen_kotlin_learning_title),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        .constrainAs(desc) {
+                            top.linkTo(title.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    text = stringResource(R.string.home_screen_kotlin_learning_description),
+                    style = TextStyle(
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp
+                    ),
+                )
+
+                Button(
+                    modifier = Modifier.constrainAs(btn) {
+                        top.linkTo(img.bottom)
+                        end.linkTo(parent.end, margin = 16.dp)
+                        bottom.linkTo(img.bottom)
+                    },
+                    onClick = {
+                        navHostController.navigate(
+                            CheatSheet.appendArg(
+                                githubVersionName ?: "",
+                                githubVersionSuffix ?: ""
+                            )
+                        )
+                    }
+                ) {
+                    Text("Start learning")
+                }
+            }
         }
 
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
-                .alpha(0.2f)
-                .clickable {
-                    scope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = activity.getString(R.string.home_screen_coming_soon_msg),
-                            duration = SnackbarDuration.Short
-                        )
-                    }
-                },
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 24.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                painter = painterResource(R.drawable.coroutine),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-            )
+            ConstraintLayout(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                val (img, title, desc, btn, label) = createRefs()
 
-            Text(
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
-                text = stringResource(R.string.home_screen_coroutine_learning_title),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .constrainAs(img) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    painter = painterResource(R.drawable.coroutine),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                )
 
-            Text(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                text = stringResource(R.string.home_screen_coroutine_learning_description),
-                style = TextStyle(
-                    fontSize = 10.sp,
-                    lineHeight = 12.sp
-                ),
-                fontWeight = FontWeight.Bold,
-            )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                        .constrainAs(title) {
+                            top.linkTo(img.bottom)
+                            start.linkTo(parent.start)
+                        },
+                    text = stringResource(R.string.home_screen_coroutine_learning_title),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        .constrainAs(desc) {
+                            top.linkTo(title.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    text = stringResource(R.string.home_screen_coroutine_learning_description),
+                    style = TextStyle(
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp
+                    ),
+                )
+
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(0.7f)
+                        .height(150.dp)
+                        .constrainAs(label) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        },
+                    painter = painterResource(R.drawable.coming_soon),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                )
+            }
         }
     }
 }
@@ -221,13 +277,11 @@ fun PortraitScreen(
 @Composable
 fun LandscapeScreen(
     activity: MainActivity,
-    scope: CoroutineScope,
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
     scrollState: ScrollState,
     githubVersionName: String?,
     githubVersionSuffix: String?,
-    snackBarHostState: SnackbarHostState
 ) {
     Row(
         modifier = Modifier
@@ -240,83 +294,139 @@ fun LandscapeScreen(
         ElevatedCard(
             modifier = Modifier
                 .width(400.dp)
-                .fillMaxHeight()
-                .padding(vertical = 16.dp, horizontal = 16.dp)
-                .clickable {
-                    navHostController.navigate(
-                        CheatSheet.appendArg(
-                            githubVersionName ?: "",
-                            githubVersionSuffix ?: ""
-                        )
-                    )
-                },
-            elevation = CardDefaults.cardElevation(defaultElevation = 20.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            Image(
-                modifier = Modifier.height(120.dp),
-                painter = painterResource(R.drawable.kotlin),
-                contentScale = ContentScale.Crop,
-                contentDescription = null
-            )
+            ConstraintLayout {
+                val (img, title, desc, btn) = createRefs()
 
-            Text(
-                modifier = Modifier.padding(start = 8.dp, top = 8.dp, bottom = 8.dp),
-                text = stringResource(R.string.home_screen_kotlin_learning_title),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
+                Image(
+                    modifier = Modifier
+                        .height(120.dp)
+                        .constrainAs(img) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    painter = painterResource(R.drawable.kotlin),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null
+                )
 
-            Text(
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                text = stringResource(R.string.home_screen_kotlin_learning_description),
-                style = TextStyle(
-                    fontSize = 10.sp,
-                    lineHeight = 12.sp
-                ),
-                fontWeight = FontWeight.Bold,
-            )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
+                        .constrainAs(title) {
+                            top.linkTo(img.bottom)
+                            start.linkTo(parent.start)
+                        },
+                    text = stringResource(R.string.home_screen_kotlin_learning_title),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+
+                Text(
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                        .constrainAs(desc) {
+                            top.linkTo(title.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    text = stringResource(R.string.home_screen_kotlin_learning_description),
+                    style = TextStyle(
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp
+                    ),
+                )
+
+                Button(
+                    modifier = Modifier.constrainAs(btn) {
+                        top.linkTo(img.bottom)
+                        end.linkTo(parent.end, margin = 16.dp)
+                        bottom.linkTo(img.bottom)
+                    },
+                    onClick = {
+                        navHostController.navigate(
+                            CheatSheet.appendArg(
+                                githubVersionName ?: "",
+                                githubVersionSuffix ?: ""
+                            )
+                        )
+                    }
+                ) {
+                    Text("Start learning")
+                }
+            }
         }
 
         ElevatedCard(
             modifier = Modifier
                 .width(400.dp)
-                .fillMaxHeight()
-                .padding(vertical = 16.dp, horizontal = 16.dp)
-                .alpha(0.2f)
-                .clickable {
-                    scope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = activity.getString(R.string.home_screen_coming_soon_msg),
-                            duration = SnackbarDuration.Short
-                        )
-                    }
-                }
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            Image(
-                modifier = Modifier.height(120.dp),
-                painter = painterResource(R.drawable.coroutine),
-                contentScale = ContentScale.Crop,
-                contentDescription = null
-            )
+            ConstraintLayout {
+                val (img, title, desc, btn, label) = createRefs()
 
-            Text(
-                modifier = Modifier.padding(start = 8.dp, top = 8.dp, bottom = 8.dp),
-                text = stringResource(R.string.home_screen_coroutine_learning_title),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
+                Image(
+                    modifier = Modifier
+                        .height(120.dp)
+                        .constrainAs(img) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    painter = painterResource(R.drawable.coroutine),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null
+                )
 
-            Text(
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                text = stringResource(R.string.home_screen_coroutine_learning_description),
-                style = TextStyle(
-                    fontSize = 10.sp,
-                    lineHeight = 12.sp
-                ),
-                fontWeight = FontWeight.Bold,
-            )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
+                        .constrainAs(title) {
+                            top.linkTo(img.bottom)
+                            start.linkTo(parent.start)
+                        },
+                    text = stringResource(R.string.home_screen_coroutine_learning_title),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+
+                Text(
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                        .constrainAs(desc) {
+                            top.linkTo(title.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    text = stringResource(R.string.home_screen_coroutine_learning_description),
+                    style = TextStyle(
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp
+                    )
+                )
+
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(0.7f)
+                        .height(150.dp)
+                        .constrainAs(label) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        },
+                    painter = painterResource(R.drawable.coming_soon),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                )
+            }
         }
     }
 }
