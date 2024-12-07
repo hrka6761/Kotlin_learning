@@ -51,7 +51,9 @@ import ir.hrka.kotlin.core.Constants.SOURCE_URL
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.ui.layout.ContentScale
 
 @SuppressLint("SwitchIntDef")
 @Composable
@@ -117,41 +119,40 @@ fun PortraitScreen(
             .fillMaxSize()
             .padding(innerPaddings)
     ) {
-        val (authorImg, authorName, authorEmail, githubRepo, source, linkedin) = createRefs()
+        val (banner, authorImg, authorName, authorEmail, githubRepo, source, linkedin) = createRefs()
 
         Image(
             modifier = Modifier
-                .width(100.dp)
-                .height(100.dp)
-                .constrainAs(authorImg) {
-                    top.linkTo(parent.top, margin = 32.dp)
+                .fillMaxWidth()
+                .constrainAs(banner) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
+                },
+            contentScale = ContentScale.Crop,
+            painter = painterResource(R.drawable.profile_banner),
+            contentDescription = null,
+        )
+
+        Image(
+            modifier = Modifier
+                .width(80.dp)
+                .height(80.dp)
+                .constrainAs(authorImg) {
+                    top.linkTo(banner.bottom)
+                    start.linkTo(parent.start, margin = 16.dp)
+                    bottom.linkTo(banner.bottom)
                 },
             painter = painterResource(R.drawable.author),
             contentDescription = null,
         )
 
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(authorName) {
-                    top.linkTo(authorImg.bottom, margin = 8.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            text = stringResource(R.string.profile_screen_author_name),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold
-        )
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .constrainAs(authorEmail) {
-                    top.linkTo(authorName.bottom, margin = 64.dp)
-                    start.linkTo(parent.start)
+                .constrainAs(authorName) {
+                    start.linkTo(parent.start, margin = 8.dp)
                     end.linkTo(parent.end, margin = 8.dp)
+                    top.linkTo(authorImg.bottom, margin = 16.dp)
                 },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
@@ -160,14 +161,42 @@ fun PortraitScreen(
                 modifier = Modifier
                     .width(40.dp)
                     .height(40.dp)
-                    .padding(start = 16.dp),
+                    .padding(start = 8.dp),
+                contentDescription = null,
+                imageVector = Icons.Default.Person
+            )
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                text = stringResource(R.string.profile_screen_author_name),
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(authorEmail) {
+                    start.linkTo(parent.start, margin = 8.dp)
+                    end.linkTo(parent.end, margin = 8.dp)
+                    top.linkTo(authorName.bottom, margin = 8.dp)
+                },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Icon(
+                modifier = Modifier
+                    .width(40.dp)
+                    .height(40.dp)
+                    .padding(start = 8.dp),
                 contentDescription = null,
                 imageVector = Icons.Default.Email
             )
 
             Text(
                 modifier = Modifier
-                    .padding(start = 16.dp)
+                    .padding(horizontal = 16.dp)
                     .clickable {
                         val clipboard =
                             activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -183,67 +212,81 @@ fun PortraitScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(githubRepo) {
-                    top.linkTo(authorEmail.bottom)
-                    start.linkTo(parent.start)
+                    start.linkTo(parent.start, margin = 8.dp)
                     end.linkTo(parent.end, margin = 8.dp)
-                }
-                .clickable { viewModel.openUrl(activity, GITHUB_URL) },
+                    top.linkTo(authorEmail.bottom, margin = 8.dp)
+                },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-            Icon(
+            Row(
                 modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp)
-                    .padding(start = 16.dp),
-                contentDescription = null,
-                painter = painterResource(R.drawable.github)
-            )
+                    .fillMaxWidth()
+                    .clickable { viewModel.openUrl(activity, GITHUB_URL) },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(40.dp)
+                        .padding(start = 8.dp),
+                    contentDescription = null,
+                    painter = painterResource(R.drawable.github)
+                )
 
-            Text(
-                modifier = Modifier
-                    .padding(start = 16.dp),
-                text = stringResource(R.string.profile_screen_github_repo_address),
-                textAlign = TextAlign.Start,
-            )
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
+                    text = stringResource(R.string.profile_screen_github_repo_address),
+                    textAlign = TextAlign.Start,
+                )
+            }
         }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(source) {
-                    top.linkTo(githubRepo.bottom)
-                    start.linkTo(parent.start)
+                    start.linkTo(parent.start, margin = 8.dp)
                     end.linkTo(parent.end, margin = 8.dp)
-                }
-                .clickable { viewModel.openUrl(activity, SOURCE_URL) },
+                    top.linkTo(githubRepo.bottom, margin = 8.dp)
+                },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-            Icon(
+            Row(
                 modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp)
-                    .padding(start = 16.dp),
-                contentDescription = null,
-                imageVector = Icons.Default.Info
-            )
+                    .fillMaxWidth()
+                    .clickable { viewModel.openUrl(activity, SOURCE_URL) },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(40.dp)
+                        .padding(start = 8.dp),
+                    contentDescription = null,
+                    imageVector = Icons.Default.Info
+                )
 
-            Text(
-                modifier = Modifier
-                    .padding(start = 16.dp),
-                text = stringResource(R.string.profile_screen_cheatSheet_source),
-                textAlign = TextAlign.Start,
-            )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp),
+                    text = stringResource(R.string.profile_screen_cheatSheet_source),
+                    textAlign = TextAlign.Start,
+                )
+            }
         }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(linkedin) {
-                    top.linkTo(source.bottom)
-                    start.linkTo(parent.start)
+                    start.linkTo(parent.start, margin = 8.dp)
                     end.linkTo(parent.end, margin = 8.dp)
+                    top.linkTo(source.bottom, margin = 8.dp)
                 }
                 .clickable { viewModel.openUrl(activity, LINKEDIN_URL) },
             verticalAlignment = Alignment.CenterVertically,
@@ -253,14 +296,14 @@ fun PortraitScreen(
                 modifier = Modifier
                     .width(40.dp)
                     .height(40.dp)
-                    .padding(start = 16.dp),
+                    .padding(start = 8.dp),
                 contentDescription = null,
                 painter = painterResource(R.drawable.linkedin)
             )
 
             Text(
                 modifier = Modifier
-                    .padding(start = 16.dp),
+                    .padding(horizontal = 16.dp),
                 text = stringResource(R.string.profile_screen_linkedin_address),
                 textAlign = TextAlign.Start,
             )
@@ -279,73 +322,105 @@ fun LandscapeScreen(
             .fillMaxSize()
             .padding(innerPaddings)
     ) {
-        val (authorImg, authorInfo) = createRefs()
+        val (banner, authorImg, authorName, authorEmail, githubRepo, source, linkedin) = createRefs()
 
-        Column(
+        Image(
             modifier = Modifier
-                .constrainAs(authorImg) {
+                .fillMaxHeight()
+                .width(320.dp)
+                .constrainAs(banner) {
+                    start.linkTo(parent.start)
                     top.linkTo(parent.top)
-                    start.linkTo(parent.start, margin = 64.dp)
                     bottom.linkTo(parent.bottom)
                 },
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentScale = ContentScale.FillHeight,
+            painter = painterResource(R.drawable.profile_banner),
+            contentDescription = null,
+        )
+
+        Image(
+            modifier = Modifier
+                .width(80.dp)
+                .height(80.dp)
+                .constrainAs(authorImg) {
+                    top.linkTo(parent.top, margin = 16.dp)
+                    start.linkTo(banner.end)
+                    end.linkTo(banner.end)
+                },
+            painter = painterResource(R.drawable.author),
+            contentDescription = null,
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(authorName) {
+                    start.linkTo(authorImg.end, margin = 8.dp)
+                    top.linkTo(authorImg.top, margin = 32.dp)
+                },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
-            Image(
+            Icon(
                 modifier = Modifier
-                    .width(120.dp)
-                    .height(120.dp),
-                painter = painterResource(R.drawable.author),
+                    .width(40.dp)
+                    .height(40.dp)
+                    .padding(start = 8.dp),
                 contentDescription = null,
+                imageVector = Icons.Default.Person
             )
 
             Text(
-                modifier = Modifier.padding(top = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 text = stringResource(R.string.profile_screen_author_name),
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
             )
         }
 
-        Column(
+        Row(
             modifier = Modifier
-                .constrainAs(authorInfo) {
-                    top.linkTo(parent.top)
-                    start.linkTo(authorImg.end, margin = 64.dp)
-                    bottom.linkTo(parent.bottom)
+                .fillMaxWidth()
+                .constrainAs(authorEmail) {
+                    start.linkTo(authorImg.end, margin = 8.dp)
+                    top.linkTo(authorName.bottom)
                 },
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
-            Row(
+            Icon(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp)
-                        .padding(start = 16.dp),
-                    contentDescription = null,
-                    imageVector = Icons.Default.Email
-                )
+                    .width(40.dp)
+                    .height(40.dp)
+                    .padding(start = 8.dp),
+                contentDescription = null,
+                imageVector = Icons.Default.Email
+            )
 
-                Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .clickable {
-                            val clipboard =
-                                activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                            val clip = ClipData.newPlainText(CLIPBOARD_LABEL, CLIPBOARD_TEXT)
-                            clipboard.setPrimaryClip(clip)
-                        },
-                    text = stringResource(R.string.profile_screen_author_email),
-                    textAlign = TextAlign.Start,
-                )
-            }
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .clickable {
+                        val clipboard =
+                            activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip = ClipData.newPlainText(CLIPBOARD_LABEL, CLIPBOARD_TEXT)
+                        clipboard.setPrimaryClip(clip)
+                    },
+                text = stringResource(R.string.profile_screen_author_email),
+                textAlign = TextAlign.Start,
+            )
+        }
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(githubRepo) {
+                    start.linkTo(authorImg.end, margin = 8.dp)
+                    top.linkTo(authorEmail.bottom)
+                },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -357,19 +432,30 @@ fun LandscapeScreen(
                     modifier = Modifier
                         .width(40.dp)
                         .height(40.dp)
-                        .padding(start = 16.dp),
+                        .padding(start = 8.dp),
                     contentDescription = null,
                     painter = painterResource(R.drawable.github)
                 )
 
                 Text(
                     modifier = Modifier
-                        .padding(start = 16.dp),
+                        .padding(horizontal = 16.dp),
                     text = stringResource(R.string.profile_screen_github_repo_address),
                     textAlign = TextAlign.Start,
                 )
             }
+        }
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(source) {
+                    start.linkTo(authorImg.end, margin = 8.dp)
+                    top.linkTo(githubRepo.bottom)
+                },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -381,7 +467,7 @@ fun LandscapeScreen(
                     modifier = Modifier
                         .width(40.dp)
                         .height(40.dp)
-                        .padding(start = 16.dp),
+                        .padding(start = 8.dp),
                     contentDescription = null,
                     imageVector = Icons.Default.Info
                 )
@@ -393,30 +479,34 @@ fun LandscapeScreen(
                     textAlign = TextAlign.Start,
                 )
             }
+        }
 
-            Row(
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(linkedin) {
+                    start.linkTo(authorImg.end, margin = 8.dp)
+                    top.linkTo(source.bottom)
+                }
+                .clickable { viewModel.openUrl(activity, LINKEDIN_URL) },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Icon(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { viewModel.openUrl(activity, LINKEDIN_URL) },
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp)
-                        .padding(start = 16.dp),
-                    contentDescription = null,
-                    painter = painterResource(R.drawable.linkedin)
-                )
+                    .width(40.dp)
+                    .height(40.dp)
+                    .padding(start = 8.dp),
+                contentDescription = null,
+                painter = painterResource(R.drawable.linkedin)
+            )
 
-                Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp),
-                    text = stringResource(R.string.profile_screen_linkedin_address),
-                    textAlign = TextAlign.Start,
-                )
-            }
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                text = stringResource(R.string.profile_screen_linkedin_address),
+                textAlign = TextAlign.Start,
+            )
         }
     }
 }
@@ -424,7 +514,7 @@ fun LandscapeScreen(
 
 @Preview(
     showBackground = true,
-//    device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
+    device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
 )
 @Composable
 fun ProfileScreenPreview() {
