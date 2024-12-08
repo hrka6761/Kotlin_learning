@@ -6,6 +6,7 @@ import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.SOURCE_URL
 import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
 import ir.hrka.kotlin.core.utilities.Screen.About
 
@@ -71,7 +73,7 @@ fun HomeScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { HomeAppBar(navHostController) },
+        topBar = { HomeAppBar(activity, viewModel, navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -428,7 +430,11 @@ fun LandscapeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeAppBar(navHostController: NavHostController) {
+fun HomeAppBar(
+    activity: MainActivity,
+    viewModel: HomeViewModel,
+    navHostController: NavHostController
+) {
     CenterAlignedTopAppBar(
         title = { Text(stringResource(R.string.home_app_bar_title)) },
         navigationIcon = {
@@ -436,7 +442,10 @@ fun HomeAppBar(navHostController: NavHostController) {
                 modifier = Modifier
                     .width(40.dp)
                     .height(40.dp)
-                    .padding(start = 12.dp),
+                    .padding(start = 12.dp)
+                    .clickable {
+                        viewModel.openUrl(activity, SOURCE_URL)
+                    },
                 painter = painterResource(R.drawable.logo),
                 contentDescription = null,
             )
