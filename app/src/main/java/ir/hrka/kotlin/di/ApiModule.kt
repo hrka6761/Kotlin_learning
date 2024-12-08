@@ -5,6 +5,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ir.hrka.kotlin.core.Constants.BASE_URL
+import ir.hrka.kotlin.core.Constants.CONNECT_TIMEOUT
+import ir.hrka.kotlin.core.Constants.READ_TIMEOUT
+import ir.hrka.kotlin.core.Constants.WRITE_TIMEOUT
 import ir.hrka.kotlin.data.datasource.github.GithubAPI
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -28,9 +31,9 @@ class ApiModule {
         OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .retryOnConnectionFailure(true)
-            .connectTimeout(180, TimeUnit.SECONDS)
-            .writeTimeout(180, TimeUnit.SECONDS)
-            .readTimeout(180, TimeUnit.SECONDS)
+            .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
             .build()
 
     @Singleton

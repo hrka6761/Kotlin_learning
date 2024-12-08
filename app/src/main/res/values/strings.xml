@@ -22,7 +22,7 @@
     <string name="profile_screen_github_repo_address">https://github.com/hrka6761/Kotlin_cheat_sheet.git</string>
     <string name="profile_screen_cheatSheet_source">Resource: www.kotlinlang.org</string>
     <string name="profile_screen_linkedin_address">https://www.linkedin.com/in/hamidrezaka</string>
-    <string name="profile_screen_author_email">hrk6761@gmail.com</string>
+    <string name="profile_screen_author_email">hrka6761@gmail.com</string>
     <string name="home_app_bar_title">Kotlin Learning</string>
     <string name="cheatsheet_app_bar_title">Kotlin Language</string>
     <string name="saving_points_on_the_database_msg">Saving points on the database.</string>

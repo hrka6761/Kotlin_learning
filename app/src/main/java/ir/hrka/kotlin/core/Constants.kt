@@ -8,6 +8,9 @@ object Constants {
     const val CHEATSHEETS_SCREEN = "cheatsheets"
     const val POINT_SCREEN = "points"
     const val ABOUT_SCREEN = "about"
+    const val CONNECT_TIMEOUT = 5L
+    const val WRITE_TIMEOUT = 60L
+    const val READ_TIMEOUT = 60L
     const val POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME = "CheatSheetName"
     const val POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME = "CheatSheetStateName"
     const val POINT_SCREEN_ARGUMENT_CHEATSHEET_ID = "cheatsheetId"
