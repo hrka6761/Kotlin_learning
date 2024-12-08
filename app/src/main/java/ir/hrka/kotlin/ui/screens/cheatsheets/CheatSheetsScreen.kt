@@ -342,7 +342,7 @@ fun CheatSheetItem(
                 Text(
                     modifier = Modifier
                         .background(
-                            color = Color.Red,
+                            color = MaterialTheme.colorScheme.primary,
                             shape = RoundedCornerShape(50)
                         )
                         .padding(horizontal = 4.dp)
