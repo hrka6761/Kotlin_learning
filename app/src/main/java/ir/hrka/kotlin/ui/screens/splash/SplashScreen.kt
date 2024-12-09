@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.ui.screens.splash
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +45,7 @@ import kotlinx.coroutines.delay
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.stringResource
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.ExecutionState.Loading
 import ir.hrka.kotlin.core.ExecutionState.Start
 import ir.hrka.kotlin.core.ExecutionState.Stop
@@ -183,17 +185,16 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     }
 
     LaunchedEffect(Unit) {
-        if (executionState == Start)
+        if (executionState == Start) {
+            viewModel.setExecutionState(Loading)
             viewModel.getAppInfo()
+        }
     }
 
     LaunchedEffect(appInfo) {
         if (executionState != Stop)
             when (appInfo) {
-                is Resource.Initial -> {
-                    viewModel.setExecutionState(Loading)
-                }
-
+                is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
                     viewModel.checkNewVersion(activity)
@@ -206,10 +207,9 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     }
 
     LaunchedEffect(newVersionState) {
-        if (executionState != Stop) {
+        if (executionState != Stop)
             if (newVersionState == NEW_VERSION_NOT_AVAILABLE) {
                 viewModel.setExecutionState(Stop)
-                delay(500)
                 navHostController.navigate(
                     Home.appendArg(
                         appInfo.data?.versionName ?: "",
@@ -243,7 +243,6 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 viewModel.setNewVersionDialogState(NEW_VERSION_AVAILABLE)
                 viewModel.goToUpdate(activity)
             }
-        }
     }
 }
 
