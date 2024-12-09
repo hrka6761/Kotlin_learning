@@ -27,6 +27,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -55,6 +56,8 @@ import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.SOURCE_URL
 import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
 import ir.hrka.kotlin.core.utilities.Screen.About
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @SuppressLint("SwitchIntDef")
 @Composable
@@ -85,6 +88,8 @@ fun HomeScreen(
         when (configuration.orientation) {
             ORIENTATION_PORTRAIT -> PortraitScreen(
                 activity,
+                scope,
+                snackBarHostState,
                 navHostController,
                 innerPaddings,
                 scrollState,
@@ -94,6 +99,8 @@ fun HomeScreen(
 
             ORIENTATION_LANDSCAPE -> LandscapeScreen(
                 activity,
+                scope,
+                snackBarHostState,
                 navHostController,
                 innerPaddings,
                 scrollState,
@@ -111,6 +118,8 @@ fun HomeScreen(
 @Composable
 fun PortraitScreen(
     activity: MainActivity,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
     scrollState: ScrollState,
@@ -193,7 +202,7 @@ fun PortraitScreen(
                         )
                     }
                 ) {
-                    Text("Start learning")
+                    Text(stringResource(R.string.home_screen_start_learning_btn))
                 }
             }
         }
@@ -207,7 +216,7 @@ fun PortraitScreen(
             ConstraintLayout(
                 modifier = Modifier.fillMaxSize()
             ) {
-                val (img, title, desc, btn, label) = createRefs()
+                val (img, title, desc, btn) = createRefs()
 
                 Image(
                     modifier = Modifier
@@ -251,21 +260,23 @@ fun PortraitScreen(
                     ),
                 )
 
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(0.7f)
-                        .height(150.dp)
-                        .constrainAs(label) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
-                        },
-                    painter = painterResource(R.drawable.coming_soon),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                )
+                Button(
+                    modifier = Modifier.constrainAs(btn) {
+                        top.linkTo(img.bottom)
+                        end.linkTo(parent.end, margin = 16.dp)
+                        bottom.linkTo(img.bottom)
+                    },
+                    onClick = {
+                        scope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = activity.getString(R.string.home_screen_coming_soon_msg),
+                                duration = SnackbarDuration.Long
+                            )
+                        }
+                    }
+                ) {
+                    Text(stringResource(R.string.home_screen_coming_soon_btn))
+                }
             }
         }
     }
@@ -274,6 +285,8 @@ fun PortraitScreen(
 @Composable
 fun LandscapeScreen(
     activity: MainActivity,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
     scrollState: ScrollState,
@@ -353,7 +366,7 @@ fun LandscapeScreen(
                         )
                     }
                 ) {
-                    Text("Start learning")
+                    Text(stringResource(R.string.home_screen_start_learning_btn))
                 }
             }
         }
@@ -408,21 +421,23 @@ fun LandscapeScreen(
                     )
                 )
 
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(0.7f)
-                        .height(150.dp)
-                        .constrainAs(label) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
-                        },
-                    painter = painterResource(R.drawable.coming_soon),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                )
+                Button(
+                    modifier = Modifier.constrainAs(btn) {
+                        top.linkTo(img.bottom)
+                        end.linkTo(parent.end, margin = 16.dp)
+                        bottom.linkTo(img.bottom)
+                    },
+                    onClick = {
+                        scope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = activity.getString(R.string.home_screen_coming_soon_msg),
+                                duration = SnackbarDuration.Long
+                            )
+                        }
+                    }
+                ) {
+                    Text(stringResource(R.string.home_screen_coming_soon_btn))
+                }
             }
         }
     }
