@@ -1,15 +1,8 @@
 package ir.hrka.kotlin.core.utilities
 
-import android.util.Base64
-
 private const val javaDocPattern = """(?s)/\*\*\s*(.*?)\s*\*/"""
 private const val snippetCodePattern = "```(.*?)```"
 
-
-fun String.decodeBase64(): String {
-    val decodedBytes = Base64.decode(this, Base64.DEFAULT)
-    return String(decodedBytes)
-}
 
 fun String.extractJavaDocsFromCheatSheetFileContent(): List<String> {
     val javaDocRegex = javaDocPattern.toRegex()
@@ -64,9 +57,3 @@ fun String.extractSubPointsFromPointContent(): MutableList<String>? {
 
     return list
 }
-
-fun String.extractFileName(): String = this.split("_").last().split(".").first()
-
-fun String.extractFileIdByName(): Long = this.split("_").first().toLong()
-
-fun String.splitByCapitalLetters(): String = replace(Regex("(?=[A-Z])"), " ")

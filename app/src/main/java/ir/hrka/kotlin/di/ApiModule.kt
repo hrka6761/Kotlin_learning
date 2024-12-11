@@ -8,7 +8,7 @@ import ir.hrka.kotlin.core.Constants.BASE_URL
 import ir.hrka.kotlin.core.Constants.CONNECT_TIMEOUT
 import ir.hrka.kotlin.core.Constants.READ_TIMEOUT
 import ir.hrka.kotlin.core.Constants.WRITE_TIMEOUT
-import ir.hrka.kotlin.data.datasource.github.GithubAPI
+import ir.hrka.kotlin.data.datasource.github.GitAPI
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -55,5 +55,5 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun provideGithubApi(retrofit: Retrofit): GithubAPI = retrofit.create(GithubAPI::class.java)
+    fun provideGitApi(retrofit: Retrofit): GitAPI = retrofit.create(GitAPI::class.java)
 }

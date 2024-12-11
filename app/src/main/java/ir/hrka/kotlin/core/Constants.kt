@@ -2,11 +2,12 @@ package ir.hrka.kotlin.core
 
 object Constants {
 
-    const val TAG = "KotlinCheatSheetProject"
+    const val TAG = "KotlinLearningProject"
 
     const val SPLASH_SCREEN = "splash"
     const val HOME_SCREEN = "home"
-    const val CHEATSHEETS_SCREEN = "cheatsheets"
+    const val KOTLIN_TOPICS_SCREEN = "kotlinTopics"
+    const val COROUTINE_TOPICS_SCREEN = "coroutineTopics"
     const val POINT_SCREEN = "points"
     const val ABOUT_SCREEN = "about"
 
@@ -14,32 +15,39 @@ object Constants {
     const val WRITE_TIMEOUT = 60L
     const val READ_TIMEOUT = 60L
 
-    const val POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME = "CheatSheetName"
-    const val POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME = "CheatSheetStateName"
-    const val POINT_SCREEN_ARGUMENT_CHEATSHEET_ID = "cheatsheetId"
-    const val CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
-    const val CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
+    const val POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME = "kotlinTopicName"
+    const val POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME = "kotlinTopicStateName"
+    const val POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID = "kotlinTopicId"
+    const val KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
+    const val KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
+    const val COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
+    const val COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
     const val HOME_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
     const val HOME_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
 
     const val TOKEN = "This is a secret."
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
 
+    const val UNKNOWN_ERROR_CODE = 999
     const val RETROFIT_ERROR_CODE = 1000
     const val READ_FILE_ERROR_CODE = 1001
     const val LOCAL_DATA_READ_ERROR_CODE = 2000
     const val LOCAL_DATA_WRITE_ERROR_CODE = 2001
-    const val DB_READ_CHEATSHEETS_LIST_ERROR_CODE = 3000
-    const val DB_READ_CHEATSHEET_POINTS_ERROR_CODE = 3001
-    const val DB_WRITE_CHEATSHEETS_ERROR_CODE = 3002
-    const val DB_CLEAR_CHEATSHEET_TABLE_ERROR_CODE = 3003
-    const val DB_UPDATE_CHEATSHEETS_ERROR_CODE = 3004
-    const val DB_WRITE_POINTS_ERROR_CODE = 3005
-    const val DB_WRITE_SUB_POINTS_ERROR_CODE = 3006
-    const val DB_WRITE_SNIPPET_CODES_ERROR_CODE = 3007
-    const val DB_DELETE_CHEATSHEET_POINTS_ERROR_CODE = 3008
-    const val DB_DELETE_POINT_SUB_POINTS_ERROR_CODE = 3009
-    const val DB_DELETE_POINT_SNIPPET_CODES_ERROR_CODE = 3010
+    const val DB_READ_KOTLIN_TOPICS_LIST_ERROR_CODE = 3000
+    const val DB_READ_COROUTINE_TOPICS_LIST_ERROR_CODE = 3001
+    const val DB_READ_POINTS_ERROR_CODE = 3002
+    const val DB_WRITE_KOTLIN_TOPICS_ERROR_CODE = 3003
+    const val DB_WRITE_COROUTINE_TOPICS_ERROR_CODE = 3003
+    const val DB_CLEAR_KOTLIN_TOPICS_TABLE_ERROR_CODE = 3004
+    const val DB_CLEAR_COROUTINE_TOPICS_TABLE_ERROR_CODE = 3004
+    const val DB_UPDATE_KOTLIN_TOPICS_ERROR_CODE = 3005
+    const val DB_UPDATE_COROUTINE_TOPICS_ERROR_CODE = 3005
+    const val DB_WRITE_POINTS_ERROR_CODE = 3006
+    const val DB_WRITE_SUB_POINTS_ERROR_CODE = 3007
+    const val DB_WRITE_SNIPPET_CODES_ERROR_CODE = 3008
+    const val DB_DELETE_KOTLIN_TOPICS_POINTS_ERROR_CODE = 3009
+    const val DB_DELETE_POINT_SUB_POINTS_ERROR_CODE = 3010
+    const val DB_DELETE_POINT_SNIPPET_CODES_ERROR_CODE = 3011
 
     const val MANDATORY = "mandatory"
     const val NON_MANDATORY = "non_mandatory"
@@ -51,7 +59,7 @@ object Constants {
     const val NEW_VERSION_CONTINUE = 5
     const val NEW_VERSION_CANCEL = 6
 
-    const val DATABASE_NAME = "cheatsheet-database"
+    const val DATABASE_NAME = "kotlin-topic-database"
     const val VERSION_NAME_KEY = "version_name_key"
     const val UPDATED_ID_KEY = "updatedId"
     const val CLIPBOARD_TEXT = "hrka6761@gmail.com"

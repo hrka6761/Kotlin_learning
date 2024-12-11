@@ -6,11 +6,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.core.ExecutionState
 import ir.hrka.kotlin.core.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.domain.entities.PointDataModel
-import ir.hrka.kotlin.domain.usecases.db.read.GetDBCheatSheetPointsUseCase
-import ir.hrka.kotlin.domain.usecases.github.GetGithubCheatSheetPointsUseCase
-import ir.hrka.kotlin.domain.usecases.db.write.SaveCheatsheetPointsOnDBUseCase
-import ir.hrka.kotlin.domain.usecases.db.write.UpdateCheatSheetUpdateStateUseCase
+import ir.hrka.kotlin.domain.entities.PointData
+import ir.hrka.kotlin.domain.usecases.db.kotlin.read.GetDBKotlinTopicPointsUseCase
+import ir.hrka.kotlin.domain.usecases.git.kotlin.read.GetGitKotlinTopicPointsUseCase
+import ir.hrka.kotlin.domain.usecases.db.kotlin.write.SaveKotlinTopicPointsOnDBUseCase
+import ir.hrka.kotlin.domain.usecases.db.kotlin.write.UpdateKotlinTopicsStateUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,25 +21,23 @@ import javax.inject.Named
 @HiltViewModel
 class PointViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
-    private val getGithubCheatSheetPointsUseCase: GetGithubCheatSheetPointsUseCase,
-    private val getDBCheatSheetPointsUseCase: GetDBCheatSheetPointsUseCase,
-    private val saveCheatsheetPointsOnDBUseCase: SaveCheatsheetPointsOnDBUseCase,
-    private val updateCheatSheetUpdateStateUseCase: UpdateCheatSheetUpdateStateUseCase
+    private val getGitKotlinTopicPointsUseCase: GetGitKotlinTopicPointsUseCase,
+    private val getDBKotlinTopicPointsUseCase: GetDBKotlinTopicPointsUseCase,
+    private val saveKotlinTopicPointsOnDBUseCase: SaveKotlinTopicPointsOnDBUseCase,
+    private val updateKotlinTopicsStateUseCase: UpdateKotlinTopicsStateUseCase
 ) : ViewModel() {
 
-    private val _points: MutableStateFlow<Resource<List<PointDataModel>?>> =
+    private val _points: MutableStateFlow<Resource<List<PointData>?>> =
         MutableStateFlow(Resource.Initial())
-    val points: StateFlow<Resource<List<PointDataModel>?>> = _points
+    val points: StateFlow<Resource<List<PointData>?>> = _points
     private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
     val executionState: MutableStateFlow<ExecutionState> = _executionState
-    private val _saveCheatsheetPointsResult: MutableStateFlow<Resource<Boolean>> =
+    private val _saveTopicPointsResult: MutableStateFlow<Resource<Boolean>> =
         MutableStateFlow(Resource.Initial())
-    val saveCheatsheetPointsResult: MutableStateFlow<Resource<Boolean>> =
-        _saveCheatsheetPointsResult
-    private val _updateCheatsheetsOnDBResult: MutableStateFlow<Resource<Boolean>> =
+    val saveTopicPointsResult: MutableStateFlow<Resource<Boolean>> = _saveTopicPointsResult
+    private val _updateTopicsOnDBResult: MutableStateFlow<Resource<Boolean>> =
         MutableStateFlow(Resource.Initial())
-    val updateCheatsheetsOnDBResult: MutableStateFlow<Resource<Boolean>> =
-        _updateCheatsheetsOnDBResult
+    val updateTopicsOnDBResult: MutableStateFlow<Resource<Boolean>> = _updateTopicsOnDBResult
     private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val failedState: StateFlow<Boolean> = _failedState
 
@@ -52,31 +50,31 @@ class PointViewModel @Inject constructor(
         _failedState.value = state
     }
 
-    fun getPointsFromGithub(fileName: String) {
+    fun getPointsFromGit(topicName: String) {
         viewModelScope.launch(io) {
             _points.value = Resource.Loading()
-            _points.value = getGithubCheatSheetPointsUseCase(fileName)
+            _points.value = getGitKotlinTopicPointsUseCase(topicName)
         }
     }
 
-    fun getPointsFromDatabase(fileName: String) {
+    fun getPointsFromDatabase(topicName: String) {
         viewModelScope.launch(io) {
             _points.value = Resource.Loading()
-            _points.value = getDBCheatSheetPointsUseCase(fileName)
+            _points.value = getDBKotlinTopicPointsUseCase(topicName)
         }
     }
 
-    fun saveCheatsheetPointsOnDB(cheatsheetName: String) {
+    fun saveTopicPointsOnDB(topicName: String) {
         viewModelScope.launch(io) {
-            _saveCheatsheetPointsResult.value =
-                _points.value.data?.let { saveCheatsheetPointsOnDBUseCase(it, cheatsheetName) }!!
+            _saveTopicPointsResult.value =
+                _points.value.data?.let { saveKotlinTopicPointsOnDBUseCase(it, topicName) }!!
         }
     }
 
-    fun updateCheatsheetState(cheatsheetId: Int) {
+    fun updateTopicState(topicId: Int) {
         viewModelScope.launch(io) {
-            _updateCheatsheetsOnDBResult.value =
-                updateCheatSheetUpdateStateUseCase(cheatsheetId, hasContentUpdated = false)
+            _updateTopicsOnDBResult.value =
+                updateKotlinTopicsStateUseCase(topicId, hasContentUpdated = false)
         }
     }
 }

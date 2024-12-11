@@ -274,7 +274,7 @@ fun PortraitScreen(
                 Text(
                     modifier = Modifier
                         .padding(start = 16.dp),
-                    text = stringResource(R.string.profile_screen_cheatSheet_source),
+                    text = stringResource(R.string.profile_screen_kotlin_topics_source),
                     textAlign = TextAlign.Start,
                 )
             }
@@ -475,7 +475,7 @@ fun LandscapeScreen(
                 Text(
                     modifier = Modifier
                         .padding(start = 16.dp),
-                    text = stringResource(R.string.profile_screen_cheatSheet_source),
+                    text = stringResource(R.string.profile_screen_kotlin_topics_source),
                     textAlign = TextAlign.Start,
                 )
             }

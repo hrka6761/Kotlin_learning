@@ -29,5 +29,5 @@ fun String.extractMinorFromVersionName(): Int = this.split(".")[1].toInt()
 
 fun String.extractMajorFromVersionName(): Int = this.split(".")[0].toInt()
 
-fun String.extractUpdatedCheatsheetsListFromVersionName(): List<Int> =
+fun String.extractUpdatedKotlinTopicsListFromVersionName(): List<Int> =
     this.split("_").map { stringId -> stringId.toInt() }

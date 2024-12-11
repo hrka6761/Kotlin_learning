@@ -16,8 +16,8 @@ import ir.hrka.kotlin.core.Constants.NEW_VERSION_UNKNOWN_STATE
 import ir.hrka.kotlin.core.ExecutionState
 import ir.hrka.kotlin.core.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.domain.entities.AppInfoModel
-import ir.hrka.kotlin.domain.usecases.github.GetAppInfoUseCase
+import ir.hrka.kotlin.domain.entities.AppInfo
+import ir.hrka.kotlin.domain.usecases.git.GetAppInfoUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,9 +31,9 @@ class SplashViewModel @Inject constructor(
     private val getAppInfoUseCase: GetAppInfoUseCase,
 ) : ViewModel() {
 
-    private val _appInfo: MutableStateFlow<Resource<AppInfoModel?>> =
+    private val _appInfo: MutableStateFlow<Resource<AppInfo?>> =
         MutableStateFlow(Resource.Initial())
-    val appInfo: StateFlow<Resource<AppInfoModel?>> = _appInfo
+    val appInfo: StateFlow<Resource<AppInfo?>> = _appInfo
     private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _newVersionState: MutableStateFlow<Int> =

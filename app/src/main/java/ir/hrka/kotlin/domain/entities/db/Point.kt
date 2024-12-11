@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class Point(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "point_text") val pointText: String,
-    @ColumnInfo(name = "cheatsheet_name") val cheatsheetName: String
+    @ColumnInfo(name = "topic_name") val topicName: String
 )

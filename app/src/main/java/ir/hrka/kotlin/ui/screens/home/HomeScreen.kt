@@ -36,7 +36,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -54,7 +53,7 @@ import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.SOURCE_URL
-import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
+import ir.hrka.kotlin.core.utilities.Screen.KotlinTopics
 import ir.hrka.kotlin.core.utilities.Screen.About
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -195,7 +194,7 @@ fun PortraitScreen(
                     },
                     onClick = {
                         navHostController.navigate(
-                            CheatSheet.appendArg(
+                            KotlinTopics.appendArg(
                                 githubVersionName ?: "",
                                 githubVersionSuffix ?: ""
                             )
@@ -359,7 +358,7 @@ fun LandscapeScreen(
                     },
                     onClick = {
                         navHostController.navigate(
-                            CheatSheet.appendArg(
+                            KotlinTopics.appendArg(
                                 githubVersionName ?: "",
                                 githubVersionSuffix ?: ""
                             )

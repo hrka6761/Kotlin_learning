@@ -59,15 +59,15 @@ import ir.hrka.kotlin.core.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
-import ir.hrka.kotlin.domain.entities.PointDataModel
+import ir.hrka.kotlin.domain.entities.PointData
 import kotlinx.coroutines.launch
 
 @Composable
 fun PointsScreen(
     activity: MainActivity,
     navHostController: NavHostController,
-    cheatsheetFileName: String,
-    cheatsheetId: Int,
+    topicName: String,
+    topicId: Int,
     hasContentUpdated: Boolean
 ) {
 
@@ -76,13 +76,13 @@ fun PointsScreen(
     val points by viewModel.points.collectAsState()
     val failedState by viewModel.failedState.collectAsState()
     val executionState by viewModel.executionState.collectAsState()
-    val saveCheatsheetPointsResult by viewModel.saveCheatsheetPointsResult.collectAsState()
-    val updateCheatsheetsOnDBResult by viewModel.updateCheatsheetsOnDBResult.collectAsState()
+    val saveTopicPointsResult by viewModel.saveTopicPointsResult.collectAsState()
+    val updateTopicsOnDBResult by viewModel.updateTopicsOnDBResult.collectAsState()
 
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { PointAppBar(cheatsheetFileName, navHostController) },
+        topBar = { PointsScreenAppBar(topicName, navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -156,9 +156,9 @@ fun PointsScreen(
                         duration = SnackbarDuration.Short
                     )
                 }
-                viewModel.getPointsFromGithub(cheatsheetFileName)
+                viewModel.getPointsFromGit(topicName)
             } else
-                viewModel.getPointsFromDatabase(cheatsheetFileName)
+                viewModel.getPointsFromDatabase(topicName)
         }
     }
 
@@ -169,7 +169,7 @@ fun PointsScreen(
                 is Resource.Loading -> {}
                 is Resource.Success -> {
                     if (hasContentUpdated)
-                        viewModel.saveCheatsheetPointsOnDB(cheatsheetFileName)
+                        viewModel.saveTopicPointsOnDB(topicName)
                     else
                         viewModel.setExecutionState(Stop)
                 }
@@ -186,9 +186,9 @@ fun PointsScreen(
         }
     }
 
-    LaunchedEffect(saveCheatsheetPointsResult) {
+    LaunchedEffect(saveTopicPointsResult) {
         if (executionState != Stop) {
-            when (saveCheatsheetPointsResult) {
+            when (saveTopicPointsResult) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {
                     snackBarHostState.showSnackbar(
@@ -198,7 +198,7 @@ fun PointsScreen(
                 }
 
                 is Resource.Success -> {
-                    viewModel.updateCheatsheetState(cheatsheetId)
+                    viewModel.updateTopicState(topicId)
                 }
 
                 is Resource.Error -> {
@@ -212,16 +212,16 @@ fun PointsScreen(
         }
     }
 
-    LaunchedEffect(updateCheatsheetsOnDBResult) {
+    LaunchedEffect(updateTopicsOnDBResult) {
         if (executionState != Stop) {
-            when (updateCheatsheetsOnDBResult) {
+            when (updateTopicsOnDBResult) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
                     navHostController
                         .previousBackStackEntry
                         ?.savedStateHandle
-                        ?.set(UPDATED_ID_KEY, cheatsheetId)
+                        ?.set(UPDATED_ID_KEY, topicId)
                     viewModel.setExecutionState(Stop)
                 }
 
@@ -243,14 +243,11 @@ fun PointsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PointAppBar(
-    cheatSheetFileName: String,
-    navHostController: NavHostController
-) {
+fun PointsScreenAppBar(topicName: String, navHostController: NavHostController) {
     TopAppBar(
         title = {
             Text(
-                text = cheatSheetFileName.extractFileName().splitByCapitalLetters(),
+                text = topicName.extractFileName().splitByCapitalLetters(),
                 fontWeight = FontWeight.Bold
             )
         },
@@ -265,7 +262,7 @@ fun PointAppBar(
 }
 
 @Composable
-fun PointItem(point: PointDataModel) {
+fun PointItem(point: PointData) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -386,6 +383,6 @@ fun SnippetCodeItem(snippetCode: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun CheatSheetScreenPreview() {
+fun PointsScreenPreview() {
     PointsScreen(MainActivity(), rememberNavController(), "", -1, false)
 }

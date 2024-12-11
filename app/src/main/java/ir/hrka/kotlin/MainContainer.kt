@@ -10,21 +10,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import ir.hrka.kotlin.core.Constants.CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME
-import ir.hrka.kotlin.core.Constants.CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX
+import ir.hrka.kotlin.core.Constants.COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME
+import ir.hrka.kotlin.core.Constants.COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX
+import ir.hrka.kotlin.core.Constants.KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME
+import ir.hrka.kotlin.core.Constants.KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN_ARGUMENT_VERSION_NAME
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN_ARGUMENT_VERSION_SUFFIX
-import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_ID
-import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME
-import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME
+import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID
+import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME
+import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
-import ir.hrka.kotlin.core.utilities.Screen.CheatSheet
+import ir.hrka.kotlin.core.utilities.Screen.KotlinTopics
+import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopics
 import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.core.utilities.Screen.About
 import ir.hrka.kotlin.ui.screens.about.AboutScreen
+import ir.hrka.kotlin.ui.screens.coroutine.CoroutineTopicsScreen
 import ir.hrka.kotlin.ui.screens.points.PointsScreen
-import ir.hrka.kotlin.ui.screens.cheatsheets.CheatSheetScreen
+import ir.hrka.kotlin.ui.screens.kotlin.KotlinTopicsScreen
 import ir.hrka.kotlin.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.ui.screens.splash.SplashScreen
 import ir.hrka.kotlin.ui.theme.KotlinTheme
@@ -52,53 +56,76 @@ fun AppContent() {
                     navArgument(HOME_SCREEN_ARGUMENT_VERSION_SUFFIX) { type = NavType.StringType },
                 )
             ) { backStackEntry ->
-                val githubVersionName =
+
+                val gitVersionName =
                     backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_VERSION_NAME)
-                val githubVersionSuffix =
+                val gitVersionSuffix =
                     backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_VERSION_SUFFIX)
-                HomeScreen(activity, navHostController, githubVersionName, githubVersionSuffix)
+
+                HomeScreen(activity, navHostController, gitVersionName, gitVersionSuffix)
             }
             composable(
-                route = "${CheatSheet()}/{${CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME}}/{${CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
+                route = "${KotlinTopics()}/{${KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME}}/{${KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
                 arguments = listOf(
-                    navArgument(CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME) {
+                    navArgument(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME) {
                         type = NavType.StringType
                     },
-                    navArgument(CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX) {
+                    navArgument(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX) {
                         type = NavType.StringType
                     },
                 )
             ) { backStackEntry ->
-                val githubVersionName =
-                    backStackEntry.arguments?.getString(CHEATSHEET_SCREEN_ARGUMENT_VERSION_NAME)
-                val githubVersionSuffix =
-                    backStackEntry.arguments?.getString(CHEATSHEET_SCREEN_ARGUMENT_VERSION_SUFFIX)
-                CheatSheetScreen(
-                    activity,
-                    navHostController,
-                    githubVersionName,
-                    githubVersionSuffix
-                )
+
+                val gitVersionName =
+                    backStackEntry.arguments?.getString(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME)
+                val gitVersionSuffix =
+                    backStackEntry.arguments?.getString(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX)
+
+                KotlinTopicsScreen(activity, navHostController, gitVersionName, gitVersionSuffix)
             }
             composable(
-                route = "${Point()}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME}}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME}}/{${POINT_SCREEN_ARGUMENT_CHEATSHEET_ID}}",
-                arguments = listOf(navArgument(POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME) {
+                route = "${CoroutineTopics()}/{${COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME}}/{${COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
+                arguments = listOf(
+                    navArgument(COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME) {
+                        type = NavType.StringType
+                    },
+                    navArgument(COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX) {
+                        type = NavType.StringType
+                    },
+                )
+            ) { backStackEntry ->
+
+                val gitVersionName =
+                    backStackEntry.arguments?.getString(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME)
+                val gitVersionSuffix =
+                    backStackEntry.arguments?.getString(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX)
+
+                CoroutineTopicsScreen(activity, navHostController, gitVersionName, gitVersionSuffix)
+            }
+            composable(
+                route = "${Point()}/{${POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME}}/{${POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME}}/{${POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID}}",
+                arguments = listOf(navArgument(POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME) {
                     type = NavType.StringType
                 })
             ) { backStackEntry ->
-                val cheatSheetFileName =
-                    backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_CHEATSHEET_NAME) ?: ""
+
+                val kotlinTopicName =
+                    backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME)
+                        ?: ""
                 val hasContentUpdated =
-                    backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_CHEATSHEET_STATE_NAME)
+                    backStackEntry.arguments?.getString(
+                        POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME
+                    )
                         ?: false
-                val cheatsheetId =
-                    backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_CHEATSHEET_ID)
+                val kotlinTopicId =
+                    backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID)
                         ?: "-1"
+
                 PointsScreen(
                     activity,
                     navHostController,
-                    cheatSheetFileName,
-                    cheatsheetId.toInt(),
+                    kotlinTopicName,
+                    kotlinTopicId.toInt(),
                     hasContentUpdated == "true"
                 )
             }
