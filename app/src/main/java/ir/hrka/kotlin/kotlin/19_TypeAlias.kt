@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.cheatSheet
+package ir.hrka.kotlin.kotlin
 
 /**
  * * Type aliases provide alternative names for existing types:

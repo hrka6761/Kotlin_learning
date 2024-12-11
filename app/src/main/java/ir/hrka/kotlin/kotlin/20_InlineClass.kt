@@ -1,6 +1,5 @@
-package ir.hrka.kotlin.cheatSheet
+package ir.hrka.kotlin.kotlin
 
-import ir.hrka.kotlin.core.utilities.Log
 import ir.hrka.kotlin.core.utilities.Log.printYellow
 
 /**
