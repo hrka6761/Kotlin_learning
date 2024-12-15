@@ -8,6 +8,7 @@ import ir.hrka.kotlin.core.Constants.BASE_URL
 import ir.hrka.kotlin.core.Constants.CONNECT_TIMEOUT
 import ir.hrka.kotlin.core.Constants.READ_TIMEOUT
 import ir.hrka.kotlin.core.Constants.WRITE_TIMEOUT
+import ir.hrka.kotlin.core.utilities.AuthInterceptor
 import ir.hrka.kotlin.data.datasource.github.GitAPI
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -27,9 +28,13 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient =
+    fun provideOkHttpClient(
+        interceptor: HttpLoggingInterceptor,
+        authInterceptor: AuthInterceptor
+    ): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(interceptor)
+            .addInterceptor(authInterceptor)
             .retryOnConnectionFailure(true)
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
