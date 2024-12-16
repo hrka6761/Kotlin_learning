@@ -13,11 +13,11 @@ interface GitAPI {
     suspend fun getAppInfo(): Response<GitFileData>
 
     @Headers("Accept: application/vnd.github.v3+json")
-    @GET("app/src/main/java/ir/hrka/kotlin/{courseName}")
+    @GET("app/src/main/java/ir/hrka/kotlin/courses/{courseName}")
     suspend fun getTopicsList(@Path("courseName") courseName: String): Response<List<GitFileData>>
 
     @Headers("Accept: application/vnd.github.v3+json")
-    @GET("app/src/main/java/ir/hrka/kotlin/{courseName}/{topicName}")
+    @GET("app/src/main/java/ir/hrka/kotlin/courses/{courseName}/{topicName}")
     suspend fun getTopicFile(
         @Path("courseName") courseName: String,
         @Path("topicName") topicName: String

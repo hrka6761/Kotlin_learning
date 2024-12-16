@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.kotlin
+package ir.hrka.kotlin.courses.kotlin
 
 /**
  * * There are four visibility modifiers in Kotlin: `private`, `protected`, `internal`, `public`.
