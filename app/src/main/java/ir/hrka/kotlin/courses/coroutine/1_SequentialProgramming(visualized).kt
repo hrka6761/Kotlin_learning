@@ -4,9 +4,9 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
 
 /**
  * * All type of programming paradigms is:
- *    * Sequential programming
- *    * Concurrent programming
- *    * Parallel programming
+ *    * Sequential programming.
+ *    * Concurrent programming.
+ *    * Parallel programming.
  * * Sequential programming is a programming paradigm where instructions are executed one after another in a specific:
  *    * In the Sequential programming instructions are executed in the single thread.
  * ```
