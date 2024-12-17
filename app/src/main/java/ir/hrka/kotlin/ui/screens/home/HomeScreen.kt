@@ -27,7 +27,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -55,8 +54,7 @@ import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.SOURCE_URL
 import ir.hrka.kotlin.core.utilities.Screen.KotlinTopics
 import ir.hrka.kotlin.core.utilities.Screen.About
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopics
 
 @SuppressLint("SwitchIntDef")
 @Composable
@@ -86,9 +84,6 @@ fun HomeScreen(
     ) { innerPaddings ->
         when (configuration.orientation) {
             ORIENTATION_PORTRAIT -> PortraitScreen(
-                activity,
-                scope,
-                snackBarHostState,
                 navHostController,
                 innerPaddings,
                 scrollState,
@@ -97,9 +92,6 @@ fun HomeScreen(
             )
 
             ORIENTATION_LANDSCAPE -> LandscapeScreen(
-                activity,
-                scope,
-                snackBarHostState,
                 navHostController,
                 innerPaddings,
                 scrollState,
@@ -116,9 +108,6 @@ fun HomeScreen(
 
 @Composable
 fun PortraitScreen(
-    activity: MainActivity,
-    scope: CoroutineScope,
-    snackBarHostState: SnackbarHostState,
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
     scrollState: ScrollState,
@@ -266,15 +255,15 @@ fun PortraitScreen(
                         bottom.linkTo(img.bottom)
                     },
                     onClick = {
-                        scope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = activity.getString(R.string.home_screen_coming_soon_msg),
-                                duration = SnackbarDuration.Long
+                        navHostController.navigate(
+                            CoroutineTopics.appendArg(
+                                githubVersionName ?: "",
+                                githubVersionSuffix ?: ""
                             )
-                        }
+                        )
                     }
                 ) {
-                    Text(stringResource(R.string.home_screen_coming_soon_btn))
+                    Text(stringResource(R.string.home_screen_start_learning_btn))
                 }
             }
         }
@@ -283,9 +272,6 @@ fun PortraitScreen(
 
 @Composable
 fun LandscapeScreen(
-    activity: MainActivity,
-    scope: CoroutineScope,
-    snackBarHostState: SnackbarHostState,
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
     scrollState: ScrollState,
@@ -427,12 +413,12 @@ fun LandscapeScreen(
                         bottom.linkTo(img.bottom)
                     },
                     onClick = {
-                        scope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = activity.getString(R.string.home_screen_coming_soon_msg),
-                                duration = SnackbarDuration.Long
-                            )
-                        }
+                       navHostController.navigate(
+                           CoroutineTopics.appendArg(
+                               githubVersionName ?: "",
+                               githubVersionSuffix ?: ""
+                           )
+                       )
                     }
                 ) {
                     Text(stringResource(R.string.home_screen_coming_soon_btn))
