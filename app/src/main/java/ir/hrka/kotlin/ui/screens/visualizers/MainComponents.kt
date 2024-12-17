@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.utilities.ComponentData
 import ir.hrka.kotlin.core.utilities.CoroutineComponentState
 import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Stop
 import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Processing
@@ -39,10 +39,11 @@ import ir.hrka.kotlin.core.utilities.ThreadData
 @Composable
 fun Thread(
     modifier: Modifier = Modifier,
-    data: ThreadData?,
-    threadState: CoroutineComponentState,
+    state: CoroutineComponentState<ThreadData>,
     content: @Composable () -> Unit
 ) {
+    val threadData = state.componentData
+
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -61,7 +62,7 @@ fun Thread(
         ) {
             Text(
                 modifier = Modifier.padding(start = 8.dp, end = 16.dp),
-                text = "Thread name: ${data?.threadName}\nThread id: ${data?.threadId}",
+                text = "Thread name: ${threadData?.threadName ?: "..."}\nThread id: ${threadData?.threadId ?: "..."}",
                 style = TextStyle(
                     fontSize = 10.sp,
                     lineHeight = 12.sp
@@ -69,7 +70,7 @@ fun Thread(
                 fontWeight = FontWeight.Bold
             )
 
-            StateIcon(threadState)
+            StateIcon(state)
         }
         content()
     }
@@ -78,10 +79,11 @@ fun Thread(
 @Composable
 fun Coroutine(
     modifier: Modifier = Modifier,
-    data: CoroutineData?,
-    coroutineState: CoroutineComponentState,
+    state: CoroutineComponentState<CoroutineData>,
     content: @Composable () -> Unit
 ) {
+    val coroutineData = state.componentData
+
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -100,7 +102,7 @@ fun Coroutine(
         ) {
             Text(
                 modifier = Modifier.padding(start = 8.dp, end = 16.dp),
-                text = "Coroutine name: ${data?.coroutineName}\nThread context: ${data?.threadContext}\nJob context: ${data?.jobContext}",
+                text = "Coroutine name: ${coroutineData?.coroutineName ?: "..."}\nThread context: ${coroutineData?.threadContext ?: "..."}\nJob context: ${coroutineData?.jobContext ?: "..."}",
                 style = TextStyle(
                     fontSize = 10.sp,
                     lineHeight = 12.sp
@@ -108,7 +110,7 @@ fun Coroutine(
                 fontWeight = FontWeight.Bold
             )
 
-            StateIcon(coroutineState)
+            StateIcon(state)
         }
         content()
     }
@@ -117,9 +119,10 @@ fun Coroutine(
 @Composable
 fun Task(
     modifier: Modifier = Modifier,
-    data: TaskData?,
-    taskState: CoroutineComponentState
+    state: CoroutineComponentState<TaskData>
 ) {
+    val taskData = state.componentData
+
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -138,7 +141,7 @@ fun Task(
         ) {
             Text(
                 modifier = Modifier.padding(start = 8.dp, end = 16.dp),
-                text = "Task name: ${data?.taskName}\nDuration time: ${data?.durationTime} MS",
+                text = "Task name: ${taskData?.taskName ?: "..."}\nDuration time: ${taskData?.durationTime ?: "..."} MS",
                 style = TextStyle(
                     fontSize = 10.sp,
                     lineHeight = 12.sp
@@ -146,16 +149,16 @@ fun Task(
                 fontWeight = FontWeight.Bold
             )
 
-            StateIcon(taskState)
+            StateIcon(state)
         }
     }
 }
 
 @Composable
 fun StateIcon(
-    state: CoroutineComponentState,
+    data: CoroutineComponentState<ComponentData>,
 ) {
-    when (state) {
+    when (data) {
         is Stop -> {
             Icon(
                 painter = painterResource(R.drawable.state_stop),
@@ -319,107 +322,5 @@ fun Guidance(
 @Preview(showBackground = true)
 @Composable
 fun ComponentPreview() {
-    Column {
-        Guidance()
-        Thread(
-            modifier = Modifier.fillMaxSize(),
-            data = ThreadData(
-                threadId = "0",
-                threadName = "Main Thread"
-            ),
-            threadState = Processing
-        ) {
-            Task(
-                data = TaskData(
-                    taskName = "Task 1",
-                    durationTime = "2000"
-                ),
-                taskState = Stop
-            )
 
-            Coroutine(
-                data = CoroutineData(
-                    coroutineName = "Coroutine 1",
-                    threadContext = "Main",
-                    jobContext = "345ldkjsd"
-                ),
-                coroutineState = Done
-            ) {
-                Task(
-                    data = TaskData(
-                        taskName = "Task 2",
-                        durationTime = "1000"
-                    ),
-                    taskState = Cancel
-                )
-            }
-
-            Thread(
-                data = ThreadData(
-                    threadId = "1",
-                    threadName = "Thread 1"
-                ),
-                threadState = Processing
-            ) {
-                Coroutine(
-                    data = CoroutineData(
-                        coroutineName = "Coroutine 2",
-                        threadContext = "IO",
-                        jobContext = "sdf544sdf"
-                    ),
-                    coroutineState = Failed
-                ) {
-                    Task(
-                        data = TaskData(
-                            taskName = "Task 3",
-                            durationTime = "500"
-                        ),
-                        taskState = Cancel
-                    )
-                }
-            }
-
-            Coroutine(
-                data = CoroutineData(
-                    coroutineName = "Coroutine 3",
-                    threadContext = "Main",
-                    jobContext = "213dasdsa2"
-                ),
-                coroutineState = Stop
-            ) {
-                Thread(
-                    data = ThreadData(
-                        threadId = "1",
-                        threadName = "Thread 1"
-                    ),
-                    threadState = Processing
-                ) {
-                    Coroutine(
-                        data = CoroutineData(
-                            coroutineName = "Coroutine 4",
-                            threadContext = "IO",
-                            jobContext = "ijhdsklfhjsd"
-                        ),
-                        coroutineState = Stop
-                    ) {
-                        Task(
-                            data = TaskData(
-                                taskName = "Task 4",
-                                durationTime = "4000"
-                            ),
-                            taskState = Processing
-                        )
-                    }
-                }
-            }
-
-            Task(
-                data = TaskData(
-                    taskName = "Task 5",
-                    durationTime = "1500"
-                ),
-                taskState = Done
-            )
-        }
-    }
 }
