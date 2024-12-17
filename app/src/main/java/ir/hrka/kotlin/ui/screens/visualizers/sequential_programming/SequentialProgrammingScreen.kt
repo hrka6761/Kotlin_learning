@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.ui.screens.visualizers
+package ir.hrka.kotlin.ui.screens.visualizers.sequential_programming
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,10 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,12 +30,22 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.ExecutionState
+import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Stop
+import ir.hrka.kotlin.ui.screens.visualizers.Guidance
+import ir.hrka.kotlin.ui.screens.visualizers.Task
+import ir.hrka.kotlin.ui.screens.visualizers.Thread
 
 @Composable
 fun SequentialProgrammingScreen(activity: MainActivity, navHostController: NavHostController) {
 
     val viewModel: SequentialProgrammingViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
+    val executionState by viewModel.executionState.collectAsState()
+    val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
+    val task1State by viewModel.task1State.observeAsState(initial = Stop())
+    val task2State by viewModel.task2State.observeAsState(initial = Stop())
+    val task3State by viewModel.task3State.observeAsState(initial = Stop())
 
 
     Scaffold(
@@ -53,7 +67,22 @@ fun SequentialProgrammingScreen(activity: MainActivity, navHostController: NavHo
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Guidance()
+            Thread(
+                modifier = Modifier.fillMaxSize(),
+                state = mainThreadState
+            ) {
+                Task(state = task1State)
+                Task(state = task2State)
+                Task(state = task3State)
+            }
+        }
+    }
 
+    LaunchedEffect(Unit) {
+        if (executionState == ExecutionState.Start) {
+            viewModel.setExecutionState(ExecutionState.Loading)
+            viewModel.runAllTasks()
         }
     }
 }
