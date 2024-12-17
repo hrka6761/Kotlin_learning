@@ -8,16 +8,16 @@ object Constants {
     const val HOME_SCREEN = "home"
     const val KOTLIN_TOPICS_SCREEN = "kotlinTopics"
     const val COROUTINE_TOPICS_SCREEN = "coroutineTopics"
-    const val POINT_SCREEN = "points"
+    const val KOTLIN_TOPIC_POINTS_SCREEN = "kotlinTopicPoints"
     const val ABOUT_SCREEN = "about"
 
     const val CONNECT_TIMEOUT = 3L
     const val WRITE_TIMEOUT = 60L
     const val READ_TIMEOUT = 60L
 
-    const val POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME = "kotlinTopicName"
-    const val POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME = "kotlinTopicStateName"
-    const val POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID = "kotlinTopicId"
+    const val KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME = "kotlinTopicName"
+    const val KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME = "kotlinTopicStateName"
+    const val KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID = "kotlinTopicId"
     const val KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
     const val KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
     const val COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"

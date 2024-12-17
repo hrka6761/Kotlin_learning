@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.ui.screens.points
+package ir.hrka.kotlin.ui.screens.kotlin_topic_points
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +19,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class PointViewModel @Inject constructor(
+class KotlinTopicPointsViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val getGitKotlinTopicPointsUseCase: GetGitKotlinTopicPointsUseCase,
     private val getDBKotlinTopicPointsUseCase: GetDBKotlinTopicPointsUseCase,

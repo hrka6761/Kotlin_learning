@@ -56,7 +56,7 @@ import ir.hrka.kotlin.core.ExecutionState.Loading
 import ir.hrka.kotlin.core.ExecutionState.Stop
 import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Screen.Point
+import ir.hrka.kotlin.core.utilities.Screen.KotlinTopicPoints
 import ir.hrka.kotlin.core.utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
 import ir.hrka.kotlin.domain.entities.db.KotlinTopic
@@ -295,7 +295,7 @@ fun KotlinTopicItem(
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .clickable {
                     navHostController.navigate(
-                        Point.appendArg(
+                        KotlinTopicPoints.appendArg(
                             kotlinTopics.name,
                             kotlinTopics.hasUpdated.toString(),
                             kotlinTopics.id.toString()

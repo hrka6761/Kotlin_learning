@@ -16,18 +16,18 @@ import ir.hrka.kotlin.core.Constants.KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME
 import ir.hrka.kotlin.core.Constants.KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN_ARGUMENT_VERSION_NAME
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN_ARGUMENT_VERSION_SUFFIX
-import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID
-import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME
-import ir.hrka.kotlin.core.Constants.POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME
+import ir.hrka.kotlin.core.Constants.KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID
+import ir.hrka.kotlin.core.Constants.KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME
+import ir.hrka.kotlin.core.Constants.KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import ir.hrka.kotlin.core.utilities.Screen.KotlinTopics
 import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopics
-import ir.hrka.kotlin.core.utilities.Screen.Point
+import ir.hrka.kotlin.core.utilities.Screen.KotlinTopicPoints
 import ir.hrka.kotlin.core.utilities.Screen.About
 import ir.hrka.kotlin.ui.screens.about.AboutScreen
 import ir.hrka.kotlin.ui.screens.coroutine.CoroutineTopicsScreen
-import ir.hrka.kotlin.ui.screens.points.PointsScreen
+import ir.hrka.kotlin.ui.screens.kotlin_topic_points.KotlinTopicPointsScreen
 import ir.hrka.kotlin.ui.screens.kotlin.KotlinTopicsScreen
 import ir.hrka.kotlin.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.ui.screens.splash.SplashScreen
@@ -103,25 +103,25 @@ fun AppContent() {
                 CoroutineTopicsScreen(activity, navHostController, gitVersionName, gitVersionSuffix)
             }
             composable(
-                route = "${Point()}/{${POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME}}/{${POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME}}/{${POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID}}",
-                arguments = listOf(navArgument(POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME) {
+                route = "${KotlinTopicPoints()}/{${KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME}}/{${KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME}}/{${KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID}}",
+                arguments = listOf(navArgument(KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME) {
                     type = NavType.StringType
                 })
             ) { backStackEntry ->
 
                 val kotlinTopicName =
-                    backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME)
+                    backStackEntry.arguments?.getString(KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME)
                         ?: ""
                 val hasContentUpdated =
                     backStackEntry.arguments?.getString(
-                        POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME
+                        KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME
                     )
                         ?: false
                 val kotlinTopicId =
-                    backStackEntry.arguments?.getString(POINT_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID)
+                    backStackEntry.arguments?.getString(KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID)
                         ?: "-1"
 
-                PointsScreen(
+                KotlinTopicPointsScreen(
                     activity,
                     navHostController,
                     kotlinTopicName,

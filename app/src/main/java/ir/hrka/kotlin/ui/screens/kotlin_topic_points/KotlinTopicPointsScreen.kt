@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.ui.screens.points
+package ir.hrka.kotlin.ui.screens.kotlin_topic_points
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -63,7 +63,7 @@ import ir.hrka.kotlin.domain.entities.PointData
 import kotlinx.coroutines.launch
 
 @Composable
-fun PointsScreen(
+fun KotlinTopicPointsScreen(
     activity: MainActivity,
     navHostController: NavHostController,
     topicName: String,
@@ -71,7 +71,7 @@ fun PointsScreen(
     hasContentUpdated: Boolean
 ) {
 
-    val viewModel: PointViewModel = hiltViewModel()
+    val viewModel: KotlinTopicPointsViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
     val points by viewModel.points.collectAsState()
     val failedState by viewModel.failedState.collectAsState()
@@ -82,7 +82,7 @@ fun PointsScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { PointsScreenAppBar(topicName, navHostController) },
+        topBar = { KotlinTopicPointsScreenAppBar(topicName, navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -131,7 +131,7 @@ fun PointsScreen(
 
                 list?.let {
                     items(it.size) { index ->
-                        PointItem(list[index])
+                        KotlinTopicPointItem(list[index])
                     }
                 }
             }
@@ -243,7 +243,7 @@ fun PointsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PointsScreenAppBar(topicName: String, navHostController: NavHostController) {
+fun KotlinTopicPointsScreenAppBar(topicName: String, navHostController: NavHostController) {
     TopAppBar(
         title = {
             Text(
@@ -262,7 +262,7 @@ fun PointsScreenAppBar(topicName: String, navHostController: NavHostController) 
 }
 
 @Composable
-fun PointItem(point: PointData) {
+fun KotlinTopicPointItem(point: PointData) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -316,7 +316,7 @@ fun PointItem(point: PointData) {
                         }
                 ) {
                     items(point.subPoints.size) { index ->
-                        SubPintItem(point.subPoints[index])
+                        KotlinTopicSubPintItem(point.subPoints[index])
                     }
                 }
 
@@ -336,7 +336,7 @@ fun PointItem(point: PointData) {
                         }
                 ) {
                     items(point.snippetsCode.size) { index ->
-                        SnippetCodeItem(point.snippetsCode[index])
+                        KotlinTopicSnippetCodeItem(point.snippetsCode[index])
                     }
                 }
         }
@@ -344,7 +344,7 @@ fun PointItem(point: PointData) {
 }
 
 @Composable
-fun SubPintItem(subPoints: String) {
+fun KotlinTopicSubPintItem(subPoints: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -361,7 +361,7 @@ fun SubPintItem(subPoints: String) {
 }
 
 @Composable
-fun SnippetCodeItem(snippetCode: String) {
+fun KotlinTopicSnippetCodeItem(snippetCode: String) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -383,6 +383,6 @@ fun SnippetCodeItem(snippetCode: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun PointsScreenPreview() {
-    PointsScreen(MainActivity(), rememberNavController(), "", -1, false)
+fun KotlinTopicPointsScreenPreview() {
+    KotlinTopicPointsScreen(MainActivity(), rememberNavController(), "", -1, false)
 }
