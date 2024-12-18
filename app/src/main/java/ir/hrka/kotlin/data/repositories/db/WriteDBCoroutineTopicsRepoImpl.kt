@@ -7,16 +7,16 @@ import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.db.interactions.CoroutineTopicsDao
 import ir.hrka.kotlin.domain.entities.db.CoroutineTopic
-import ir.hrka.kotlin.domain.repositories.db.WriteDBCoroutineTopicRepo
+import ir.hrka.kotlin.domain.repositories.db.WriteDBCoroutineTopicsRepo
 import javax.inject.Inject
 
-class WriteDBCoroutineTopicRepoImpl @Inject constructor(
+class WriteDBCoroutineTopicsRepoImpl @Inject constructor(
     private val coroutineTopicsDao: CoroutineTopicsDao,
-) : WriteDBCoroutineTopicRepo {
+) : WriteDBCoroutineTopicsRepo {
 
-    override suspend fun saveCoroutineTopicsListOnDB(coroutineTopics: List<CoroutineTopic>): Resource<Boolean> {
+    override suspend fun saveCoroutineTopicsListOnDB(topics: List<CoroutineTopic>): Resource<Boolean> {
         return try {
-            coroutineTopicsDao.insertTopics(*coroutineTopics.toTypedArray())
+            coroutineTopicsDao.insertTopics(*topics.toTypedArray())
             Resource.Success(true)
         } catch (e: Exception) {
             Resource.Error(

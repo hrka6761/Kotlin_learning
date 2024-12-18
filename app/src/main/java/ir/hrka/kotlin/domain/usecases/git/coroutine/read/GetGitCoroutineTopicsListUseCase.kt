@@ -1,5 +1,7 @@
 package ir.hrka.kotlin.domain.usecases.git.coroutine.read
 
+import android.util.Log
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UNKNOWN_ERROR_CODE
 import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.core.utilities.Course.Coroutine
@@ -22,6 +24,9 @@ class GetGitCoroutineTopicsListUseCase @Inject constructor(
     suspend operator fun invoke(): Resource<List<CoroutineTopic>?> {
         val appInfoResult = appInfoRepo.getAppInfo()
         val topicsListResult = readGitTopicsRepo.getTopicsList(Coroutine)
+
+        Log.i(TAG, "appInfoResult: $appInfoResult")
+        Log.i(TAG, "topicsListResult: $topicsListResult")
 
         if (appInfoResult is Resource.Error)
             return Resource.Error(appInfoResult.error ?: unknownError)

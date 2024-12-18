@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.ui.screens.coroutine
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,12 +52,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.ExecutionState.Loading
 import ir.hrka.kotlin.core.ExecutionState.Start
 import ir.hrka.kotlin.core.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Screen.Point
+import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopicPoints
 import ir.hrka.kotlin.core.utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.removeVisualizedFromFileName
 import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
@@ -222,7 +224,7 @@ fun CoroutineTopicsScreen(
                     }
 
                     if (hasUpdateForCoroutineTopicsList == true)
-                        viewModel.saveCoroutineTopicsOnDB(githubVersionName!!)
+                        viewModel.saveCoroutineTopicsOnDB()
                     else
                         viewModel.setExecutionState(Stop)
                 }
@@ -281,7 +283,7 @@ fun CoroutineTopicItem(
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .clickable {
                     navHostController.navigate(
-                        Point.appendArg(
+                        CoroutineTopicPoints.appendArg(
                             coroutineTopic.name,
                             coroutineTopic.hasUpdated.toString(),
                             coroutineTopic.id.toString()

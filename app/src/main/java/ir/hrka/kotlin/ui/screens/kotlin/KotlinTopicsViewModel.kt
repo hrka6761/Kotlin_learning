@@ -14,9 +14,9 @@ import ir.hrka.kotlin.domain.entities.db.KotlinTopic
 import ir.hrka.kotlin.domain.usecases.db.kotlin.write.ClearKotlinTopicsTableUseCase
 import ir.hrka.kotlin.domain.usecases.db.kotlin.read.GetDBKotlinTopicsListUseCase
 import ir.hrka.kotlin.domain.usecases.git.kotlin.read.GetGitKotlinTopicsListUseCase
-import ir.hrka.kotlin.domain.usecases.preference.LoadCurrentVersionNameUseCase
+import ir.hrka.kotlin.domain.usecases.preference.LoadCurrentKotlinCourseVersionNameUseCase
 import ir.hrka.kotlin.domain.usecases.db.kotlin.write.SaveKotlinTopicsOnDBUseCase
-import ir.hrka.kotlin.domain.usecases.preference.SaveCurrentVersionNameUseCase
+import ir.hrka.kotlin.domain.usecases.preference.SaveCurrentKotlinCourseVersionNameUseCase
 import ir.hrka.kotlin.domain.usecases.db.kotlin.write.UpdateKotlinTopicsStateUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -31,8 +31,8 @@ class KotlinTopicsViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val getGitKotlinTopicsListUseCase: GetGitKotlinTopicsListUseCase,
     private val getDBKotlinTopicsListUseCase: GetDBKotlinTopicsListUseCase,
-    private val loadCurrentVersionNameUseCase: LoadCurrentVersionNameUseCase,
-    private val saveCurrentVersionNameUseCase: SaveCurrentVersionNameUseCase,
+    private val loadCurrentKotlinCourseVersionNameUseCase: LoadCurrentKotlinCourseVersionNameUseCase,
+    private val saveCurrentKotlinCourseVersionNameUseCase: SaveCurrentKotlinCourseVersionNameUseCase,
     private val clearKotlinTopicsTableUseCase: ClearKotlinTopicsTableUseCase,
     private val saveKotlinTopicsOnDBUseCase: SaveKotlinTopicsOnDBUseCase,
     private val updateKotlinTopicsStateUseCase: UpdateKotlinTopicsStateUseCase
@@ -84,7 +84,7 @@ class KotlinTopicsViewModel @Inject constructor(
     fun checkNewUpdateForKotlinTopicsList(gitVersionName: String?) {
         viewModelScope.launch(io) {
             currentVersionName =
-                (loadCurrentVersionNameUseCase().data ?: "0.0.0").ifEmpty { "0.0.0" }
+                (loadCurrentKotlinCourseVersionNameUseCase().data ?: "0.0.0").ifEmpty { "0.0.0" }
 
             if (gitVersionName.isNullOrEmpty()) {
                 _hasUpdateForKotlinTopicsList.value = false
@@ -161,7 +161,7 @@ class KotlinTopicsViewModel @Inject constructor(
         }
     }
 
-    fun saveKotlinTopicsOnDB(gitVersionName: String) {
+    fun saveKotlinTopicsOnDB() {
         viewModelScope.launch(io) {
             val clearDiffered = async { clearKotlinTopicsTableUseCase() }
             val clearResult = clearDiffered.await()
@@ -171,13 +171,7 @@ class KotlinTopicsViewModel @Inject constructor(
                 return@launch
             }
 
-            _kotlinTopics.value.data?.map { kotlinTopic ->
-                KotlinTopic(
-                    id = kotlinTopic.id,
-                    name = kotlinTopic.name,
-                    versionName = gitVersionName
-                )
-            }?.let {
+            _kotlinTopics.value.data?.let {
                 val saveDiffered = async { saveKotlinTopicsOnDBUseCase(it) }
                 _saveKotlinTopicsListResult.value = saveDiffered.await()
             }
@@ -186,7 +180,7 @@ class KotlinTopicsViewModel @Inject constructor(
 
     fun saveVersionName(gitVersionName: String) {
         viewModelScope.launch(io) {
-            saveCurrentVersionNameUseCase(gitVersionName)
+            saveCurrentKotlinCourseVersionNameUseCase(gitVersionName)
         }
     }
 

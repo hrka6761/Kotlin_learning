@@ -95,9 +95,9 @@ class SaveCoroutineTopicPointsOnDBUseCase @Inject constructor(
     }
 
 
-    private suspend fun deleteCoroutineTopicPoints(cheatsheetName: String): Resource<Boolean> {
+    private suspend fun deleteCoroutineTopicPoints(topicName: String): Resource<Boolean> {
         val cheatsheetPointsIdResult =
-            readDBTopicPointsRepo.getTopicPoints(cheatsheetName)
+            readDBTopicPointsRepo.getTopicPoints(topicName)
 
         if (cheatsheetPointsIdResult is Resource.Error)
             return Resource.Error(cheatsheetPointsIdResult.error!!)
@@ -106,7 +106,7 @@ class SaveCoroutineTopicPointsOnDBUseCase @Inject constructor(
             ?.map { pointDataModel -> pointDataModel.databaseId!! }!!
 
         val deletePointsDiffered = CoroutineScope(io).async {
-            writeDBTopicPointsRepo.deletePoints(cheatsheetName)
+            writeDBTopicPointsRepo.deletePoints(topicName)
         }
 
         val deleteSubPointsDiffered = CoroutineScope(io).async {

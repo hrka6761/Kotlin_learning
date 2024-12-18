@@ -7,7 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import ir.hrka.kotlin.data.repositories.db.ReadDBTopicPointsRepoImpl
 import ir.hrka.kotlin.data.repositories.git.AppInfoRepoImpl
 import ir.hrka.kotlin.data.repositories.db.ReadDBTopicsRepoImpl
-import ir.hrka.kotlin.data.repositories.db.WriteDBCoroutineTopicRepoImpl
+import ir.hrka.kotlin.data.repositories.db.WriteDBCoroutineTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.db.WriteDBKotlinTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.db.WriteDBTopicPointsRepoImpl
@@ -19,7 +19,7 @@ import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicsRepo
 import ir.hrka.kotlin.domain.repositories.db.WriteDBKotlinTopicsRepo
 import ir.hrka.kotlin.domain.repositories.preference.VersionDataRepo
 import ir.hrka.kotlin.domain.repositories.db.ReadDBTopicsRepo
-import ir.hrka.kotlin.domain.repositories.db.WriteDBCoroutineTopicRepo
+import ir.hrka.kotlin.domain.repositories.db.WriteDBCoroutineTopicsRepo
 import ir.hrka.kotlin.domain.repositories.db.WriteDBTopicPointsRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicPointsRepo
 
@@ -49,7 +49,7 @@ interface RepositoryModule {
     fun bindWriteDBKotlinTopicsRepo(writeDBKotlinTopicsRepoImpl: WriteDBKotlinTopicsRepoImpl): WriteDBKotlinTopicsRepo
 
     @Binds
-    fun bindWriteDBCoroutineTopicRepo(writeDBCoroutineTopicRepoImpl: WriteDBCoroutineTopicRepoImpl): WriteDBCoroutineTopicRepo
+    fun bindWriteDBCoroutineTopicRepo(writeDBCoroutineTopicRepoImpl: WriteDBCoroutineTopicsRepoImpl): WriteDBCoroutineTopicsRepo
 
     @Binds
     fun bindWriteDBTopicPointsRepo(writeDBTopicPointsRepoImpl: WriteDBTopicPointsRepoImpl): WriteDBTopicPointsRepo

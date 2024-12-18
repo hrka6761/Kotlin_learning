@@ -6,6 +6,7 @@ import ir.hrka.kotlin.core.Constants.KOTLIN_TOPICS_SCREEN
 import ir.hrka.kotlin.core.Constants.COROUTINE_TOPICS_SCREEN
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN
 import ir.hrka.kotlin.core.Constants.ABOUT_SCREEN
+import ir.hrka.kotlin.core.Constants.COROUTINE_TOPIC_POINTS_SCREEN
 
 
 enum class Screen(private val destination: String) {
@@ -15,6 +16,7 @@ enum class Screen(private val destination: String) {
     KotlinTopics(KOTLIN_TOPICS_SCREEN),
     CoroutineTopics(COROUTINE_TOPICS_SCREEN),
     KotlinTopicPoints(KOTLIN_TOPIC_POINTS_SCREEN),
+    CoroutineTopicPoints(COROUTINE_TOPIC_POINTS_SCREEN),
     About(ABOUT_SCREEN);
 
 

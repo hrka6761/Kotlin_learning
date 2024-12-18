@@ -1,23 +1,25 @@
-package ir.hrka.kotlin.ui.screens.kotlin
+package ir.hrka.kotlin.ui.screens.coroutine_topic_points
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +31,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -38,8 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,43 +52,37 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.ExecutionState.Start
 import ir.hrka.kotlin.core.ExecutionState.Loading
 import ir.hrka.kotlin.core.ExecutionState.Stop
-import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Screen.KotlinTopicPoints
 import ir.hrka.kotlin.core.utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
-import ir.hrka.kotlin.domain.entities.db.KotlinTopic
+import ir.hrka.kotlin.domain.entities.PointData
+import kotlinx.coroutines.launch
 
 @Composable
-fun KotlinTopicsScreen(
+fun CoroutineTopicPointsScreen(
     activity: MainActivity,
     navHostController: NavHostController,
-    githubVersionName: String?,
-    githubVersionSuffix: String?
+    topicName: String,
+    topicId: Int,
+    hasContentUpdated: Boolean
 ) {
 
-    val viewModel: KotlinTopicsViewModel = hiltViewModel()
+    val viewModel: CoroutineTopicPointsViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
-    val kotlinTopics by viewModel.kotlinTopics.collectAsState()
-    val executionState by viewModel.executionState.collectAsState()
+    val points by viewModel.points.collectAsState()
     val failedState by viewModel.failedState.collectAsState()
-    val hasUpdateForKotlinTopicsList by viewModel.hasUpdateForKotlinTopicsList.collectAsState()
-    val hasUpdateForKotlinTopicsContent by viewModel.hasUpdateForKotlinTopicsContent.collectAsState()
-    val saveKotlinTopicsListResult by viewModel.saveKotlinTopicsListResult.collectAsState()
-    val updateKotlinTopicsOnDBResult by viewModel.updateKotlinTopicsOnDBResult.collectAsState()
-    val updatedId = navHostController.currentBackStackEntry
-        ?.savedStateHandle
-        ?.get<Int>(UPDATED_ID_KEY)
+    val executionState by viewModel.executionState.collectAsState()
+    val saveTopicPointsResult by viewModel.saveTopicPointsResult.collectAsState()
+    val updateTopicsOnDBResult by viewModel.updateTopicsOnDBResult.collectAsState()
 
-
-    updatedId?.let { id -> viewModel.updateKotlinTopicsList(id - 1) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { KotlinTopicsAppBar(navHostController) },
+        topBar = { CoroutineTopicPointsScreenAppBar(topicName, navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -96,7 +91,6 @@ fun KotlinTopicsScreen(
             )
         }
     ) { innerPaddings ->
-
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -128,14 +122,16 @@ fun KotlinTopicsScreen(
 
             LazyVerticalStaggeredGrid(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(innerPaddings),
                 columns = StaggeredGridCells.Fixed(1),
                 contentPadding = PaddingValues(8.dp)
             ) {
-                kotlinTopics.data?.let {
+                val list = points.data
+
+                list?.let {
                     items(it.size) { index ->
-                        KotlinTopicItem(it[index], navHostController)
+                        CoroutineTopicPointItem(list[index])
                     }
                 }
             }
@@ -153,84 +149,36 @@ fun KotlinTopicsScreen(
     LaunchedEffect(Unit) {
         if (executionState == Start) {
             viewModel.setExecutionState(Loading)
-            viewModel.checkNewUpdateForKotlinTopicsList(githubVersionName)
-        }
-    }
-
-    LaunchedEffect(hasUpdateForKotlinTopicsList) {
-        if (executionState != Stop) {
-            if (hasUpdateForKotlinTopicsList == true)
-                viewModel.getKotlinTopicsFromGithub()
-            else if (hasUpdateForKotlinTopicsList == false)
-                viewModel.checkNewUpdateForKotlinTopicsContent(githubVersionName)
-        }
-    }
-
-    LaunchedEffect(hasUpdateForKotlinTopicsContent) {
-        if (executionState != Stop) {
-            if (hasUpdateForKotlinTopicsContent == true)
-                viewModel.updateKotlinTopicsInDatabase(githubVersionSuffix)
-            else if (hasUpdateForKotlinTopicsContent == false)
-                viewModel.getKotlinTopicsFromDatabase()
-        }
-    }
-
-    LaunchedEffect(updateKotlinTopicsOnDBResult) {
-        if (executionState != Stop) {
-            when (updateKotlinTopicsOnDBResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    viewModel.saveVersionName(githubVersionName!!)
-                    viewModel.getKotlinTopicsFromDatabase()
-                }
-
-                is Resource.Error -> {
-                    viewModel.setExecutionState(Stop)
+            if (hasContentUpdated) {
+                launch {
                     snackBarHostState.showSnackbar(
-                        message = updateKotlinTopicsOnDBResult.error?.errorMsg ?: "",
+                        message = activity.getString(R.string.fetching_new_points_list_msg),
                         duration = SnackbarDuration.Short
                     )
                 }
-            }
+                viewModel.getPointsFromGit(topicName)
+            } else
+                viewModel.getPointsFromDatabase(topicName)
         }
     }
 
-    LaunchedEffect(kotlinTopics) {
+    LaunchedEffect(points) {
         if (executionState != Stop) {
-            when (kotlinTopics) {
+            when (points) {
                 is Resource.Initial -> {}
-                is Resource.Loading -> {
-                    if (hasUpdateForKotlinTopicsList == true) {
-                        snackBarHostState.showSnackbar(
-                            message = activity.getString(R.string.fetching_new_kotlin_topics_list_msg),
-                            duration = SnackbarDuration.Long
-                        )
-                    }
-                }
-
+                is Resource.Loading -> {}
                 is Resource.Success -> {
-                    if (kotlinTopics.data?.isEmpty() != false) {
-                        viewModel.setExecutionState(Stop)
-                        viewModel.setFailedState(true)
-                        snackBarHostState.showSnackbar(
-                            message = activity.getString(R.string.no_kotlin_topics_msg),
-                            duration = SnackbarDuration.Long
-                        )
-                        return@LaunchedEffect
-                    }
-
-                    if (hasUpdateForKotlinTopicsList == true)
-                        viewModel.saveKotlinTopicsOnDB()
+                    if (hasContentUpdated)
+                        viewModel.saveTopicPointsOnDB(topicName)
                     else
                         viewModel.setExecutionState(Stop)
                 }
 
                 is Resource.Error -> {
-                    viewModel.setExecutionState(Stop)
                     viewModel.setFailedState(true)
+                    viewModel.setExecutionState(Stop)
                     snackBarHostState.showSnackbar(
-                        message = kotlinTopics.error?.errorMsg.toString(),
+                        message = points.error?.errorMsg.toString(),
                         duration = SnackbarDuration.Long
                     )
                 }
@@ -238,22 +186,51 @@ fun KotlinTopicsScreen(
         }
     }
 
-    LaunchedEffect(saveKotlinTopicsListResult) {
+    LaunchedEffect(saveTopicPointsResult) {
         if (executionState != Stop) {
-            when (saveKotlinTopicsListResult) {
+            when (saveTopicPointsResult) {
                 is Resource.Initial -> {}
-                is Resource.Loading -> {}
+                is Resource.Loading -> {
+                    snackBarHostState.showSnackbar(
+                        message = activity.getString(R.string.saving_points_on_the_database_msg),
+                        duration = SnackbarDuration.Long
+                    )
+                }
+
                 is Resource.Success -> {
-                    viewModel.saveVersionName(githubVersionName!!)
-                    viewModel.setExecutionState(Stop)
+                    viewModel.updateTopicState(topicId)
                 }
 
                 is Resource.Error -> {
                     viewModel.setExecutionState(Stop)
                     snackBarHostState.showSnackbar(
-                        message = saveKotlinTopicsListResult.error?.errorMsg.toString(),
+                        message = activity.getString(R.string.failed_to_save_points_on_the_database_msg),
                         duration = SnackbarDuration.Long
                     )
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(updateTopicsOnDBResult) {
+        if (executionState != Stop) {
+            when (updateTopicsOnDBResult) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    navHostController
+                        .previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(UPDATED_ID_KEY, topicId)
+                    viewModel.setExecutionState(Stop)
+                }
+
+                is Resource.Error -> {
+                    snackBarHostState.showSnackbar(
+                        message = activity.getString(R.string.failed_to_save_points_on_the_database_msg),
+                        duration = SnackbarDuration.Long
+                    )
+                    viewModel.setExecutionState(Stop)
                 }
             }
         }
@@ -266,9 +243,14 @@ fun KotlinTopicsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun KotlinTopicsAppBar(navHostController: NavHostController) {
-    CenterAlignedTopAppBar(
-        title = { Text(stringResource(R.string.kotlin_topics_app_bar_title)) },
+fun CoroutineTopicPointsScreenAppBar(topicName: String, navHostController: NavHostController) {
+    TopAppBar(
+        title = {
+            Text(
+                text = topicName.extractFileName().splitByCapitalLetters(),
+                fontWeight = FontWeight.Bold
+            )
+        },
         navigationIcon = {
             IconButton(
                 onClick = { navHostController.popBackStack() }
@@ -280,91 +262,127 @@ fun KotlinTopicsAppBar(navHostController: NavHostController) {
 }
 
 @Composable
-fun KotlinTopicItem(
-    kotlinTopics: KotlinTopic,
-    navHostController: NavHostController,
-) {
+fun CoroutineTopicPointItem(point: PointData) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
     ) {
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .clickable {
-                    navHostController.navigate(
-                        KotlinTopicPoints.appendArg(
-                            kotlinTopics.name,
-                            kotlinTopics.hasUpdated.toString(),
-                            kotlinTopics.id.toString()
-                        )
-                    )
-                }
-                .padding(8.dp)
-        ) {
-            val (id, title, label) = createRefs()
+        ConstraintLayout {
+            val (id, pointHead, subPoints, snippetCodes) = createRefs()
 
             Text(
                 modifier = Modifier
                     .width(25.dp)
                     .height(25.dp)
+                    .constrainAs(id) {
+                        start.linkTo(parent.start, margin = 8.dp)
+                        top.linkTo(parent.top, margin = 8.dp)
+                    }
                     .background(
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(50)
-                    )
-                    .constrainAs(id) {
-                        start.linkTo(parent.start)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                    },
+                    ),
+                text = point.num.toString(),
                 fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-                text = kotlinTopics.id.toString(),
-            )
-
-            Text(
-                modifier = Modifier.constrainAs(title) {
-                    start.linkTo(id.end, margin = 8.dp)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                },
-                text = kotlinTopics.name
-                    .extractFileName()
-                    .splitByCapitalLetters(),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
             )
 
-            if (kotlinTopics.hasUpdated)
-                Text(
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .constrainAs(pointHead) {
+                        top.linkTo(id.bottom, margin = 8.dp)
+                        start.linkTo(parent.start, margin = 8.dp)
+                        end.linkTo(parent.end, margin = 8.dp)
+                    },
+                text = point.headPoint,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+
+            if (!point.subPoints.isNullOrEmpty())
+                LazyColumn(
                     modifier = Modifier
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(50)
-                        )
-                        .padding(horizontal = 4.dp)
-                        .constrainAs(label) {
-                            end.linkTo(parent.end)
-                            top.linkTo(parent.top)
-                            bottom.linkTo(parent.bottom)
-                        },
-                    text = stringResource(R.string.updated_label_txt),
-                    textAlign = TextAlign.Center,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 8.sp,
-                    color = MaterialTheme.colorScheme.surface,
-                    fontWeight = FontWeight.Bold
-                )
+                        .fillMaxWidth()
+                        .heightIn(max = 400.dp)
+                        .constrainAs(subPoints) {
+                            top.linkTo(pointHead.bottom, margin = 16.dp)
+                            end.linkTo(parent.end, margin = 8.dp)
+                            start.linkTo(parent.start, margin = 8.dp)
+                            if (point.snippetsCode.isNullOrEmpty())
+                                bottom.linkTo(parent.bottom, margin = 8.dp)
+                        }
+                ) {
+                    items(point.subPoints.size) { index ->
+                        CoroutineTopicSubPintItem(point.subPoints[index])
+                    }
+                }
+
+            if (!point.snippetsCode.isNullOrEmpty())
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 400.dp)
+                        .constrainAs(snippetCodes) {
+                            top.linkTo(
+                                if (point.subPoints.isNullOrEmpty()) pointHead.bottom else subPoints.bottom,
+                                margin = 16.dp
+                            )
+                            end.linkTo(parent.end, margin = 8.dp)
+                            start.linkTo(parent.start, margin = 8.dp)
+                            bottom.linkTo(parent.bottom, margin = 8.dp)
+                        }
+                ) {
+                    items(point.snippetsCode.size) { index ->
+                        CoroutineTopicSnippetCodeItem(point.snippetsCode[index])
+                    }
+                }
         }
+    }
+}
+
+@Composable
+fun CoroutineTopicSubPintItem(subPoints: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Icon(Icons.Default.PlayArrow, contentDescription = null)
+        Text(
+            text = subPoints,
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
+fun CoroutineTopicSnippetCodeItem(snippetCode: String) {
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .padding(vertical = 8.dp),
+            text = snippetCode,
+            textAlign = TextAlign.Start,
+            fontSize = 10.sp,
+            lineHeight = 16.sp
+        )
     }
 }
 
 
 @Preview(showBackground = true)
 @Composable
-fun KotlinTopicsScreenPreview() {
-    KotlinTopicsScreen(MainActivity(), rememberNavController(), "", "")
+fun KotlinTopicPointsScreenPreview() {
+    CoroutineTopicPointsScreen(MainActivity(), rememberNavController(), "", -1, false)
 }

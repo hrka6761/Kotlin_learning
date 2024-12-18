@@ -11,14 +11,13 @@ import ir.hrka.kotlin.core.utilities.extractMinorFromVersionName
 import ir.hrka.kotlin.core.utilities.extractPatchFromVersionName
 import ir.hrka.kotlin.core.utilities.extractUpdatedKotlinTopicsListFromVersionName
 import ir.hrka.kotlin.domain.entities.db.CoroutineTopic
-import ir.hrka.kotlin.domain.entities.db.KotlinTopic
 import ir.hrka.kotlin.domain.usecases.db.coroutine.read.GetDBCoroutineTopicsListUseCase
 import ir.hrka.kotlin.domain.usecases.db.coroutine.write.ClearCoroutineTopicsTableUseCase
 import ir.hrka.kotlin.domain.usecases.db.coroutine.write.SaveCoroutineTopicsOnDBUseCase
 import ir.hrka.kotlin.domain.usecases.db.coroutine.write.UpdateCoroutineTopicsStateUseCase
 import ir.hrka.kotlin.domain.usecases.git.coroutine.read.GetGitCoroutineTopicsListUseCase
-import ir.hrka.kotlin.domain.usecases.preference.LoadCurrentVersionNameUseCase
-import ir.hrka.kotlin.domain.usecases.preference.SaveCurrentVersionNameUseCase
+import ir.hrka.kotlin.domain.usecases.preference.LoadCurrentCoroutineCourseVersionNameUseCase
+import ir.hrka.kotlin.domain.usecases.preference.SaveCurrentCoroutineCourseVersionNameUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,9 +30,9 @@ import javax.inject.Named
 class CoroutineTopicsViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val getGitCoroutineTopicsListUseCase: GetGitCoroutineTopicsListUseCase,
-    private val getDBKotlinTopicsListUseCase: GetDBCoroutineTopicsListUseCase,
-    private val loadCurrentVersionNameUseCase: LoadCurrentVersionNameUseCase,
-    private val saveCurrentVersionNameUseCase: SaveCurrentVersionNameUseCase,
+    private val getDBCoroutineTopicsListUseCase: GetDBCoroutineTopicsListUseCase,
+    private val loadCurrentCoroutineCourseVersionNameUseCase: LoadCurrentCoroutineCourseVersionNameUseCase,
+    private val saveCurrentCoroutineCourseVersionNameUseCase: SaveCurrentCoroutineCourseVersionNameUseCase,
     private val clearCoroutineTopicsTableUseCase: ClearCoroutineTopicsTableUseCase,
     private val saveCoroutineTopicsOnDBUseCase: SaveCoroutineTopicsOnDBUseCase,
     private val updateCoroutineTopicsStateUseCase: UpdateCoroutineTopicsStateUseCase
@@ -44,10 +43,13 @@ class CoroutineTopicsViewModel @Inject constructor(
     val coroutineTopics: StateFlow<Resource<List<CoroutineTopic>?>> = _coroutineTopics
     private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
     val executionState: MutableStateFlow<ExecutionState> = _executionState
-    private val _hasUpdateForCoroutineTopicsList: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    private val _hasUpdateForCoroutineTopicsList: MutableStateFlow<Boolean?> =
+        MutableStateFlow(null)
     val hasUpdateForCoroutineTopicsList: StateFlow<Boolean?> = _hasUpdateForCoroutineTopicsList
-    private val _hasUpdateForCoroutineTopicsContent: MutableStateFlow<Boolean?> = MutableStateFlow(null)
-    val hasUpdateForCoroutineTopicsContent: StateFlow<Boolean?> = _hasUpdateForCoroutineTopicsContent
+    private val _hasUpdateForCoroutineTopicsContent: MutableStateFlow<Boolean?> =
+        MutableStateFlow(null)
+    val hasUpdateForCoroutineTopicsContent: StateFlow<Boolean?> =
+        _hasUpdateForCoroutineTopicsContent
     private val _saveCoroutineTopicsListResult: MutableStateFlow<Resource<Boolean>> =
         MutableStateFlow(Resource.Initial())
     val saveCoroutineTopicsListResult: StateFlow<Resource<Boolean>> = _saveCoroutineTopicsListResult
@@ -78,15 +80,14 @@ class CoroutineTopicsViewModel @Inject constructor(
     fun getCoroutineTopicsFromDatabase() {
         viewModelScope.launch(io) {
             _coroutineTopics.value = Resource.Loading()
-            _coroutineTopics.value = getDBKotlinTopicsListUseCase()
+            _coroutineTopics.value = getDBCoroutineTopicsListUseCase()
         }
     }
 
     fun checkNewUpdateForCoroutineTopicsList(gitVersionName: String?) {
         viewModelScope.launch(io) {
             currentVersionName =
-                (loadCurrentVersionNameUseCase().data ?: "0.0.0").ifEmpty { "0.0.0" }
-
+                (loadCurrentCoroutineCourseVersionNameUseCase().data ?: "0.0.0").ifEmpty { "0.0.0" }
             if (gitVersionName.isNullOrEmpty()) {
                 _hasUpdateForCoroutineTopicsList.value = false
                 return@launch
@@ -162,7 +163,7 @@ class CoroutineTopicsViewModel @Inject constructor(
         }
     }
 
-    fun saveCoroutineTopicsOnDB(gitVersionName: String) {
+    fun saveCoroutineTopicsOnDB() {
         viewModelScope.launch(io) {
             val clearDiffered = async { clearCoroutineTopicsTableUseCase() }
             val clearResult = clearDiffered.await()
@@ -172,13 +173,7 @@ class CoroutineTopicsViewModel @Inject constructor(
                 return@launch
             }
 
-            _coroutineTopics.value.data?.map { kotlinTopic ->
-                KotlinTopic(
-                    id = kotlinTopic.id,
-                    name = kotlinTopic.name,
-                    versionName = gitVersionName
-                )
-            }?.let {
+            _coroutineTopics.value.data?.let {
                 val saveDiffered = async { saveCoroutineTopicsOnDBUseCase(it) }
                 _saveCoroutineTopicsListResult.value = saveDiffered.await()
             }
@@ -187,7 +182,7 @@ class CoroutineTopicsViewModel @Inject constructor(
 
     fun saveVersionName(gitVersionName: String) {
         viewModelScope.launch(io) {
-            saveCurrentVersionNameUseCase(gitVersionName)
+            saveCurrentCoroutineCourseVersionNameUseCase(gitVersionName)
         }
     }
 

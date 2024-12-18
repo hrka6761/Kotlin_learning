@@ -1,0 +1,9 @@
+package ir.hrka.kotlin.domain.usecases.preference
+
+import ir.hrka.kotlin.domain.repositories.preference.VersionDataRepo
+import javax.inject.Inject
+
+class SaveCurrentKotlinCourseVersionNameUseCase @Inject constructor(private val versionDataRepo: VersionDataRepo) {
+
+    suspend operator fun invoke(versionName: String) = versionDataRepo.saveCurrentKotlinCourseVersionName(versionName)
+}

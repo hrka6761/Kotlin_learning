@@ -14,7 +14,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ReadDBTopicsRepoImpl @Inject constructor(
-    @Named("IO") private val io: CoroutineDispatcher,
     private val kotlinTopicsDao: KotlinTopicsDao,
     private val coroutineTopicsDao: CoroutineTopicsDao
 ) : ReadDBTopicsRepo {

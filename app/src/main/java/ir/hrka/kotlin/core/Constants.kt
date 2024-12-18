@@ -9,6 +9,7 @@ object Constants {
     const val KOTLIN_TOPICS_SCREEN = "kotlinTopics"
     const val COROUTINE_TOPICS_SCREEN = "coroutineTopics"
     const val KOTLIN_TOPIC_POINTS_SCREEN = "kotlinTopicPoints"
+    const val COROUTINE_TOPIC_POINTS_SCREEN = "coroutineTopicPoints"
     const val ABOUT_SCREEN = "about"
 
     const val CONNECT_TIMEOUT = 3L
@@ -18,6 +19,9 @@ object Constants {
     const val KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME = "kotlinTopicName"
     const val KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME = "kotlinTopicStateName"
     const val KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID = "kotlinTopicId"
+    const val COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME = "coroutineTopicName"
+    const val COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME = "coroutineTopicStateName"
+    const val COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID = "coroutineTopicId"
     const val KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
     const val KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
     const val COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
@@ -60,7 +64,8 @@ object Constants {
     const val NEW_VERSION_CANCEL = 6
 
     const val DATABASE_NAME = "kotlin-topic-database"
-    const val VERSION_NAME_KEY = "version_name_key"
+    const val KOTLIN_COURSE_VERSION_NAME_KEY = "kotlin_course_version_name_key"
+    const val COROUTINE_COURSE_VERSION_NAME_KEY = "coroutine_course_version_name_key"
     const val UPDATED_ID_KEY = "updatedId"
     const val CLIPBOARD_TEXT = "hrka6761@gmail.com"
     const val CLIPBOARD_LABEL = "Email"
