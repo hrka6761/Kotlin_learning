@@ -30,8 +30,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.ExecutionState
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Stop
+import ir.hrka.kotlin.core.utilities.ExecutionState
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Stop
 import ir.hrka.kotlin.ui.screens.visualizers.Guidance
 import ir.hrka.kotlin.ui.screens.visualizers.Task
 import ir.hrka.kotlin.ui.screens.visualizers.Thread

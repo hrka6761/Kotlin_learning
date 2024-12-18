@@ -17,17 +17,18 @@ object Constants {
     const val READ_TIMEOUT = 60L
 
     const val KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME = "kotlinTopicName"
-    const val KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME = "kotlinTopicStateName"
+    const val KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME = "kotlinTopicUpdateState"
     const val KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID = "kotlinTopicId"
-    const val COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME = "coroutineTopicName"
-    const val COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME = "coroutineTopicStateName"
-    const val COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID = "coroutineTopicId"
-    const val KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
-    const val KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
-    const val COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
-    const val COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
-    const val HOME_SCREEN_ARGUMENT_VERSION_NAME = "githubVersionName"
-    const val HOME_SCREEN_ARGUMENT_VERSION_SUFFIX = "githubVersionSuffix"
+    const val COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_NAME = "coroutineTopicName"
+    const val COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_STATE_NAME = "coroutineTopicUpdateState"
+    const val COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_ID = "coroutineTopicId"
+    const val COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_VISUALIZER_STATE = "coroutineTopicVisualizerState"
+    const val KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME = "kotlinTopicGitVersionName"
+    const val KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX = "kotlinTopicGitVersionSuffix"
+    const val COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME = "coroutineTopicGitVersionName"
+    const val COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX = "coroutineTopicGitVersionSuffix"
+    const val HOME_SCREEN_ARGUMENT_VERSION_NAME = "homeGitVersionName"
+    const val HOME_SCREEN_ARGUMENT_VERSION_SUFFIX = "homeGitVersionSuffix"
 
     const val TOKEN = "This is a secret."
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
@@ -55,6 +56,7 @@ object Constants {
 
     const val MANDATORY = "mandatory"
     const val NON_MANDATORY = "non_mandatory"
+    const val DEFAULT_VERSION_NAME = "0.0.0"
 
     const val NEW_VERSION_NO_STATE = 1
     const val NEW_VERSION_UNKNOWN_STATE = 2

@@ -1,15 +1,17 @@
-package ir.hrka.kotlin.ui.screens.coroutine
+package ir.hrka.kotlin.ui.screens.coroutine_topics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.ExecutionState
-import ir.hrka.kotlin.core.ExecutionState.Start
+import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_NAME
+import ir.hrka.kotlin.core.errors.unknownError
+import ir.hrka.kotlin.core.utilities.ExecutionState
+import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.extractMajorFromVersionName
-import ir.hrka.kotlin.core.utilities.extractMinorFromVersionName
-import ir.hrka.kotlin.core.utilities.extractPatchFromVersionName
-import ir.hrka.kotlin.core.utilities.extractUpdatedKotlinTopicsListFromVersionName
+import ir.hrka.kotlin.core.utilities.string_utilities.extractMajorFromVersionName
+import ir.hrka.kotlin.core.utilities.string_utilities.extractMinorFromVersionName
+import ir.hrka.kotlin.core.utilities.string_utilities.extractPatchFromVersionName
+import ir.hrka.kotlin.core.utilities.string_utilities.extractUpdatedKotlinTopicsListFromVersionName
 import ir.hrka.kotlin.domain.entities.db.CoroutineTopic
 import ir.hrka.kotlin.domain.usecases.db.coroutine.read.GetDBCoroutineTopicsListUseCase
 import ir.hrka.kotlin.domain.usecases.db.coroutine.write.ClearCoroutineTopicsTableUseCase
@@ -70,7 +72,7 @@ class CoroutineTopicsViewModel @Inject constructor(
         _failedState.value = state
     }
 
-    fun getCoroutineTopicsFromGithub() {
+    fun getCoroutineTopicsFromGit() {
         viewModelScope.launch(io) {
             _coroutineTopics.value = Resource.Loading()
             _coroutineTopics.value = getGitCoroutineTopicsListUseCase()
@@ -87,7 +89,9 @@ class CoroutineTopicsViewModel @Inject constructor(
     fun checkNewUpdateForCoroutineTopicsList(gitVersionName: String?) {
         viewModelScope.launch(io) {
             currentVersionName =
-                (loadCurrentCoroutineCourseVersionNameUseCase().data ?: "0.0.0").ifEmpty { "0.0.0" }
+                (loadCurrentCoroutineCourseVersionNameUseCase().data ?: DEFAULT_VERSION_NAME)
+                    .ifEmpty { DEFAULT_VERSION_NAME }
+
             if (gitVersionName.isNullOrEmpty()) {
                 _hasUpdateForCoroutineTopicsList.value = false
                 return@launch
@@ -95,26 +99,26 @@ class CoroutineTopicsViewModel @Inject constructor(
 
             val currentVersionMajorDiffered =
                 async { currentVersionName.extractMajorFromVersionName() }
-            val githubVersionMajorDiffered =
+            val gitVersionMajorDiffered =
                 async { gitVersionName.extractMajorFromVersionName() }
 
-            val githubVersionMajor = githubVersionMajorDiffered.await()
+            val gitVersionMajor = gitVersionMajorDiffered.await()
             val currentVersionMajor = currentVersionMajorDiffered.await()
 
-            if (githubVersionMajor != currentVersionMajor) {
+            if (gitVersionMajor != currentVersionMajor) {
                 _hasUpdateForCoroutineTopicsList.value = true
                 return@launch
             }
 
             val currentVersionMinorDiffered =
                 async { currentVersionName.extractMinorFromVersionName() }
-            val githubVersionMinorDiffered =
+            val gitVersionMinorDiffered =
                 async { gitVersionName.extractMinorFromVersionName() }
 
-            val githubVersionMinor = githubVersionMinorDiffered.await()
+            val gitVersionMinor = gitVersionMinorDiffered.await()
             val currentVersionMinor = currentVersionMinorDiffered.await()
 
-            if (githubVersionMinor != currentVersionMinor) {
+            if (gitVersionMinor != currentVersionMinor) {
                 _hasUpdateForCoroutineTopicsList.value = true
                 return@launch
             }
@@ -132,14 +136,14 @@ class CoroutineTopicsViewModel @Inject constructor(
 
             val currentVersionPatchDiffered =
                 async { currentVersionName.extractPatchFromVersionName() }
-            val githubVersionPatchDiffered =
+            val gitVersionPatchDiffered =
                 async { gitVersionName.extractPatchFromVersionName() }
 
-            val githubVersionPatch = githubVersionPatchDiffered.await()
+            val gitVersionPatch = gitVersionPatchDiffered.await()
             val currentVersionPatch = currentVersionPatchDiffered.await()
 
-            if (githubVersionPatch != currentVersionPatch) {
-                if ((githubVersionPatch - currentVersionPatch) > 1) {
+            if (gitVersionPatch != currentVersionPatch) {
+                if ((gitVersionPatch - currentVersionPatch) > 1) {
                     _hasUpdateForCoroutineTopicsList.value = true
                     return@launch
                 }
@@ -152,9 +156,14 @@ class CoroutineTopicsViewModel @Inject constructor(
     }
 
     fun updateCoroutineTopicsInDatabase(gitVersionSuffix: String?) {
+        if (gitVersionSuffix.isNullOrEmpty()) {
+            _updateCoroutineTopicsOnDBResult.value = Resource.Error(unknownError)
+            return
+        }
+
         viewModelScope.launch(io) {
             val updatedKotlinTopicsList =
-                gitVersionSuffix!!.extractUpdatedKotlinTopicsListFromVersionName()
+                gitVersionSuffix.extractUpdatedKotlinTopicsListFromVersionName()
 
             updateCoroutineTopicsOnDBResult.value = updateCoroutineTopicsStateUseCase(
                 *updatedKotlinTopicsList.toIntArray(),

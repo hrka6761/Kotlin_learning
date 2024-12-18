@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.core.utilities
+package ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities
 
 sealed class CoroutineComponentState<out T: ComponentData>(val componentData: T? = null) {
 

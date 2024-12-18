@@ -1,6 +1,5 @@
 package ir.hrka.kotlin.ui.screens.splash
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,14 +40,12 @@ import ir.hrka.kotlin.core.Constants.NEW_VERSION_AVAILABLE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.Home
-import kotlinx.coroutines.delay
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.stringResource
-import ir.hrka.kotlin.core.Constants.TAG
-import ir.hrka.kotlin.core.ExecutionState.Loading
-import ir.hrka.kotlin.core.ExecutionState.Start
-import ir.hrka.kotlin.core.ExecutionState.Stop
+import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
+import ir.hrka.kotlin.core.utilities.ExecutionState.Start
+import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 
 @Composable
 fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {

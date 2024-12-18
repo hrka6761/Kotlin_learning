@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.core.utilities
+package ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities
 
 data class TaskData(
     val taskName: String,

@@ -2,10 +2,10 @@ package ir.hrka.kotlin.domain.usecases.git
 
 import ir.hrka.kotlin.core.Constants.READ_FILE_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.decodeBase64
-import ir.hrka.kotlin.core.utilities.extractVersionCodeFromGradleContent
-import ir.hrka.kotlin.core.utilities.extractVersionNameFromGradleContent
-import ir.hrka.kotlin.core.utilities.extractVersionSuffixFromGradleContent
+import ir.hrka.kotlin.core.utilities.string_utilities.decodeBase64
+import ir.hrka.kotlin.core.utilities.string_utilities.extractVersionCodeFromGradleContent
+import ir.hrka.kotlin.core.utilities.string_utilities.extractVersionNameFromGradleContent
+import ir.hrka.kotlin.core.utilities.string_utilities.extractVersionSuffixFromGradleContent
 import ir.hrka.kotlin.domain.entities.AppInfo
 import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.domain.repositories.git.AppInfoRepo

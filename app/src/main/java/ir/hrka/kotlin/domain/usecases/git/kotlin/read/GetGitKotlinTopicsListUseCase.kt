@@ -1,11 +1,10 @@
 package ir.hrka.kotlin.domain.usecases.git.kotlin.read
 
-import ir.hrka.kotlin.core.Constants.UNKNOWN_ERROR_CODE
-import ir.hrka.kotlin.core.errors.Error
+import ir.hrka.kotlin.core.errors.unknownError
 import ir.hrka.kotlin.core.utilities.Course.Kotlin
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.decodeBase64
-import ir.hrka.kotlin.core.utilities.extractVersionNameFromGradleContent
+import ir.hrka.kotlin.core.utilities.string_utilities.decodeBase64
+import ir.hrka.kotlin.core.utilities.string_utilities.extractVersionNameFromGradleContent
 import ir.hrka.kotlin.domain.entities.db.KotlinTopic
 import ir.hrka.kotlin.domain.repositories.git.AppInfoRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicsRepo
@@ -15,9 +14,6 @@ class GetGitKotlinTopicsListUseCase @Inject constructor(
     private val readGitTopicsRepo: ReadGitTopicsRepo,
     private val appInfoRepo: AppInfoRepo
 ) {
-
-    private val unknownError = Error(errorCode = UNKNOWN_ERROR_CODE, errorMsg = "unknown error !!!")
-
 
     suspend operator fun invoke(): Resource<List<KotlinTopic>?> {
         val appInfoResult = appInfoRepo.getAppInfo()

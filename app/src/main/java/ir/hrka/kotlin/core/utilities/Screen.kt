@@ -23,7 +23,7 @@ enum class Screen(private val destination: String) {
     operator fun invoke() = destination
 
 
-    fun appendArg(vararg arg: String): String {
+    fun appendArg(vararg arg: Any): String {
         return buildString {
             append(destination)
 

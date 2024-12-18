@@ -3,7 +3,7 @@ package ir.hrka.kotlin.data.repositories.git
 import ir.hrka.kotlin.core.Constants.RETROFIT_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.data.datasource.github.GitAPI
+import ir.hrka.kotlin.data.datasource.git.GitAPI
 import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.domain.entities.GitFileData
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicsRepo

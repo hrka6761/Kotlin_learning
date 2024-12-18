@@ -1,6 +1,5 @@
-package ir.hrka.kotlin.ui.screens.coroutine
+package ir.hrka.kotlin.ui.screens.coroutine_topics
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -52,24 +51,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
-import ir.hrka.kotlin.core.ExecutionState.Loading
-import ir.hrka.kotlin.core.ExecutionState.Start
-import ir.hrka.kotlin.core.ExecutionState.Stop
+import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
+import ir.hrka.kotlin.core.utilities.ExecutionState.Start
+import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopicPoints
-import ir.hrka.kotlin.core.utilities.extractFileName
-import ir.hrka.kotlin.core.utilities.removeVisualizedFromFileName
-import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
+import ir.hrka.kotlin.core.utilities.string_utilities.extractFileName
+import ir.hrka.kotlin.core.utilities.string_utilities.removeVisualizedFromFileName
+import ir.hrka.kotlin.core.utilities.string_utilities.splitByCapitalLetters
 import ir.hrka.kotlin.domain.entities.db.CoroutineTopic
 
 @Composable
 fun CoroutineTopicsScreen(
     activity: MainActivity,
     navHostController: NavHostController,
-    githubVersionName: String?,
-    githubVersionSuffix: String?
+    gitVersionName: String?,
+    gitVersionSuffix: String?
 ) {
 
     val viewModel: CoroutineTopicsViewModel = hiltViewModel()
@@ -156,23 +154,23 @@ fun CoroutineTopicsScreen(
     LaunchedEffect(Unit) {
         if (executionState == Start) {
             viewModel.setExecutionState(Loading)
-            viewModel.checkNewUpdateForCoroutineTopicsList(githubVersionName)
+            viewModel.checkNewUpdateForCoroutineTopicsList(gitVersionName)
         }
     }
 
     LaunchedEffect(hasUpdateForCoroutineTopicsList) {
         if (executionState != Stop) {
             if (hasUpdateForCoroutineTopicsList == true)
-                viewModel.getCoroutineTopicsFromGithub()
+                viewModel.getCoroutineTopicsFromGit()
             else if (hasUpdateForCoroutineTopicsList == false)
-                viewModel.checkNewUpdateForCoroutineTopicsContent(githubVersionName)
+                viewModel.checkNewUpdateForCoroutineTopicsContent(gitVersionName)
         }
     }
 
     LaunchedEffect(hasUpdateForCoroutineTopicsContent) {
         if (executionState != Stop) {
             if (hasUpdateForCoroutineTopicsContent == true)
-                viewModel.updateCoroutineTopicsInDatabase(githubVersionSuffix)
+                viewModel.updateCoroutineTopicsInDatabase(gitVersionSuffix)
             else if (hasUpdateForCoroutineTopicsContent == false)
                 viewModel.getCoroutineTopicsFromDatabase()
         }
@@ -184,7 +182,7 @@ fun CoroutineTopicsScreen(
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    viewModel.saveVersionName(githubVersionName!!)
+                    viewModel.saveVersionName(gitVersionName!!)
                     viewModel.getCoroutineTopicsFromDatabase()
                 }
 
@@ -247,7 +245,7 @@ fun CoroutineTopicsScreen(
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    viewModel.saveVersionName(githubVersionName!!)
+                    viewModel.saveVersionName(gitVersionName!!)
                     viewModel.setExecutionState(Stop)
                 }
 
@@ -285,8 +283,9 @@ fun CoroutineTopicItem(
                     navHostController.navigate(
                         CoroutineTopicPoints.appendArg(
                             coroutineTopic.name,
-                            coroutineTopic.hasUpdated.toString(),
-                            coroutineTopic.id.toString()
+                            coroutineTopic.hasUpdated,
+                            coroutineTopic.id,
+                            coroutineTopic.hasVisualizer
                         )
                     )
                 }

@@ -13,8 +13,8 @@ import ir.hrka.kotlin.core.Constants.NEW_VERSION_NOT_AVAILABLE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_NO_STATE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_AVAILABLE
 import ir.hrka.kotlin.core.Constants.NEW_VERSION_UNKNOWN_STATE
-import ir.hrka.kotlin.core.ExecutionState
-import ir.hrka.kotlin.core.ExecutionState.Start
+import ir.hrka.kotlin.core.utilities.ExecutionState
+import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.AppInfo
 import ir.hrka.kotlin.domain.usecases.git.GetAppInfoUseCase

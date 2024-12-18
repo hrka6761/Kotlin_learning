@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.core.utilities
+package ir.hrka.kotlin.core.utilities.string_utilities
 
 private const val javaDocPattern = """(?s)/\*\*\s*(.*?)\s*\*/"""
 private const val snippetCodePattern = "```(.*?)```"

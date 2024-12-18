@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.core.utilities
+package ir.hrka.kotlin.core.utilities.string_utilities
 
 import android.util.Base64
 

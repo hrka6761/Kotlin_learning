@@ -12,9 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ir.hrka.kotlin.core.Constants.COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME
 import ir.hrka.kotlin.core.Constants.COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX
-import ir.hrka.kotlin.core.Constants.COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID
-import ir.hrka.kotlin.core.Constants.COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME
-import ir.hrka.kotlin.core.Constants.COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME
+import ir.hrka.kotlin.core.Constants.COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_ID
+import ir.hrka.kotlin.core.Constants.COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_NAME
+import ir.hrka.kotlin.core.Constants.COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_STATE_NAME
+import ir.hrka.kotlin.core.Constants.COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_VISUALIZER_STATE
 import ir.hrka.kotlin.core.Constants.KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME
 import ir.hrka.kotlin.core.Constants.KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN_ARGUMENT_VERSION_NAME
@@ -30,10 +31,10 @@ import ir.hrka.kotlin.core.utilities.Screen.KotlinTopicPoints
 import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopicPoints
 import ir.hrka.kotlin.core.utilities.Screen.About
 import ir.hrka.kotlin.ui.screens.about.AboutScreen
-import ir.hrka.kotlin.ui.screens.coroutine.CoroutineTopicsScreen
+import ir.hrka.kotlin.ui.screens.coroutine_topics.CoroutineTopicsScreen
 import ir.hrka.kotlin.ui.screens.coroutine_topic_points.CoroutineTopicPointsScreen
 import ir.hrka.kotlin.ui.screens.kotlin_topic_points.KotlinTopicPointsScreen
-import ir.hrka.kotlin.ui.screens.kotlin.KotlinTopicsScreen
+import ir.hrka.kotlin.ui.screens.kotlin_topics.KotlinTopicsScreen
 import ir.hrka.kotlin.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.ui.screens.splash.SplashScreen
 import ir.hrka.kotlin.ui.theme.KotlinTheme
@@ -105,9 +106,9 @@ fun AppContent() {
             ) { backStackEntry ->
 
                 val gitVersionName =
-                    backStackEntry.arguments?.getString(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME)
+                    backStackEntry.arguments?.getString(COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME)
                 val gitVersionSuffix =
-                    backStackEntry.arguments?.getString(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX)
+                    backStackEntry.arguments?.getString(COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX)
 
                 CoroutineTopicsScreen(activity, navHostController, gitVersionName, gitVersionSuffix)
             }
@@ -118,7 +119,7 @@ fun AppContent() {
                         type = NavType.StringType
                     },
                     navArgument(KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME) {
-                        type = NavType.StringType
+                        type = NavType.BoolType
                     },
                     navArgument(KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID) {
                         type = NavType.IntType
@@ -131,7 +132,7 @@ fun AppContent() {
                         KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME
                     ) ?: ""
                 val hasContentUpdated =
-                    backStackEntry.arguments?.getString(
+                    backStackEntry.arguments?.getBoolean(
                         KOTLIN_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME
                     ) ?: false
                 val kotlinTopicId =
@@ -144,43 +145,51 @@ fun AppContent() {
                     navHostController,
                     kotlinTopicName,
                     kotlinTopicId,
-                    hasContentUpdated == "true"
+                    hasContentUpdated
                 )
             }
             composable(
-                route = "${CoroutineTopicPoints()}/{${COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME}}/{${COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME}}/{${COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID}}",
+                route = "${CoroutineTopicPoints()}/{${COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_NAME}}/{${COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_STATE_NAME}}/{${COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_ID}}/{${COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_VISUALIZER_STATE}}",
                 arguments = listOf(
-                    navArgument(COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME) {
+                    navArgument(COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_NAME) {
                         type = NavType.StringType
                     },
-                    navArgument(COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME) {
-                        type = NavType.StringType
+                    navArgument(COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_STATE_NAME) {
+                        type = NavType.BoolType
                     },
-                    navArgument(COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID) {
+                    navArgument(COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_ID) {
                         type = NavType.IntType
                     },
+                    navArgument(COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_VISUALIZER_STATE) {
+                        type = NavType.BoolType
+                    }
                 )
             ) { backStackEntry ->
 
-                val kotlinTopicName =
+                val coroutineTopicName =
                     backStackEntry.arguments?.getString(
-                        COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_NAME
+                        COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_NAME
                     ) ?: ""
                 val hasContentUpdated =
-                    backStackEntry.arguments?.getString(
-                        COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_STATE_NAME
+                    backStackEntry.arguments?.getBoolean(
+                        COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_STATE_NAME
                     ) ?: false
-                val kotlinTopicId =
+                val coroutineTopicId =
                     backStackEntry.arguments?.getInt(
-                        COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_KOTLIN_TOPIC_ID
+                        COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_COROUTINE_TOPIC_ID
                     ) ?: -1
+                val coroutineTopicVisualizerState =
+                    backStackEntry.arguments?.getBoolean(
+                        COROUTINE_TOPIC_POINTS_SCREEN_ARGUMENT_VISUALIZER_STATE
+                    ) ?: false
 
                 CoroutineTopicPointsScreen(
                     activity,
                     navHostController,
-                    kotlinTopicName,
-                    kotlinTopicId,
-                    hasContentUpdated == "true"
+                    coroutineTopicName,
+                    coroutineTopicId,
+                    hasContentUpdated,
+                    coroutineTopicVisualizerState
                 )
             }
             composable(

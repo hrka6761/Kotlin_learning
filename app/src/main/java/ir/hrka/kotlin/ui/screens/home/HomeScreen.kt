@@ -61,8 +61,8 @@ import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopics
 fun HomeScreen(
     activity: MainActivity,
     navHostController: NavHostController,
-    githubVersionName: String?,
-    githubVersionSuffix: String?
+    gitVersionName: String?,
+    gitVersionSuffix: String?
 ) {
 
     val viewModel: HomeViewModel = hiltViewModel()
@@ -87,16 +87,16 @@ fun HomeScreen(
                 navHostController,
                 innerPaddings,
                 scrollState,
-                githubVersionName,
-                githubVersionSuffix,
+                gitVersionName,
+                gitVersionSuffix,
             )
 
             ORIENTATION_LANDSCAPE -> LandscapeScreen(
                 navHostController,
                 innerPaddings,
                 scrollState,
-                githubVersionName,
-                githubVersionSuffix,
+                gitVersionName,
+                gitVersionSuffix,
             )
         }
     }
@@ -111,8 +111,8 @@ fun PortraitScreen(
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
     scrollState: ScrollState,
-    githubVersionName: String?,
-    githubVersionSuffix: String?,
+    gitVersionName: String?,
+    gitVersionSuffix: String?,
 ) {
     Column(
         modifier = Modifier
@@ -184,8 +184,8 @@ fun PortraitScreen(
                     onClick = {
                         navHostController.navigate(
                             KotlinTopics.appendArg(
-                                githubVersionName ?: "",
-                                githubVersionSuffix ?: ""
+                                gitVersionName ?: "",
+                                gitVersionSuffix ?: ""
                             )
                         )
                     }
@@ -257,8 +257,8 @@ fun PortraitScreen(
                     onClick = {
                         navHostController.navigate(
                             CoroutineTopics.appendArg(
-                                githubVersionName ?: "",
-                                githubVersionSuffix ?: ""
+                                gitVersionName ?: "",
+                                gitVersionSuffix ?: ""
                             )
                         )
                     }
@@ -275,8 +275,8 @@ fun LandscapeScreen(
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
     scrollState: ScrollState,
-    githubVersionName: String?,
-    githubVersionSuffix: String?,
+    gitVersionName: String?,
+    gitVersionSuffix: String?,
 ) {
     Row(
         modifier = Modifier
@@ -345,8 +345,8 @@ fun LandscapeScreen(
                     onClick = {
                         navHostController.navigate(
                             KotlinTopics.appendArg(
-                                githubVersionName ?: "",
-                                githubVersionSuffix ?: ""
+                                gitVersionName ?: "",
+                                gitVersionSuffix ?: ""
                             )
                         )
                     }
@@ -415,8 +415,8 @@ fun LandscapeScreen(
                     onClick = {
                        navHostController.navigate(
                            CoroutineTopics.appendArg(
-                               githubVersionName ?: "",
-                               githubVersionSuffix ?: ""
+                               gitVersionName ?: "",
+                               gitVersionSuffix ?: ""
                            )
                        )
                     }

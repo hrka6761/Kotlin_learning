@@ -53,12 +53,13 @@ import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
-import ir.hrka.kotlin.core.ExecutionState.Start
-import ir.hrka.kotlin.core.ExecutionState.Loading
-import ir.hrka.kotlin.core.ExecutionState.Stop
+import ir.hrka.kotlin.core.utilities.ExecutionState.Start
+import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
+import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.extractFileName
-import ir.hrka.kotlin.core.utilities.splitByCapitalLetters
+import ir.hrka.kotlin.core.utilities.string_utilities.extractFileName
+import ir.hrka.kotlin.core.utilities.string_utilities.removeVisualizedFromFileName
+import ir.hrka.kotlin.core.utilities.string_utilities.splitByCapitalLetters
 import ir.hrka.kotlin.domain.entities.PointData
 import kotlinx.coroutines.launch
 
@@ -68,7 +69,8 @@ fun CoroutineTopicPointsScreen(
     navHostController: NavHostController,
     topicName: String,
     topicId: Int,
-    hasContentUpdated: Boolean
+    hasContentUpdated: Boolean,
+    hasVisualizer: Boolean
 ) {
 
     val viewModel: CoroutineTopicPointsViewModel = hiltViewModel()
@@ -247,7 +249,10 @@ fun CoroutineTopicPointsScreenAppBar(topicName: String, navHostController: NavHo
     TopAppBar(
         title = {
             Text(
-                text = topicName.extractFileName().splitByCapitalLetters(),
+                text = topicName
+                    .extractFileName()
+                    .splitByCapitalLetters()
+                    .removeVisualizedFromFileName(),
                 fontWeight = FontWeight.Bold
             )
         },
@@ -384,5 +389,12 @@ fun CoroutineTopicSnippetCodeItem(snippetCode: String) {
 @Preview(showBackground = true)
 @Composable
 fun KotlinTopicPointsScreenPreview() {
-    CoroutineTopicPointsScreen(MainActivity(), rememberNavController(), "", -1, false)
+    CoroutineTopicPointsScreen(
+        MainActivity(),
+        rememberNavController(),
+        "",
+        -1,
+        hasContentUpdated = false,
+        hasVisualizer = true
+    )
 }

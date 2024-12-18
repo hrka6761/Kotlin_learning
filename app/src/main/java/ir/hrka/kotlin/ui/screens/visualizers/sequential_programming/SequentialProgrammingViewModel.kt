@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.ExecutionState
-import ir.hrka.kotlin.core.ExecutionState.Start
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Stop
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Processing
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Done
-import ir.hrka.kotlin.core.utilities.TaskData
-import ir.hrka.kotlin.core.utilities.ThreadData
+import ir.hrka.kotlin.core.utilities.ExecutionState
+import ir.hrka.kotlin.core.utilities.ExecutionState.Start
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Stop
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Processing
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Done
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.TaskData
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ThreadData
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 

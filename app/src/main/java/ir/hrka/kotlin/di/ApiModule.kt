@@ -9,7 +9,7 @@ import ir.hrka.kotlin.core.Constants.CONNECT_TIMEOUT
 import ir.hrka.kotlin.core.Constants.READ_TIMEOUT
 import ir.hrka.kotlin.core.Constants.WRITE_TIMEOUT
 import ir.hrka.kotlin.core.utilities.AuthInterceptor
-import ir.hrka.kotlin.data.datasource.github.GitAPI
+import ir.hrka.kotlin.data.datasource.git.GitAPI
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

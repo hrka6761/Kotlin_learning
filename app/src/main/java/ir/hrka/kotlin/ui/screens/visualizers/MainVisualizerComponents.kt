@@ -25,16 +25,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.utilities.ComponentData
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Stop
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Processing
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Done
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Cancel
-import ir.hrka.kotlin.core.utilities.CoroutineComponentState.Failed
-import ir.hrka.kotlin.core.utilities.CoroutineData
-import ir.hrka.kotlin.core.utilities.TaskData
-import ir.hrka.kotlin.core.utilities.ThreadData
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentData
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Stop
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Processing
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Done
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Cancel
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Failed
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineData
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.TaskData
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ThreadData
 
 @Composable
 fun Thread(

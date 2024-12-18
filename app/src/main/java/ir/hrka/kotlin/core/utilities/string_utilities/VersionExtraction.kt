@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.core.utilities
+package ir.hrka.kotlin.core.utilities.string_utilities
 
 private const val versionCodePattern = """versionCode\s*=\s*(\d+)"""
 private const val versionNamePattern = """versionName\s*=\s*"([^"]+)""""

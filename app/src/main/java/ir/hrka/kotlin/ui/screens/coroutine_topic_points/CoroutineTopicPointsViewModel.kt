@@ -3,8 +3,8 @@ package ir.hrka.kotlin.ui.screens.coroutine_topic_points
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.ExecutionState
-import ir.hrka.kotlin.core.ExecutionState.Start
+import ir.hrka.kotlin.core.utilities.ExecutionState
+import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.PointData
 import ir.hrka.kotlin.domain.usecases.db.coroutine.read.GetDBCoroutineTopicPointsUseCase

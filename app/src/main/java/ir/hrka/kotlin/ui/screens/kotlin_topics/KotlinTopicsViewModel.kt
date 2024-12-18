@@ -1,15 +1,17 @@
-package ir.hrka.kotlin.ui.screens.kotlin
+package ir.hrka.kotlin.ui.screens.kotlin_topics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.ExecutionState
-import ir.hrka.kotlin.core.ExecutionState.Start
+import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_NAME
+import ir.hrka.kotlin.core.errors.unknownError
+import ir.hrka.kotlin.core.utilities.ExecutionState
+import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.extractMajorFromVersionName
-import ir.hrka.kotlin.core.utilities.extractMinorFromVersionName
-import ir.hrka.kotlin.core.utilities.extractPatchFromVersionName
-import ir.hrka.kotlin.core.utilities.extractUpdatedKotlinTopicsListFromVersionName
+import ir.hrka.kotlin.core.utilities.string_utilities.extractMajorFromVersionName
+import ir.hrka.kotlin.core.utilities.string_utilities.extractMinorFromVersionName
+import ir.hrka.kotlin.core.utilities.string_utilities.extractPatchFromVersionName
+import ir.hrka.kotlin.core.utilities.string_utilities.extractUpdatedKotlinTopicsListFromVersionName
 import ir.hrka.kotlin.domain.entities.db.KotlinTopic
 import ir.hrka.kotlin.domain.usecases.db.kotlin.write.ClearKotlinTopicsTableUseCase
 import ir.hrka.kotlin.domain.usecases.db.kotlin.read.GetDBKotlinTopicsListUseCase
@@ -45,7 +47,8 @@ class KotlinTopicsViewModel @Inject constructor(
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _hasUpdateForKotlinTopicsList: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     val hasUpdateForKotlinTopicsList: StateFlow<Boolean?> = _hasUpdateForKotlinTopicsList
-    private val _hasUpdateForKotlinTopicsContent: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    private val _hasUpdateForKotlinTopicsContent: MutableStateFlow<Boolean?> =
+        MutableStateFlow(null)
     val hasUpdateForKotlinTopicsContent: StateFlow<Boolean?> = _hasUpdateForKotlinTopicsContent
     private val _saveKotlinTopicsListResult: MutableStateFlow<Resource<Boolean>> =
         MutableStateFlow(Resource.Initial())
@@ -67,7 +70,7 @@ class KotlinTopicsViewModel @Inject constructor(
         _failedState.value = state
     }
 
-    fun getKotlinTopicsFromGithub() {
+    fun getKotlinTopicsFromGit() {
         viewModelScope.launch(io) {
             _kotlinTopics.value = Resource.Loading()
             _kotlinTopics.value = getGitKotlinTopicsListUseCase()
@@ -84,7 +87,8 @@ class KotlinTopicsViewModel @Inject constructor(
     fun checkNewUpdateForKotlinTopicsList(gitVersionName: String?) {
         viewModelScope.launch(io) {
             currentVersionName =
-                (loadCurrentKotlinCourseVersionNameUseCase().data ?: "0.0.0").ifEmpty { "0.0.0" }
+                (loadCurrentKotlinCourseVersionNameUseCase().data ?: DEFAULT_VERSION_NAME)
+                    .ifEmpty { DEFAULT_VERSION_NAME }
 
             if (gitVersionName.isNullOrEmpty()) {
                 _hasUpdateForKotlinTopicsList.value = false
@@ -93,26 +97,26 @@ class KotlinTopicsViewModel @Inject constructor(
 
             val currentVersionMajorDiffered =
                 async { currentVersionName.extractMajorFromVersionName() }
-            val githubVersionMajorDiffered =
+            val gitVersionMajorDiffered =
                 async { gitVersionName.extractMajorFromVersionName() }
 
-            val githubVersionMajor = githubVersionMajorDiffered.await()
+            val gitVersionMajor = gitVersionMajorDiffered.await()
             val currentVersionMajor = currentVersionMajorDiffered.await()
 
-            if (githubVersionMajor != currentVersionMajor) {
+            if (gitVersionMajor != currentVersionMajor) {
                 _hasUpdateForKotlinTopicsList.value = true
                 return@launch
             }
 
             val currentVersionMinorDiffered =
                 async { currentVersionName.extractMinorFromVersionName() }
-            val githubVersionMinorDiffered =
+            val gitVersionMinorDiffered =
                 async { gitVersionName.extractMinorFromVersionName() }
 
-            val githubVersionMinor = githubVersionMinorDiffered.await()
+            val gitVersionMinor = gitVersionMinorDiffered.await()
             val currentVersionMinor = currentVersionMinorDiffered.await()
 
-            if (githubVersionMinor != currentVersionMinor) {
+            if (gitVersionMinor != currentVersionMinor) {
                 _hasUpdateForKotlinTopicsList.value = true
                 return@launch
             }
@@ -130,14 +134,14 @@ class KotlinTopicsViewModel @Inject constructor(
 
             val currentVersionPatchDiffered =
                 async { currentVersionName.extractPatchFromVersionName() }
-            val githubVersionPatchDiffered =
+            val gitVersionPatchDiffered =
                 async { gitVersionName.extractPatchFromVersionName() }
 
-            val githubVersionPatch = githubVersionPatchDiffered.await()
+            val gitVersionPatch = gitVersionPatchDiffered.await()
             val currentVersionPatch = currentVersionPatchDiffered.await()
 
-            if (githubVersionPatch != currentVersionPatch) {
-                if ((githubVersionPatch - currentVersionPatch) > 1) {
+            if (gitVersionPatch != currentVersionPatch) {
+                if ((gitVersionPatch - currentVersionPatch) > 1) {
                     _hasUpdateForKotlinTopicsList.value = true
                     return@launch
                 }
@@ -150,9 +154,14 @@ class KotlinTopicsViewModel @Inject constructor(
     }
 
     fun updateKotlinTopicsInDatabase(gitVersionSuffix: String?) {
+        if (gitVersionSuffix.isNullOrEmpty()) {
+            _updateKotlinTopicsOnDBResult.value = Resource.Error(unknownError)
+            return
+        }
+
         viewModelScope.launch(io) {
             val updatedKotlinTopicsList =
-                gitVersionSuffix!!.extractUpdatedKotlinTopicsListFromVersionName()
+                gitVersionSuffix.extractUpdatedKotlinTopicsListFromVersionName()
 
             updateKotlinTopicsOnDBResult.value = updateKotlinTopicsStateUseCase(
                 *updatedKotlinTopicsList.toIntArray(),

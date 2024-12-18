@@ -1,0 +1,3 @@
+package ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities
+
+interface ComponentData

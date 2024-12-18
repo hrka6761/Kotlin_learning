@@ -2,7 +2,7 @@ package ir.hrka.kotlin.domain.entities
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import ir.hrka.kotlin.core.utilities.extractFileIdByName
+import ir.hrka.kotlin.core.utilities.string_utilities.extractFileIdByName
 
 @JsonClass(generateAdapter = true)
 data class GitFileData(

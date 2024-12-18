@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.data.datasource.github
+package ir.hrka.kotlin.data.datasource.git
 
 import ir.hrka.kotlin.domain.entities.GitFileData
 import retrofit2.Response
