@@ -2,6 +2,7 @@ package ir.hrka.kotlin.ui.screens.coroutine_topic_points
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -57,6 +59,7 @@ import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.utilities.Screen.SequentialProgramming
 import ir.hrka.kotlin.core.utilities.string_utilities.extractFileName
 import ir.hrka.kotlin.core.utilities.string_utilities.removeVisualizedFromFileName
 import ir.hrka.kotlin.core.utilities.string_utilities.splitByCapitalLetters
@@ -91,6 +94,41 @@ fun CoroutineTopicPointsScreen(
                     .fillMaxWidth(),
                 hostState = snackBarHostState
             )
+        },
+        bottomBar = {
+            if (hasVisualizer)
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .navigationBarsPadding()
+                        .clickable {
+                            navHostController.navigate(SequentialProgramming())
+                        }
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.tertiaryContainer)
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(start = 8.dp),
+                            text = "Play Visualizer",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 36.sp
+                        )
+                        Icon(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(50.dp),
+                            painter = painterResource(R.drawable.play_visualizer),
+                            contentDescription = null
+                        )
+                    }
+                }
         }
     ) { innerPaddings ->
         Box(

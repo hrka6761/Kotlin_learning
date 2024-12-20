@@ -10,6 +10,7 @@ object Constants {
     const val COROUTINE_TOPICS_SCREEN = "coroutineTopics"
     const val KOTLIN_TOPIC_POINTS_SCREEN = "kotlinTopicPoints"
     const val COROUTINE_TOPIC_POINTS_SCREEN = "coroutineTopicPoints"
+    const val SEQUENTIAL_PROGRAMMING_SCREEN = "sequentialProgramming"
     const val ABOUT_SCREEN = "about"
 
     const val CONNECT_TIMEOUT = 3L

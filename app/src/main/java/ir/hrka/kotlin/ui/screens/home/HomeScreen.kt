@@ -363,7 +363,7 @@ fun LandscapeScreen(
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             ConstraintLayout {
-                val (img, title, desc, btn, label) = createRefs()
+                val (img, title, desc, btn) = createRefs()
 
                 Image(
                     modifier = Modifier

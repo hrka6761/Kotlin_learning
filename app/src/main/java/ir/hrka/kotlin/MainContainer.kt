@@ -30,6 +30,7 @@ import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopics
 import ir.hrka.kotlin.core.utilities.Screen.KotlinTopicPoints
 import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopicPoints
 import ir.hrka.kotlin.core.utilities.Screen.About
+import ir.hrka.kotlin.core.utilities.Screen.SequentialProgramming
 import ir.hrka.kotlin.ui.screens.about.AboutScreen
 import ir.hrka.kotlin.ui.screens.coroutine_topics.CoroutineTopicsScreen
 import ir.hrka.kotlin.ui.screens.coroutine_topic_points.CoroutineTopicPointsScreen
@@ -37,6 +38,7 @@ import ir.hrka.kotlin.ui.screens.kotlin_topic_points.KotlinTopicPointsScreen
 import ir.hrka.kotlin.ui.screens.kotlin_topics.KotlinTopicsScreen
 import ir.hrka.kotlin.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.ui.screens.splash.SplashScreen
+import ir.hrka.kotlin.ui.screens.visualizers.sequential_programming.SequentialProgrammingScreen
 import ir.hrka.kotlin.ui.theme.KotlinTheme
 
 @Composable
@@ -196,6 +198,11 @@ fun AppContent() {
                 route = About()
             ) {
                 AboutScreen(activity, navHostController)
+            }
+            composable(
+                route = SequentialProgramming()
+            ) {
+                SequentialProgrammingScreen(activity, navHostController)
             }
         }
     }

@@ -7,6 +7,7 @@ import ir.hrka.kotlin.core.Constants.COROUTINE_TOPICS_SCREEN
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN
 import ir.hrka.kotlin.core.Constants.ABOUT_SCREEN
 import ir.hrka.kotlin.core.Constants.COROUTINE_TOPIC_POINTS_SCREEN
+import ir.hrka.kotlin.core.Constants.SEQUENTIAL_PROGRAMMING_SCREEN
 
 
 enum class Screen(private val destination: String) {
@@ -17,7 +18,8 @@ enum class Screen(private val destination: String) {
     CoroutineTopics(COROUTINE_TOPICS_SCREEN),
     KotlinTopicPoints(KOTLIN_TOPIC_POINTS_SCREEN),
     CoroutineTopicPoints(COROUTINE_TOPIC_POINTS_SCREEN),
-    About(ABOUT_SCREEN);
+    About(ABOUT_SCREEN),
+    SequentialProgramming(SEQUENTIAL_PROGRAMMING_SCREEN);
 
 
     operator fun invoke() = destination
