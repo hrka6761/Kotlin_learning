@@ -39,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -306,24 +305,26 @@ fun KotlinTopicItem(
         ) {
             val (id, title, label) = createRefs()
 
-            Text(
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .width(25.dp)
-                    .height(25.dp)
+                    .width(35.dp)
+                    .height(35.dp)
                     .background(
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(50)
                     )
                     .constrainAs(id) {
                         start.linkTo(parent.start)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                    },
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-                text = kotlinTopics.id.toString(),
-            )
+                    }
+            ) {
+                Text(
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    text = kotlinTopics.id.toString(),
+                )
+            }
 
             Text(
                 modifier = Modifier.constrainAs(title) {
@@ -339,24 +340,17 @@ fun KotlinTopicItem(
             )
 
             if (kotlinTopics.hasUpdated)
-                Text(
+                Icon(
                     modifier = Modifier
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(50)
-                        )
-                        .padding(horizontal = 4.dp)
+                        .width(25.dp)
+                        .height(25.dp)
                         .constrainAs(label) {
-                            end.linkTo(parent.end)
+                            end.linkTo(parent.end, margin = 8.dp)
                             top.linkTo(parent.top)
                             bottom.linkTo(parent.bottom)
                         },
-                    text = stringResource(R.string.updated_label_txt),
-                    textAlign = TextAlign.Center,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 8.sp,
-                    color = MaterialTheme.colorScheme.surface,
-                    fontWeight = FontWeight.Bold
+                    painter = painterResource(R.drawable.download_update),
+                    contentDescription = null
                 )
         }
     }
@@ -366,5 +360,13 @@ fun KotlinTopicItem(
 @Preview(showBackground = true)
 @Composable
 fun KotlinTopicsScreenPreview() {
-    KotlinTopicsScreen(MainActivity(), rememberNavController(), "", "")
+    KotlinTopicItem(
+        KotlinTopic(
+            id = 12,
+            name = "Basic",
+            versionName = "0.0.0",
+            hasUpdated = true
+        ),
+        rememberNavController()
+    )
 }
