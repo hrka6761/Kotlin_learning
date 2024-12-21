@@ -203,7 +203,7 @@ fun CoroutineTopicsScreen(
                 is Resource.Loading -> {
                     if (hasUpdateForCoroutineTopicsList == true) {
                         snackBarHostState.showSnackbar(
-                            message = activity.getString(R.string.fetching_new_kotlin_topics_list_msg),
+                            message = activity.getString(R.string.fetching_new_coroutine_topics_list_msg),
                             duration = SnackbarDuration.Long
                         )
                     }
@@ -301,7 +301,9 @@ fun CoroutineTopicItem(
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(50)
                     )
-                    .constrainAs(id) {}
+                    .constrainAs(id) {
+                        start.linkTo(parent.start)
+                    }
             ) {
                 Text(
                     fontSize = 16.sp,

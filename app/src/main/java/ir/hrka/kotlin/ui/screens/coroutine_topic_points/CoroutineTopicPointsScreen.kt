@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -173,9 +172,13 @@ fun CoroutineTopicPointsScreen(
             LazyVerticalStaggeredGrid(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(innerPaddings),
-                columns = StaggeredGridCells.Fixed(1),
-                contentPadding = PaddingValues(8.dp)
+                    .padding(
+                        top = innerPaddings.calculateTopPadding(),
+                        bottom = innerPaddings.calculateBottomPadding() + 8.dp,
+                        start = 8.dp,
+                        end = 8.dp
+                    ),
+                columns = StaggeredGridCells.Fixed(1)
             ) {
                 val list = points.data
 
@@ -324,23 +327,27 @@ fun CoroutineTopicPointItem(point: PointData) {
         ConstraintLayout {
             val (id, pointHead, subPoints, snippetCodes) = createRefs()
 
-            Text(
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .width(25.dp)
-                    .height(25.dp)
+                    .width(40.dp)
+                    .height(40.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(50)
+                    )
                     .constrainAs(id) {
                         start.linkTo(parent.start, margin = 8.dp)
                         top.linkTo(parent.top, margin = 8.dp)
                     }
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(50)
-                    ),
-                text = point.num.toString(),
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
+            ) {
+                Text(
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    text = point.num.toString(),
+                )
+            }
 
             Text(
                 modifier = Modifier

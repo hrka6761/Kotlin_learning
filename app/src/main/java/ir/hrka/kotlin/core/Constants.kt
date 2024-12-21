@@ -31,7 +31,7 @@ object Constants {
     const val HOME_SCREEN_ARGUMENT_VERSION_NAME = "homeGitVersionName"
     const val HOME_SCREEN_ARGUMENT_VERSION_SUFFIX = "homeGitVersionSuffix"
 
-    const val TOKEN = "This is a secret."
+    const val TOKEN = "This is a secret ."
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
 
     const val UNKNOWN_ERROR_CODE = 999
@@ -77,4 +77,7 @@ object Constants {
     const val SOURCE_URL = "https://kotlinlang.org/"
     const val BAZAAR_URL = "https://cafebazaar.ir/app/ir.hrka.kotlin"
     const val MYKET_URL = "https://myket.ir/app/ir.hrka.kotlin"
+
+    const val KOTLIN_COURSE_CHANGE_ID = 0
+    const val COROUTINE_COURSE_CHANGE_ID = 1
 }

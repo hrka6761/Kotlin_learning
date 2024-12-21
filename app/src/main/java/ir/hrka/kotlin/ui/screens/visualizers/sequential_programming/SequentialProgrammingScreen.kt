@@ -1,5 +1,7 @@
 package ir.hrka.kotlin.ui.screens.visualizers.sequential_programming
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,6 +42,7 @@ import ir.hrka.kotlin.ui.screens.visualizers.Guidance
 import ir.hrka.kotlin.ui.screens.visualizers.Task
 import ir.hrka.kotlin.ui.screens.visualizers.Thread
 
+@SuppressLint("SourceLockedOrientationActivity")
 @Composable
 fun SequentialProgrammingScreen(activity: MainActivity, navHostController: NavHostController) {
 
@@ -83,9 +87,19 @@ fun SequentialProgrammingScreen(activity: MainActivity, navHostController: NavHo
     }
 
     LaunchedEffect(Unit) {
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    LaunchedEffect(Unit) {
         if (executionState == ExecutionState.Start) {
             viewModel.setExecutionState(ExecutionState.Loading)
             viewModel.runAllTasks()
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
 }

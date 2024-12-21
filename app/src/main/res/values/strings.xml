@@ -15,6 +15,7 @@
     <string name="downloading_notification_desc">Downloading new version of kotlin cheat sheet app.</string>
     <string name="downloading_notification_title">Kotlin cheat sheet</string>
     <string name="fetching_new_kotlin_topics_list_msg">Fetching new kotlin kotlinTopics list from github.</string>
+    <string name="fetching_new_coroutine_topics_list_msg">Fetching new coroutine kotlinTopics list from github.</string>
     <string name="fetching_new_points_list_msg">Fetching new points list from github.</string>
     <string name="no_kotlin_topics_msg">There are no kotlin kotlinTopics available in the database.</string>
     <string name="updated_label_txt">Update</string>

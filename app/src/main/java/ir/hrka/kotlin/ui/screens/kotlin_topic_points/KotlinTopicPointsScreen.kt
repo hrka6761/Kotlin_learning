@@ -273,23 +273,27 @@ fun KotlinTopicPointItem(point: PointData) {
         ConstraintLayout {
             val (id, pointHead, subPoints, snippetCodes) = createRefs()
 
-            Text(
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .width(25.dp)
-                    .height(25.dp)
+                    .width(40.dp)
+                    .height(40.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(50)
+                    )
                     .constrainAs(id) {
                         start.linkTo(parent.start, margin = 8.dp)
                         top.linkTo(parent.top, margin = 8.dp)
                     }
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(50)
-                    ),
-                text = point.num.toString(),
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
+            ) {
+                Text(
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    text = point.num.toString(),
+                )
+            }
 
             Text(
                 modifier = Modifier
