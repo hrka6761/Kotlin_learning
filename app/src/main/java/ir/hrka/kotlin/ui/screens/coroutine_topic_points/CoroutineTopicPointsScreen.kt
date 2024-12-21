@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -97,26 +98,26 @@ fun CoroutineTopicPointsScreen(
         },
         bottomBar = {
             if (hasVisualizer)
-                ElevatedCard(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
-                        .navigationBarsPadding()
+                        .background(MaterialTheme.colorScheme.tertiaryContainer)
                         .clickable {
                             navHostController.navigate(SequentialProgramming())
                         }
+                        .padding(8.dp)
+                        .navigationBarsPadding(),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.Start
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.tertiaryContainer)
-                            .padding(8.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
                             modifier = Modifier.padding(start = 8.dp),
-                            text = "Play Visualizer",
+                            text = stringResource(R.string.visualization_page_title),
                             fontWeight = FontWeight.Bold,
                             fontSize = 36.sp
                         )
@@ -128,6 +129,15 @@ fun CoroutineTopicPointsScreen(
                             contentDescription = null
                         )
                     }
+
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp),
+                        text = stringResource(R.string.visualization_page_desc),
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
         }
     ) { innerPaddings ->

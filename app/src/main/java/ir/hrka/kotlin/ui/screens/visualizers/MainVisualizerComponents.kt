@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -63,6 +64,7 @@ fun Thread(
             Text(
                 modifier = Modifier.padding(start = 8.dp, end = 16.dp),
                 text = "Thread name: ${threadData?.threadName ?: "..."}\nThread id: ${threadData?.threadId ?: "..."}",
+                color = Color.Black,
                 style = TextStyle(
                     fontSize = 10.sp,
                     lineHeight = 12.sp
@@ -103,6 +105,7 @@ fun Coroutine(
             Text(
                 modifier = Modifier.padding(start = 8.dp, end = 16.dp),
                 text = "Coroutine name: ${coroutineData?.coroutineName ?: "..."}\nThread context: ${coroutineData?.threadContext ?: "..."}\nJob context: ${coroutineData?.jobContext ?: "..."}",
+                color = Color.Black,
                 style = TextStyle(
                     fontSize = 10.sp,
                     lineHeight = 12.sp
@@ -142,6 +145,7 @@ fun Task(
             Text(
                 modifier = Modifier.padding(start = 8.dp, end = 16.dp),
                 text = "Task name: ${taskData?.taskName ?: "..."}\nDuration time: ${taskData?.durationTime ?: "..."} MS",
+                color = Color.Black,
                 style = TextStyle(
                     fontSize = 10.sp,
                     lineHeight = 12.sp
@@ -162,6 +166,7 @@ fun StateIcon(
         is Stop -> {
             Icon(
                 painter = painterResource(R.drawable.state_stop),
+                tint = Color.Black,
                 contentDescription = null
             )
         }
@@ -169,8 +174,9 @@ fun StateIcon(
         is Processing -> {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp),
+                    .width(25.dp)
+                    .height(25.dp),
+                color = Color.Black,
                 strokeWidth = 1.dp
             )
         }
@@ -178,6 +184,7 @@ fun StateIcon(
         is Done -> {
             Icon(
                 painter = painterResource(R.drawable.state_done),
+                tint = Color.Black,
                 contentDescription = null
             )
         }
@@ -185,6 +192,7 @@ fun StateIcon(
         is Cancel -> {
             Icon(
                 painter = painterResource(R.drawable.state_cancel),
+                tint = Color.Black,
                 contentDescription = null
             )
         }
@@ -192,6 +200,7 @@ fun StateIcon(
         is Failed -> {
             Icon(
                 painter = painterResource(R.drawable.state_failed),
+                tint = Color.Black,
                 contentDescription = null
             )
         }

@@ -37,4 +37,6 @@
     <string name="home_screen_coming_soon_msg">coming soon in the next version.</string>
     <string name="home_screen_start_learning_btn">Start learning</string>
     <string name="home_screen_coming_soon_btn">Coming soon</string>
+    <string name="visualization_page_desc">You can see the visualization of the topic raised on this page.</string>
+    <string name="visualization_page_title">Play Visualizer</string>
 </resources>

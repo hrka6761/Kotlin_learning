@@ -39,16 +39,26 @@ class SequentialProgrammingViewModel @Inject constructor() : ViewModel() {
     }
 
     fun runAllTasks() {
-        val threadData = ThreadData(
-            Thread.currentThread().id.toString(),
-            Thread.currentThread().name
-        )
-        _mainThreadState.value = Processing(threadData)
-        task1()
-        task2()
-        task3()
-        _mainThreadState.value = Done(threadData)
-        setExecutionState(ExecutionState.Stop)
+//        I had to use another thread for visualization and manually named the thread name and ID here.
+        Thread {
+            val threadData = ThreadData(
+                "2",
+                "main"
+            )
+            _mainThreadState.postValue(Processing(threadData))
+            task1()
+            task2()
+            task3()
+            _mainThreadState.postValue(Done(threadData))
+            setExecutionState(ExecutionState.Stop)
+        }.start()
+    }
+
+    fun restartVisualizer() {
+        _task1State.value = Stop()
+        _task2State.value = Stop()
+        _task3State.value = Stop()
+        runAllTasks()
     }
 
     private fun task1() {
@@ -56,9 +66,9 @@ class SequentialProgrammingViewModel @Inject constructor() : ViewModel() {
             "First Task",
             "1000"
         )
-        _task1State.value = Processing(taskData)
+        _task1State.postValue(Processing(taskData))
         Thread.sleep(1_000)
-        _task1State.value = Done(taskData)
+        _task1State.postValue(Done(taskData))
     }
 
     private fun task2() {
@@ -66,9 +76,9 @@ class SequentialProgrammingViewModel @Inject constructor() : ViewModel() {
             "Second Task",
             "4000"
         )
-        _task2State.value = Processing(taskData)
+        _task2State.postValue(Processing(taskData))
         Thread.sleep(4_000)
-        _task2State.value = Done(taskData)
+        _task2State.postValue(Done(taskData))
     }
 
     private fun task3() {
@@ -76,8 +86,8 @@ class SequentialProgrammingViewModel @Inject constructor() : ViewModel() {
             "Thread Task",
             "2000"
         )
-        _task3State.value = Processing(taskData)
+        _task3State.postValue(Processing(taskData))
         Thread.sleep(2_000)
-        _task3State.value = Done(taskData)
+        _task3State.postValue(Done(taskData))
     }
 }
