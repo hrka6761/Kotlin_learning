@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.core.utilities.ExecutionState
-import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Stop
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Processing
@@ -18,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SequentialProgrammingViewModel @Inject constructor() : ViewModel() {
 
-    private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
+    private val _executionState: MutableStateFlow<ExecutionState> =
+        MutableStateFlow(ExecutionState.Start)
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _mainThreadState: MutableLiveData<CoroutineComponentState<ThreadData>> =
         MutableLiveData(Stop())
@@ -55,6 +55,7 @@ class SequentialProgrammingViewModel @Inject constructor() : ViewModel() {
     }
 
     fun restartVisualizer() {
+        setExecutionState(ExecutionState.Start)
         _task1State.value = Stop()
         _task2State.value = Stop()
         _task3State.value = Stop()
