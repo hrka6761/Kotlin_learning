@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Kotlin cheat sheet"
+rootProject.name = "Kotlin Learning"
 include(":app")
  
