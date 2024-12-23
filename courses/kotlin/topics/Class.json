@@ -1,0 +1,72 @@
+{
+  "topic_id": 2,
+  "topic_name": "Class",
+  "points": [
+    {
+      "id": 1,
+      "point": "A class in Kotlin can only have one primary constructor and one or more secondary constructors.",
+      "sub_points": null,
+      "snippet_codes": [
+        " class Person(val age: Int) {\n    constructor(age: Int, name: String) : this(age) {\n         // Do something\n     }\n\n     constructor(age: Int, name: String, nationalCode: Long) :\n     this(age, name) {\n         // Do something\n     }\n }"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "A class is public and final and with a public zero-param constructor by default.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "The Functions of a class are final by default and must be open to overriding.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "The Properties of a class must be open to overriding.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "An open member can not be private.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "If a class has a primary constructor, secondary constructors must be invoke primary constructor, directly or indirectly by calling another secondary constructor that the primary constructor calls.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 7,
+      "point": "During the initialization of an instance, the initializer blocks are executed in the same order as they appear in the class body, interleaved with the property initializers.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 8,
+      "point": "Members that declared in the companion object block must be called by the class name without instantiating.",
+      "sub_points": null,
+      "snippet_codes": [
+        " class Person(val age: Int) {\n     companion object {\n          val MAX_AGE = 100\n     }\n }\n\n Person.MAX_AGE\n\n val p1 = Person(10)\n p1.age"
+      ]
+    },
+    {
+      "id": 9,
+      "point": "Class members can access the private members of the corresponding companion object.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 10,
+      "point": "After decompile in java create static final class Companion and member function of companion object is declared in it and member property of companion object is declared as static final property.",
+      "sub_points": [
+        "To get byteCode and decompile to java code go to the bellow path in the android studio.\n(Tools -> Kotlin -> Show Kotlin Bytecode)"
+      ],
+      "snippet_codes": null
+    }
+  ]
+}
