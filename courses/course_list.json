@@ -1,0 +1,19 @@
+{
+  "course_number": 2,
+  "courses": [
+    {
+      "course_id": 1,
+      "course_title": "Kotlin language",
+      "course_description": "Using the tips in this section, you will achieve complete mastery of Kotlin syntax. When you start using this section, all the tips are taken from GitHub repository and stored in your phone's database, and in your next uses, the tips are taken from the database. If new tips are created or existing tips are modified, the app will retrieve the new tips from GitHub repository and replace the previous ones.",
+      "course_banner": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin_course_banner.png",
+      "is_active": true
+    },
+    {
+      "course_id": 2,
+      "course_title": "Coroutine & Flow",
+      "course_description": "Using the tips in this section, you will master Kotlin coroutines. To clearly understand the concepts in this section, all the use cases of Kotlin coroutines and flows are visualized.",
+      "course_banner": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/coroutine_course_banner.png",
+      "is_active": true
+    }
+  ]
+}
