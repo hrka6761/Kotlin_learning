@@ -1,0 +1,11 @@
+{
+  "topics_number": 1,
+  "topics": [
+    {
+      "topic_id": 1,
+      "topic_title": "Sequential programming",
+      "points_number": 4,
+      "has_visualizer": true
+    }
+  ]
+}
