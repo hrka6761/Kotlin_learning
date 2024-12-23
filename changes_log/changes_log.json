@@ -1,0 +1,21 @@
+{
+  "last_version_id": 1,
+  "min_supported_version_id": 1,
+  "versions": [
+    {
+      "version_id": 1,
+      "version_name": "6.0.0",
+      "version_code": 7,
+      "version_type": "NewFeature",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Change update method.",
+        "Change courses content resource from javadoc to json.",
+        "Dynamicize courses info in the home screen.",
+        "Add coroutine course.",
+        "Rename project name to kotlin learning."
+      ]
+    }
+  ]
+}
