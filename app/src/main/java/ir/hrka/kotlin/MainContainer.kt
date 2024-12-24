@@ -58,23 +58,9 @@ fun AppContent() {
                 SplashScreen(activity, navHostController)
             }
             composable(
-                route = "${Home()}/{${HOME_SCREEN_ARGUMENT_VERSION_NAME}}/{${HOME_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
-                arguments = listOf(
-                    navArgument(HOME_SCREEN_ARGUMENT_VERSION_NAME) {
-                        type = NavType.StringType
-                    },
-                    navArgument(HOME_SCREEN_ARGUMENT_VERSION_SUFFIX) {
-                        type = NavType.StringType
-                    },
-                )
-            ) { backStackEntry ->
-
-                val gitVersionName =
-                    backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_VERSION_NAME)
-                val gitVersionSuffix =
-                    backStackEntry.arguments?.getString(HOME_SCREEN_ARGUMENT_VERSION_SUFFIX)
-
-                HomeScreen(activity, navHostController, gitVersionName, gitVersionSuffix)
+                route = Home()
+            ) {
+                HomeScreen(activity, navHostController)
             }
             composable(
                 route = "${KotlinTopics()}/{${KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME}}/{${KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX}}",

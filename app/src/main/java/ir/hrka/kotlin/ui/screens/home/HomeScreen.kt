@@ -32,7 +32,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -58,18 +57,12 @@ import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopics
 
 @SuppressLint("SwitchIntDef")
 @Composable
-fun HomeScreen(
-    activity: MainActivity,
-    navHostController: NavHostController,
-    gitVersionName: String?,
-    gitVersionSuffix: String?
-) {
+fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
 
     val viewModel: HomeViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
     val configuration = LocalConfiguration.current
     val scrollState = rememberScrollState()
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -86,17 +79,13 @@ fun HomeScreen(
             ORIENTATION_PORTRAIT -> PortraitScreen(
                 navHostController,
                 innerPaddings,
-                scrollState,
-                gitVersionName,
-                gitVersionSuffix,
+                scrollState
             )
 
             ORIENTATION_LANDSCAPE -> LandscapeScreen(
                 navHostController,
                 innerPaddings,
-                scrollState,
-                gitVersionName,
-                gitVersionSuffix,
+                scrollState
             )
         }
     }
@@ -110,9 +99,7 @@ fun HomeScreen(
 fun PortraitScreen(
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
-    scrollState: ScrollState,
-    gitVersionName: String?,
-    gitVersionSuffix: String?,
+    scrollState: ScrollState
 ) {
     Column(
         modifier = Modifier
@@ -181,14 +168,7 @@ fun PortraitScreen(
                         end.linkTo(parent.end, margin = 16.dp)
                         bottom.linkTo(img.bottom)
                     },
-                    onClick = {
-                        navHostController.navigate(
-                            KotlinTopics.appendArg(
-                                gitVersionName ?: "",
-                                gitVersionSuffix ?: ""
-                            )
-                        )
-                    }
+                    onClick = { navHostController.navigate(KotlinTopics()) }
                 ) {
                     Text(stringResource(R.string.home_screen_start_learning_btn))
                 }
@@ -254,14 +234,7 @@ fun PortraitScreen(
                         end.linkTo(parent.end, margin = 16.dp)
                         bottom.linkTo(img.bottom)
                     },
-                    onClick = {
-                        navHostController.navigate(
-                            CoroutineTopics.appendArg(
-                                gitVersionName ?: "",
-                                gitVersionSuffix ?: ""
-                            )
-                        )
-                    }
+                    onClick = { navHostController.navigate(CoroutineTopics()) }
                 ) {
                     Text(stringResource(R.string.home_screen_start_learning_btn))
                 }
@@ -274,9 +247,7 @@ fun PortraitScreen(
 fun LandscapeScreen(
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
-    scrollState: ScrollState,
-    gitVersionName: String?,
-    gitVersionSuffix: String?,
+    scrollState: ScrollState
 ) {
     Row(
         modifier = Modifier
@@ -342,14 +313,7 @@ fun LandscapeScreen(
                         end.linkTo(parent.end, margin = 16.dp)
                         bottom.linkTo(img.bottom)
                     },
-                    onClick = {
-                        navHostController.navigate(
-                            KotlinTopics.appendArg(
-                                gitVersionName ?: "",
-                                gitVersionSuffix ?: ""
-                            )
-                        )
-                    }
+                    onClick = { navHostController.navigate(KotlinTopics()) }
                 ) {
                     Text(stringResource(R.string.home_screen_start_learning_btn))
                 }
@@ -412,14 +376,7 @@ fun LandscapeScreen(
                         end.linkTo(parent.end, margin = 16.dp)
                         bottom.linkTo(img.bottom)
                     },
-                    onClick = {
-                       navHostController.navigate(
-                           CoroutineTopics.appendArg(
-                               gitVersionName ?: "",
-                               gitVersionSuffix ?: ""
-                           )
-                       )
-                    }
+                    onClick = { navHostController.navigate(CoroutineTopics()) }
                 ) {
                     Text(stringResource(R.string.home_screen_coming_soon_btn))
                 }
@@ -472,5 +429,5 @@ fun HomeAppBar(
 )
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(MainActivity(), rememberNavController(), "", "")
+    HomeScreen(MainActivity(), rememberNavController())
 }
