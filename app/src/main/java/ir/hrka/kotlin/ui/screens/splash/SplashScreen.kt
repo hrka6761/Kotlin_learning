@@ -1,6 +1,7 @@
 package ir.hrka.kotlin.ui.screens.splash
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -9,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -32,20 +32,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.Constants.MANDATORY
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_CANCEL
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_NOT_AVAILABLE
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_CONTINUE
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_AVAILABLE
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Screen.Home
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.stringResource
+import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
+import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
+import ir.hrka.kotlin.core.Constants.UPDATE_UNKNOWN_STATE
+import ir.hrka.kotlin.core.Constants.UPDATE_STATE
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
+import ir.hrka.kotlin.core.utilities.Screen.Home
 
 @Composable
 fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
@@ -53,8 +51,8 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     val viewModel: SplashViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
     val executionState by viewModel.executionState.collectAsState()
-    val appInfo by viewModel.appInfo.collectAsState()
-    val newVersionState by viewModel.newVersionState.collectAsState()
+    val versionsInfo by viewModel.versionsInfo.collectAsState()
+    val updateState by viewModel.updateState.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -112,11 +110,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 modifier = Modifier
                     .width(35.dp)
                     .height(35.dp)
-                    .alpha(
-                        if (newVersionState == NEW_VERSION_AVAILABLE ||
-                            newVersionState == NEW_VERSION_CONTINUE
-                        ) 0f else 1f
-                    )
+                    .alpha(if (updateState == UPDATE_UNKNOWN_STATE || updateState == NO_UPDATE_STATE) 1f else 0f)
                     .constrainAs(progressBar) {
                         bottom.linkTo(authorName.top)
                         start.linkTo(parent.start)
@@ -138,13 +132,13 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 contentDescription = null,
             )
 
-            if (newVersionState == NEW_VERSION_AVAILABLE || newVersionState == NEW_VERSION_CONTINUE)
+            if (updateState == UPDATE_STATE || updateState == FORCE_UPDATE_STATE)
                 AlertDialog(
                     modifier = Modifier.fillMaxWidth(),
                     onDismissRequest = {},
                     confirmButton = {
                         TextButton(
-                            onClick = { viewModel.setNewVersionDialogState(NEW_VERSION_CONTINUE) }
+                            onClick = { viewModel.goToUpdate(activity) }
                         ) {
                             Text(
                                 text = stringResource(R.string.new_version_dialog_update_btn),
@@ -156,24 +150,31 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                     dismissButton = {
                         TextButton(
                             onClick = {
-                                viewModel.setNewVersionDialogState(NEW_VERSION_CANCEL)
+                                if (updateState == FORCE_UPDATE_STATE)
+                                    activity.finish()
+                                else
+                                    navHostController.navigate(Home())
                             }
-                        ) { Text(text = stringResource(R.string.new_version_dialog_cancel_btn)) }
+                        ) {
+                            Text(text = stringResource(R.string.new_version_dialog_cancel_btn))
+                        }
                     },
                     icon = { Icon(painterResource(R.drawable.update), contentDescription = null) },
                     title = {
                         Text(text = stringResource(R.string.new_version_dialog_title_update))
                     },
                     text = {
-                        Text(
-                            stringResource(
-                                R.string.new_version_dialog_desc_available,
-                                if (appInfo.data?.versionNameSuffix == MANDATORY)
-                                    stringResource(R.string.new_version_dialog_desc_available_mandatory_update)
-                                else
-                                    ""
+                        Column {
+                            Text(
+                                text = stringResource(R.string.new_version_dialog_desc_available)
                             )
-                        )
+                            if (updateState == FORCE_UPDATE_STATE)
+                                Text(
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    text = stringResource(R.string.new_version_dialog_desc_available_mandatory_update)
+                                )
+                        }
                     },
                     shape = RoundedCornerShape(16.dp),
                     tonalElevation = 16.dp
@@ -184,13 +185,13 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     LaunchedEffect(Unit) {
         if (executionState == Start) {
             viewModel.setExecutionState(Loading)
-            viewModel.getAppInfo()
+            viewModel.getAppVersions()
         }
     }
 
-    LaunchedEffect(appInfo) {
+    LaunchedEffect(versionsInfo) {
         if (executionState != Stop)
-            when (appInfo) {
+            when (versionsInfo) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
@@ -198,48 +199,16 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 }
 
                 is Resource.Error -> {
-                    viewModel.setNewVersionDialogState(NEW_VERSION_UNKNOWN_STATE)
+                    viewModel.setNewVersionDialogState(NO_UPDATE_STATE)
                 }
             }
     }
 
-    LaunchedEffect(newVersionState) {
-        if (executionState != Stop)
-            if (newVersionState == NEW_VERSION_NOT_AVAILABLE) {
-                viewModel.setExecutionState(Stop)
-                navHostController.navigate(
-                    Home.appendArg(
-                        appInfo.data?.versionName ?: "",
-                        appInfo.data?.versionNameSuffix ?: ""
-                    )
-                )
-            } else if (newVersionState == NEW_VERSION_UNKNOWN_STATE) {
-                snackBarHostState.showSnackbar(
-                    message = appInfo.error?.errorMsg.toString(),
-                    duration = SnackbarDuration.Short
-                )
-                viewModel.setExecutionState(Stop)
-                navHostController.navigate(
-                    Home.appendArg(
-                        appInfo.data?.versionName ?: "",
-                        appInfo.data?.versionNameSuffix ?: ""
-                    )
-                )
-            } else if (newVersionState == NEW_VERSION_CANCEL) {
-                viewModel.setExecutionState(Stop)
-                if (appInfo.data?.versionNameSuffix == MANDATORY)
-                    activity.finish()
-                else
-                    navHostController.navigate(
-                        Home.appendArg(
-                            appInfo.data?.versionName ?: "",
-                            appInfo.data?.versionNameSuffix ?: ""
-                        )
-                    )
-            } else if (newVersionState == NEW_VERSION_CONTINUE) {
-                viewModel.setNewVersionDialogState(NEW_VERSION_AVAILABLE)
-                viewModel.goToUpdate(activity)
-            }
+    LaunchedEffect(updateState) {
+        if (executionState != Stop && updateState == NO_UPDATE_STATE) {
+            viewModel.setExecutionState(Stop)
+            navHostController.navigate(Home())
+        }
     }
 }
 

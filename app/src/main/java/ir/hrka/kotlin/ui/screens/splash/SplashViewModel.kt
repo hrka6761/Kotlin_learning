@@ -9,15 +9,15 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.MainActivity
 import ir.hrka.kotlin.core.Constants.BAZAAR_URL
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_NOT_AVAILABLE
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_NO_STATE
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_AVAILABLE
-import ir.hrka.kotlin.core.Constants.NEW_VERSION_UNKNOWN_STATE
+import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
+import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
+import ir.hrka.kotlin.core.Constants.UPDATE_STATE
+import ir.hrka.kotlin.core.Constants.UPDATE_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.domain.entities.AppInfo
-import ir.hrka.kotlin.domain.usecases.git.GetAppInfoUseCase
+import ir.hrka.kotlin.domain.entities.VersionsInfo
+import ir.hrka.kotlin.domain.usecases.git.GetAppVersionsUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,17 +28,16 @@ import javax.inject.Named
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
-    private val getAppInfoUseCase: GetAppInfoUseCase,
+    private val getAppVersionsUseCase: GetAppVersionsUseCase,
 ) : ViewModel() {
 
-    private val _appInfo: MutableStateFlow<Resource<AppInfo?>> =
+    private val _versionsInfo: MutableStateFlow<Resource<VersionsInfo>> =
         MutableStateFlow(Resource.Initial())
-    val appInfo: StateFlow<Resource<AppInfo?>> = _appInfo
+    val versionsInfo: StateFlow<Resource<VersionsInfo>> = _versionsInfo
     private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
     val executionState: MutableStateFlow<ExecutionState> = _executionState
-    private val _newVersionState: MutableStateFlow<Int> =
-        MutableStateFlow(NEW_VERSION_NO_STATE)
-    val newVersionState: StateFlow<Int> = _newVersionState
+    private val _updateState: MutableStateFlow<Int> = MutableStateFlow(UPDATE_UNKNOWN_STATE)
+    val updateState: StateFlow<Int> = _updateState
 
 
     fun setExecutionState(state: ExecutionState) {
@@ -46,33 +45,42 @@ class SplashViewModel @Inject constructor(
     }
 
     fun setNewVersionDialogState(state: Int) {
-        _newVersionState.value = state
+        _updateState.value = state
     }
 
-    fun getAppInfo() {
+    fun getAppVersions() {
         viewModelScope.launch(io) {
-            _appInfo.value = Resource.Loading()
-            _appInfo.value = getAppInfoUseCase()
+            _versionsInfo.value = Resource.Loading()
+            _versionsInfo.value = getAppVersionsUseCase()
         }
     }
 
     fun checkNewVersion(context: Context) {
-        try {
-            val packageInfo: PackageInfo =
-                context.packageManager.getPackageInfo(context.packageName, 0)
-            val versionCode = packageInfo.longVersionCode.toInt()
-            if (_appInfo.value.data != null)
-                if (versionCode < _appInfo.value.data!!.versionCode)
-                    _newVersionState.value = NEW_VERSION_AVAILABLE
+        val currentVersionId = getAppVersionCode(context)
+        val lastVersionId = _versionsInfo.value.data?.lastVersionCode
+        val minSupportedVersionId = _versionsInfo.value.data?.minSupportedVersionCode ?: 1
+
+        _updateState.value =
+            if (currentVersionId != lastVersionId)
+                if (currentVersionId < minSupportedVersionId)
+                    FORCE_UPDATE_STATE
                 else
-                    _newVersionState.value = NEW_VERSION_NOT_AVAILABLE
-        } catch (e: Exception) {
-            _newVersionState.value = NEW_VERSION_UNKNOWN_STATE
-        }
+                    UPDATE_STATE
+            else
+                NO_UPDATE_STATE
     }
 
     fun goToUpdate(activity: MainActivity) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BAZAAR_URL))
         activity.startActivity(intent)
+    }
+
+
+    private fun getAppVersionCode(context: Context): Int {
+        val packageInfo: PackageInfo =
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        val versionCode = packageInfo.longVersionCode.toInt()
+
+        return versionCode
     }
 }

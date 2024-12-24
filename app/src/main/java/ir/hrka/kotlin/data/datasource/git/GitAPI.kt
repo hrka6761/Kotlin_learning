@@ -9,8 +9,8 @@ import retrofit2.http.Path
 interface GitAPI {
 
     @Headers("Accept: application/vnd.github.v3+json")
-    @GET("app/build.gradle.kts")
-    suspend fun getAppInfo(): Response<GitFileData>
+    @GET("changelog/changelog.json")
+    suspend fun getChangeLog(): Response<GitFileData>
 
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("app/src/main/java/ir/hrka/kotlin/courses/{courseName}")

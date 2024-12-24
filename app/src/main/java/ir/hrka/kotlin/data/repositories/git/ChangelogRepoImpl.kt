@@ -5,14 +5,14 @@ import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.git.GitAPI
 import ir.hrka.kotlin.domain.entities.GitFileData
 import ir.hrka.kotlin.core.errors.Error
-import ir.hrka.kotlin.domain.repositories.git.AppInfoRepo
+import ir.hrka.kotlin.domain.repositories.git.ChangelogRepo
 import javax.inject.Inject
 
-class AppInfoRepoImpl @Inject constructor(private val gitAPI: GitAPI) : AppInfoRepo {
+class ChangelogRepoImpl @Inject constructor(private val gitAPI: GitAPI) : ChangelogRepo {
 
-    override suspend fun getAppInfo(): Resource<GitFileData?> {
+    override suspend fun getChangeLog(): Resource<GitFileData?> {
         return try {
-            val response = gitAPI.getAppInfo()
+            val response = gitAPI.getChangeLog()
 
             if (response.isSuccessful)
                 Resource.Success(response.body())

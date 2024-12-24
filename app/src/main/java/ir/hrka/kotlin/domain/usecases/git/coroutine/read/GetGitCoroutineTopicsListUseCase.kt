@@ -7,17 +7,17 @@ import ir.hrka.kotlin.core.utilities.string_utilities.decodeBase64
 import ir.hrka.kotlin.core.utilities.string_utilities.extractVersionNameFromGradleContent
 import ir.hrka.kotlin.core.utilities.string_utilities.isTopicVisualized
 import ir.hrka.kotlin.domain.entities.db.CoroutineTopic
-import ir.hrka.kotlin.domain.repositories.git.AppInfoRepo
+import ir.hrka.kotlin.domain.repositories.git.ChangelogRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicsRepo
 import javax.inject.Inject
 
 class GetGitCoroutineTopicsListUseCase @Inject constructor(
     private val readGitTopicsRepo: ReadGitTopicsRepo,
-    private val appInfoRepo: AppInfoRepo
+    private val changelogRepo: ChangelogRepo
 ) {
 
     suspend operator fun invoke(): Resource<List<CoroutineTopic>?> {
-        val appInfoResult = appInfoRepo.getAppInfo()
+        val appInfoResult = changelogRepo.getChangeLog()
         val topicsListResult = readGitTopicsRepo.getTopicsList(Coroutine)
 
         if (appInfoResult is Resource.Error)

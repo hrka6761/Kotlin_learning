@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ir.hrka.kotlin.data.repositories.db.ReadDBTopicPointsRepoImpl
-import ir.hrka.kotlin.data.repositories.git.AppInfoRepoImpl
+import ir.hrka.kotlin.data.repositories.git.ChangelogRepoImpl
 import ir.hrka.kotlin.data.repositories.db.ReadDBTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.db.WriteDBCoroutineTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitTopicsRepoImpl
@@ -14,7 +14,7 @@ import ir.hrka.kotlin.data.repositories.db.WriteDBTopicPointsRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitTopicPointsRepoImpl
 import ir.hrka.kotlin.data.repositories.preference.VersionDataRepoImpl
 import ir.hrka.kotlin.domain.repositories.db.ReadDBTopicPointsRepo
-import ir.hrka.kotlin.domain.repositories.git.AppInfoRepo
+import ir.hrka.kotlin.domain.repositories.git.ChangelogRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicsRepo
 import ir.hrka.kotlin.domain.repositories.db.WriteDBKotlinTopicsRepo
 import ir.hrka.kotlin.domain.repositories.preference.VersionDataRepo
@@ -28,7 +28,7 @@ import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicPointsRepo
 interface RepositoryModule {
 
     @Binds
-    fun bindAppInfoRepo(appInfoRepoImpl: AppInfoRepoImpl): AppInfoRepo
+    fun bindAppInfoRepo(appInfoRepoImpl: ChangelogRepoImpl): ChangelogRepo
 
     @Binds
     fun bindReadGitTopicsRepo(readGitTopicsRepoImpl: ReadGitTopicsRepoImpl): ReadGitTopicsRepo

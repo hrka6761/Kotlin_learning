@@ -3,7 +3,7 @@ package ir.hrka.kotlin.domain.repositories.git
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.GitFileData
 
-interface AppInfoRepo {
+interface ChangelogRepo {
 
-    suspend fun getAppInfo(): Resource<GitFileData?>
+    suspend fun getChangeLog(): Resource<GitFileData?>
 }

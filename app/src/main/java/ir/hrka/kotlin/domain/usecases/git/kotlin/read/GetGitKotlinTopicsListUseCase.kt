@@ -6,17 +6,17 @@ import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.string_utilities.decodeBase64
 import ir.hrka.kotlin.core.utilities.string_utilities.extractVersionNameFromGradleContent
 import ir.hrka.kotlin.domain.entities.db.KotlinTopic
-import ir.hrka.kotlin.domain.repositories.git.AppInfoRepo
+import ir.hrka.kotlin.domain.repositories.git.ChangelogRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicsRepo
 import javax.inject.Inject
 
 class GetGitKotlinTopicsListUseCase @Inject constructor(
     private val readGitTopicsRepo: ReadGitTopicsRepo,
-    private val appInfoRepo: AppInfoRepo
+    private val changelogRepo: ChangelogRepo
 ) {
 
     suspend operator fun invoke(): Resource<List<KotlinTopic>?> {
-        val appInfoResult = appInfoRepo.getAppInfo()
+        val appInfoResult = changelogRepo.getChangeLog()
         val topicsListResult = readGitTopicsRepo.getTopicsList(Kotlin)
 
         if (appInfoResult is Resource.Error)

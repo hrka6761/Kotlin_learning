@@ -59,12 +59,10 @@ object Constants {
     const val NON_MANDATORY = "non_mandatory"
     const val DEFAULT_VERSION_NAME = "0.0.0"
 
-    const val NEW_VERSION_NO_STATE = 1
-    const val NEW_VERSION_UNKNOWN_STATE = 2
-    const val NEW_VERSION_AVAILABLE = 3
-    const val NEW_VERSION_NOT_AVAILABLE = 4
-    const val NEW_VERSION_CONTINUE = 5
-    const val NEW_VERSION_CANCEL = 6
+    const val UPDATE_UNKNOWN_STATE = 0
+    const val NO_UPDATE_STATE = 1
+    const val UPDATE_STATE = 2
+    const val FORCE_UPDATE_STATE = 3
 
     const val DATABASE_NAME = "kotlin-topic-database"
     const val KOTLIN_COURSE_VERSION_NAME_KEY = "kotlin_course_version_name_key"
