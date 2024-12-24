@@ -32,7 +32,7 @@ object Constants {
     const val HOME_SCREEN_ARGUMENT_VERSION_SUFFIX = "homeGitVersionSuffix"
 
     const val TOKEN = "This is a secret ."
-    const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_cheat_sheet/contents/"
+    const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_learning/contents/"
 
     const val UNKNOWN_ERROR_CODE = 999
     const val RETROFIT_ERROR_CODE = 1000
