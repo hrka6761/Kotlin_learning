@@ -21,6 +21,7 @@ moshiKotlinCodegen = "1.15.0"
 roomRuntime = "2.6.1"
 ksp = "2.0.21-1.0.27"
 runtimeLivedata = "1.7.6"
+gson = "2.8.9"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +53,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
+google-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
 
 [plugins]
