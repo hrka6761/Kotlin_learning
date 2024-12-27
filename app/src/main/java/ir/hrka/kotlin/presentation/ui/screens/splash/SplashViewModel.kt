@@ -18,6 +18,7 @@ import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.VersionsInfo
 import ir.hrka.kotlin.domain.usecases.git.GetAppVersionsUseCase
+import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +29,7 @@ import javax.inject.Named
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
+    private val globalData: GlobalData,
     private val getAppVersionsUseCase: GetAppVersionsUseCase,
 ) : ViewModel() {
 

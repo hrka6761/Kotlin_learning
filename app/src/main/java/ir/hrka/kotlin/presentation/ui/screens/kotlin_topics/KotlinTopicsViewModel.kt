@@ -20,6 +20,7 @@ import ir.hrka.kotlin.domain.usecases.preference.LoadCurrentKotlinCourseVersionN
 import ir.hrka.kotlin.domain.usecases.db.kotlin.write.SaveKotlinTopicsOnDBUseCase
 import ir.hrka.kotlin.domain.usecases.preference.SaveCurrentKotlinCourseVersionNameUseCase
 import ir.hrka.kotlin.domain.usecases.db.kotlin.write.UpdateKotlinTopicsStateUseCase
+import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,7 @@ import javax.inject.Named
 @HiltViewModel
 class KotlinTopicsViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
+    private val globalData: GlobalData,
     private val getGitKotlinTopicsListUseCase: GetGitKotlinTopicsListUseCase,
     private val getDBKotlinTopicsListUseCase: GetDBKotlinTopicsListUseCase,
     private val loadCurrentKotlinCourseVersionNameUseCase: LoadCurrentKotlinCourseVersionNameUseCase,

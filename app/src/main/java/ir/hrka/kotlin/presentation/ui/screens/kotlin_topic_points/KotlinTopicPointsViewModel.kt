@@ -11,6 +11,7 @@ import ir.hrka.kotlin.domain.usecases.db.kotlin.read.GetDBKotlinTopicPointsUseCa
 import ir.hrka.kotlin.domain.usecases.git.kotlin.read.GetGitKotlinTopicPointsUseCase
 import ir.hrka.kotlin.domain.usecases.db.kotlin.write.SaveKotlinTopicPointsOnDBUseCase
 import ir.hrka.kotlin.domain.usecases.db.kotlin.write.UpdateKotlinTopicsStateUseCase
+import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,6 +22,7 @@ import javax.inject.Named
 @HiltViewModel
 class KotlinTopicPointsViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
+    private val globalData: GlobalData,
     private val getGitKotlinTopicPointsUseCase: GetGitKotlinTopicPointsUseCase,
     private val getDBKotlinTopicPointsUseCase: GetDBKotlinTopicPointsUseCase,
     private val saveKotlinTopicPointsOnDBUseCase: SaveKotlinTopicPointsOnDBUseCase,

@@ -11,11 +11,14 @@ import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineCo
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Done
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.TaskData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ThreadData
+import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class SequentialProgrammingViewModel @Inject constructor() : ViewModel() {
+class SequentialProgrammingViewModel @Inject constructor(
+    private val globalData: GlobalData
+) : ViewModel() {
 
     private val _executionState: MutableStateFlow<ExecutionState> =
         MutableStateFlow(ExecutionState.Start)

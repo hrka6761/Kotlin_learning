@@ -20,6 +20,7 @@ import ir.hrka.kotlin.domain.usecases.db.coroutine.write.UpdateCoroutineTopicsSt
 import ir.hrka.kotlin.domain.usecases.git.coroutine.read.GetGitCoroutineTopicsListUseCase
 import ir.hrka.kotlin.domain.usecases.preference.LoadCurrentCoroutineCourseVersionNameUseCase
 import ir.hrka.kotlin.domain.usecases.preference.SaveCurrentCoroutineCourseVersionNameUseCase
+import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,7 @@ import javax.inject.Named
 @HiltViewModel
 class CoroutineTopicsViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
+    private val globalData: GlobalData,
     private val getGitCoroutineTopicsListUseCase: GetGitCoroutineTopicsListUseCase,
     private val getDBCoroutineTopicsListUseCase: GetDBCoroutineTopicsListUseCase,
     private val loadCurrentCoroutineCourseVersionNameUseCase: LoadCurrentCoroutineCourseVersionNameUseCase,
