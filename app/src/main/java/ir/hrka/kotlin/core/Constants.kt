@@ -65,6 +65,8 @@ object Constants {
     const val FORCE_UPDATE_STATE = 3
 
     const val DATABASE_NAME = "kotlin-topic-database"
+    const val KOTLIN_VERSION_ID_PREFERENCE_KEY = "kotlinVersionId"
+    const val COROUTINE_VERSION_ID_PREFERENCE_KEY = "coroutineVersionId"
     const val KOTLIN_COURSE_VERSION_NAME_KEY = "kotlin_course_version_name_key"
     const val COROUTINE_COURSE_VERSION_NAME_KEY = "coroutine_course_version_name_key"
     const val UPDATED_ID_KEY = "updatedId"

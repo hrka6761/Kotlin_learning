@@ -13,6 +13,7 @@ import ir.hrka.kotlin.data.repositories.db.WriteDBKotlinTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.db.WriteDBTopicPointsRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitTopicPointsRepoImpl
 import ir.hrka.kotlin.data.repositories.preference.VersionDataRepoImpl
+import ir.hrka.kotlin.data.repositories.preference.VersionLocalInfoRepoImpl
 import ir.hrka.kotlin.domain.repositories.db.ReadDBTopicPointsRepo
 import ir.hrka.kotlin.domain.repositories.git.ChangelogRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicsRepo
@@ -22,6 +23,7 @@ import ir.hrka.kotlin.domain.repositories.db.ReadDBTopicsRepo
 import ir.hrka.kotlin.domain.repositories.db.WriteDBCoroutineTopicsRepo
 import ir.hrka.kotlin.domain.repositories.db.WriteDBTopicPointsRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicPointsRepo
+import ir.hrka.kotlin.domain.repositories.preference.VersionLocalInfoRepo
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -53,4 +55,7 @@ interface RepositoryModule {
 
     @Binds
     fun bindWriteDBTopicPointsRepo(writeDBTopicPointsRepoImpl: WriteDBTopicPointsRepoImpl): WriteDBTopicPointsRepo
+
+    @Binds
+    fun bindVersionLocalInfoRepo(versionLocalInfoRepoImpl: VersionLocalInfoRepoImpl): VersionLocalInfoRepo
 }
