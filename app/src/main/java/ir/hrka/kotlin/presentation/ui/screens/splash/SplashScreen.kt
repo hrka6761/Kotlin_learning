@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.presentation.ui.screens.splash
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +39,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.stringResource
 import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATE_UNKNOWN_STATE
 import ir.hrka.kotlin.core.Constants.UPDATE_STATE
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
@@ -53,6 +55,8 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     val executionState by viewModel.executionState.collectAsState()
     val versionsInfo by viewModel.versionsInfo.collectAsState()
     val updateState by viewModel.updateState.collectAsState()
+    val kotlinLocalVersionId by viewModel.kotlinLocalVersionId.collectAsState()
+    val coroutineLocalVersionId by viewModel.coroutineLocalVersionId.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -195,6 +199,37 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
+                    viewModel.getKotlinVersionId()
+                }
+
+                is Resource.Error -> {
+                    viewModel.getKotlinVersionId()
+                }
+            }
+    }
+
+    LaunchedEffect(kotlinLocalVersionId) {
+        if (executionState != Stop)
+            when (kotlinLocalVersionId) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    viewModel.getCoroutineVersionId()
+                }
+
+                is Resource.Error -> {
+                    viewModel.getCoroutineVersionId()
+                }
+            }
+    }
+
+    LaunchedEffect(coroutineLocalVersionId) {
+        if (executionState != Stop)
+            when (coroutineLocalVersionId) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    viewModel.initGlobalData()
                     viewModel.checkNewVersion(activity)
                 }
 

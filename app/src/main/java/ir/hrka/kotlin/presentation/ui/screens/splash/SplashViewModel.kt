@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,6 +12,7 @@ import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.core.Constants.BAZAAR_URL
 import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.UPDATE_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.ExecutionState
@@ -18,6 +20,8 @@ import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.VersionsInfo
 import ir.hrka.kotlin.domain.usecases.git.GetAppVersionsUseCase
+import ir.hrka.kotlin.domain.usecases.preference.GetCoroutineVersionIdUseCase
+import ir.hrka.kotlin.domain.usecases.preference.GetKotlinVersionIdUseCase
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +35,8 @@ class SplashViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val globalData: GlobalData,
     private val getAppVersionsUseCase: GetAppVersionsUseCase,
+    private val getKotlinVersionIdUseCase: GetKotlinVersionIdUseCase,
+    private val getCoroutineVersionIdUseCase: GetCoroutineVersionIdUseCase
 ) : ViewModel() {
 
     private val _versionsInfo: MutableStateFlow<Resource<VersionsInfo>> =
@@ -40,6 +46,12 @@ class SplashViewModel @Inject constructor(
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _updateState: MutableStateFlow<Int> = MutableStateFlow(UPDATE_UNKNOWN_STATE)
     val updateState: StateFlow<Int> = _updateState
+    private val _kotlinLocalVersionId: MutableStateFlow<Resource<Int?>> =
+        MutableStateFlow(Resource.Initial())
+    val kotlinLocalVersionId: StateFlow<Resource<Int?>> = _kotlinLocalVersionId
+    private val _coroutineLocalVersionId: MutableStateFlow<Resource<Int?>> =
+        MutableStateFlow(Resource.Initial())
+    val coroutineLocalVersionId: StateFlow<Resource<Int?>> = _coroutineLocalVersionId
 
 
     fun setExecutionState(state: ExecutionState) {
@@ -58,18 +70,43 @@ class SplashViewModel @Inject constructor(
     }
 
     fun checkNewVersion(context: Context) {
-        val currentVersionId = getAppVersionCode(context)
-        val lastVersionId = _versionsInfo.value.data?.lastVersionCode
+        val appVersionCode = getAppVersionCode(context)
+        val lastVersionCode = _versionsInfo.value.data?.lastVersionCode ?: appVersionCode
         val minSupportedVersionId = _versionsInfo.value.data?.minSupportedVersionCode ?: 1
 
         _updateState.value =
-            if (currentVersionId != lastVersionId)
-                if (currentVersionId < minSupportedVersionId)
+            if (appVersionCode != lastVersionCode)
+                if (appVersionCode < minSupportedVersionId)
                     FORCE_UPDATE_STATE
                 else
                     UPDATE_STATE
             else
                 NO_UPDATE_STATE
+    }
+
+    fun getKotlinVersionId() {
+        viewModelScope.launch(io) {
+            _kotlinLocalVersionId.value = Resource.Loading()
+            _kotlinLocalVersionId.value = getKotlinVersionIdUseCase()
+        }
+    }
+
+    fun getCoroutineVersionId() {
+        viewModelScope.launch(io) {
+            _coroutineLocalVersionId.value = Resource.Loading()
+            _coroutineLocalVersionId.value = getCoroutineVersionIdUseCase()
+        }
+    }
+
+    fun initGlobalData() {
+        _versionsInfo.value.data?.let { versionsInfo ->
+            globalData.initGlobalData(
+                versionsInfo,
+                _versionsInfo.value.data?.lastVersionId ?: _kotlinLocalVersionId.value.data ?: 0,
+                _kotlinLocalVersionId.value.data ?: 0,
+                _coroutineLocalVersionId.value.data ?: 0
+            )
+        }
     }
 
     fun goToUpdate(activity: MainActivity) {
