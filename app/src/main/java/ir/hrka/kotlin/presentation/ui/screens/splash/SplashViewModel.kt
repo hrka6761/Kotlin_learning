@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.core.Constants.BAZAAR_URL
+import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.TAG
@@ -21,6 +22,7 @@ import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.VersionsInfo
 import ir.hrka.kotlin.domain.usecases.git.GetAppVersionsUseCase
 import ir.hrka.kotlin.domain.usecases.preference.GetCoroutineVersionIdUseCase
+import ir.hrka.kotlin.domain.usecases.preference.GetCoursesVersionIdUseCase
 import ir.hrka.kotlin.domain.usecases.preference.GetKotlinVersionIdUseCase
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -35,6 +37,7 @@ class SplashViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val globalData: GlobalData,
     private val getAppVersionsUseCase: GetAppVersionsUseCase,
+    private val getCoursesVersionIdUseCase: GetCoursesVersionIdUseCase,
     private val getKotlinVersionIdUseCase: GetKotlinVersionIdUseCase,
     private val getCoroutineVersionIdUseCase: GetCoroutineVersionIdUseCase
 ) : ViewModel() {
@@ -49,6 +52,9 @@ class SplashViewModel @Inject constructor(
     private val _kotlinLocalVersionId: MutableStateFlow<Resource<Int?>> =
         MutableStateFlow(Resource.Initial())
     val kotlinLocalVersionId: StateFlow<Resource<Int?>> = _kotlinLocalVersionId
+    private val _coursesLocalVersionId: MutableStateFlow<Resource<Int?>> =
+        MutableStateFlow(Resource.Initial())
+    val coursesLocalVersionId: StateFlow<Resource<Int?>> = _coursesLocalVersionId
     private val _coroutineLocalVersionId: MutableStateFlow<Resource<Int?>> =
         MutableStateFlow(Resource.Initial())
     val coroutineLocalVersionId: StateFlow<Resource<Int?>> = _coroutineLocalVersionId
@@ -72,7 +78,8 @@ class SplashViewModel @Inject constructor(
     fun checkNewVersion(context: Context) {
         val appVersionCode = getAppVersionCode(context)
         val lastVersionCode = _versionsInfo.value.data?.lastVersionCode ?: appVersionCode
-        val minSupportedVersionId = _versionsInfo.value.data?.minSupportedVersionCode ?: 1
+        val minSupportedVersionId = _versionsInfo.value.data?.minSupportedVersionCode
+            ?: DEFAULT_VERSION_ID
 
         _updateState.value =
             if (appVersionCode != lastVersionCode)
@@ -82,6 +89,13 @@ class SplashViewModel @Inject constructor(
                     UPDATE_STATE
             else
                 NO_UPDATE_STATE
+    }
+
+    fun getCoursesVersionId() {
+        viewModelScope.launch(io) {
+            _coursesLocalVersionId.value = Resource.Loading()
+            _coursesLocalVersionId.value = getKotlinVersionIdUseCase()
+        }
     }
 
     fun getKotlinVersionId() {
@@ -101,10 +115,11 @@ class SplashViewModel @Inject constructor(
     fun initGlobalData() {
         _versionsInfo.value.data?.let { versionsInfo ->
             globalData.initGlobalData(
-                versionsInfo,
-                _versionsInfo.value.data?.lastVersionId ?: _kotlinLocalVersionId.value.data ?: 0,
-                _kotlinLocalVersionId.value.data ?: 0,
-                _coroutineLocalVersionId.value.data ?: 0
+                versionsInfo = versionsInfo,
+                lastVersionId = _versionsInfo.value.data?.lastVersionId,
+                coursesVersionId = _coursesLocalVersionId.value.data ?: DEFAULT_VERSION_ID,
+                kotlinVersionId = _kotlinLocalVersionId.value.data ?: DEFAULT_VERSION_ID,
+                coroutineVersionId = _coroutineLocalVersionId.value.data ?: DEFAULT_VERSION_ID
             )
         }
     }

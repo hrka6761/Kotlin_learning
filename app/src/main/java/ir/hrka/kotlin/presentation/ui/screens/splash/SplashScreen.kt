@@ -55,8 +55,9 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     val executionState by viewModel.executionState.collectAsState()
     val versionsInfo by viewModel.versionsInfo.collectAsState()
     val updateState by viewModel.updateState.collectAsState()
-    val kotlinLocalVersionId by viewModel.kotlinLocalVersionId.collectAsState()
-    val coroutineLocalVersionId by viewModel.coroutineLocalVersionId.collectAsState()
+    val coursesVersionId by viewModel.coursesLocalVersionId.collectAsState()
+    val kotlinVersionId by viewModel.kotlinLocalVersionId.collectAsState()
+    val coroutineVersionId by viewModel.coroutineLocalVersionId.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -199,6 +200,21 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
+                    viewModel.getCoursesVersionId()
+                }
+
+                is Resource.Error -> {
+                    viewModel.getCoursesVersionId()
+                }
+            }
+    }
+
+    LaunchedEffect(coursesVersionId) {
+        if (executionState != Stop)
+            when (coursesVersionId) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
                     viewModel.getKotlinVersionId()
                 }
 
@@ -208,9 +224,9 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
             }
     }
 
-    LaunchedEffect(kotlinLocalVersionId) {
+    LaunchedEffect(kotlinVersionId) {
         if (executionState != Stop)
-            when (kotlinLocalVersionId) {
+            when (kotlinVersionId) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
@@ -223,9 +239,9 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
             }
     }
 
-    LaunchedEffect(coroutineLocalVersionId) {
+    LaunchedEffect(coroutineVersionId) {
         if (executionState != Stop)
-            when (coroutineLocalVersionId) {
+            when (coroutineVersionId) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
@@ -234,7 +250,8 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 }
 
                 is Resource.Error -> {
-                    viewModel.setNewVersionDialogState(NO_UPDATE_STATE)
+                    viewModel.initGlobalData()
+                    viewModel.checkNewVersion(activity)
                 }
             }
     }

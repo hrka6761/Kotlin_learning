@@ -5,6 +5,7 @@ enum class VersionType {
     NewFeature,
     BugFix,
     Hotfix,
+    UpdateCourses,
     UpdateKotlinTopics,
     UpdateCoroutineTopics,
     UpdateKotlinTopicPoints,

@@ -31,7 +31,7 @@ object Constants {
     const val HOME_SCREEN_ARGUMENT_VERSION_NAME = "homeGitVersionName"
     const val HOME_SCREEN_ARGUMENT_VERSION_SUFFIX = "homeGitVersionSuffix"
 
-    const val TOKEN = "This is a secret ."
+    const val TOKEN = "This is a secret."
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_learning/contents/"
 
     const val UNKNOWN_ERROR_CODE = 999
@@ -58,6 +58,7 @@ object Constants {
     const val MANDATORY = "mandatory"
     const val NON_MANDATORY = "non_mandatory"
     const val DEFAULT_VERSION_NAME = "0.0.0"
+    const val DEFAULT_VERSION_ID = -1
 
     const val UPDATE_UNKNOWN_STATE = 0
     const val NO_UPDATE_STATE = 1
@@ -65,6 +66,7 @@ object Constants {
     const val FORCE_UPDATE_STATE = 3
 
     const val DATABASE_NAME = "kotlin-topic-database"
+    const val COURSES_VERSION_ID_PREFERENCE_KEY = "coursesVersionId"
     const val KOTLIN_VERSION_ID_PREFERENCE_KEY = "kotlinVersionId"
     const val COROUTINE_VERSION_ID_PREFERENCE_KEY = "coroutineVersionId"
     const val KOTLIN_COURSE_VERSION_NAME_KEY = "kotlin_course_version_name_key"
