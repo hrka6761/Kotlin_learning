@@ -1,10 +1,10 @@
 package ir.hrka.kotlin.domain.usecases.preference
 
-import ir.hrka.kotlin.domain.repositories.preference.VersionLocalInfoRepo
+import ir.hrka.kotlin.domain.repositories.preference.LocalVersionInfoRepo
 import javax.inject.Inject
 
-class PutCoursesVersionIdUseCase @Inject constructor(private val versionLocalInfoRepo: VersionLocalInfoRepo) {
+class PutCoursesVersionIdUseCase @Inject constructor(private val localVersionInfoRepo: LocalVersionInfoRepo) {
 
     suspend operator fun invoke(versionId: Int) =
-        versionLocalInfoRepo.saveCoursesVersionId(versionId)
+        localVersionInfoRepo.saveCoursesVersionId(versionId)
 }

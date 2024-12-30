@@ -9,12 +9,12 @@ import ir.hrka.kotlin.core.Constants.KOTLIN_VERSION_ID_PREFERENCE_KEY
 import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.preference.LocalDataSource
-import ir.hrka.kotlin.domain.repositories.preference.VersionLocalInfoRepo
+import ir.hrka.kotlin.domain.repositories.preference.LocalVersionInfoRepo
 import javax.inject.Inject
 
-class VersionLocalInfoRepoImpl @Inject constructor(
+class LocalVersionInfoRepoImpl @Inject constructor(
     private val localDataSource: LocalDataSource
-) : VersionLocalInfoRepo {
+) : LocalVersionInfoRepo {
 
     override suspend fun loadCoursesVersionId(): Resource<Int?> {
         return try {

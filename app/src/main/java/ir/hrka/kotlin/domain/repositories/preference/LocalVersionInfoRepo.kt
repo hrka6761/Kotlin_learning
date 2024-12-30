@@ -2,7 +2,7 @@ package ir.hrka.kotlin.domain.repositories.preference
 
 import ir.hrka.kotlin.core.utilities.Resource
 
-interface VersionLocalInfoRepo {
+interface LocalVersionInfoRepo {
 
     suspend fun loadCoursesVersionId(): Resource<Int?>
     suspend fun saveCoursesVersionId(newVersionId: Int): Resource<Boolean?>

@@ -14,7 +14,7 @@ import ir.hrka.kotlin.data.repositories.db.WriteDBTopicPointsRepoImpl
 import ir.hrka.kotlin.data.repositories.git.GitCoursesRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitTopicPointsRepoImpl
 import ir.hrka.kotlin.data.repositories.preference.VersionDataRepoImpl
-import ir.hrka.kotlin.data.repositories.preference.VersionLocalInfoRepoImpl
+import ir.hrka.kotlin.data.repositories.preference.LocalVersionInfoRepoImpl
 import ir.hrka.kotlin.domain.repositories.db.ReadDBTopicPointsRepo
 import ir.hrka.kotlin.domain.repositories.git.ChangelogRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicsRepo
@@ -25,7 +25,7 @@ import ir.hrka.kotlin.domain.repositories.db.WriteDBCoroutineTopicsRepo
 import ir.hrka.kotlin.domain.repositories.db.WriteDBTopicPointsRepo
 import ir.hrka.kotlin.domain.repositories.git.CoursesRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicPointsRepo
-import ir.hrka.kotlin.domain.repositories.preference.VersionLocalInfoRepo
+import ir.hrka.kotlin.domain.repositories.preference.LocalVersionInfoRepo
 import javax.inject.Named
 
 @InstallIn(SingletonComponent::class)
@@ -60,7 +60,7 @@ interface RepositoryModule {
     fun bindWriteDBTopicPointsRepo(writeDBTopicPointsRepoImpl: WriteDBTopicPointsRepoImpl): WriteDBTopicPointsRepo
 
     @Binds
-    fun bindVersionLocalInfoRepo(versionLocalInfoRepoImpl: VersionLocalInfoRepoImpl): VersionLocalInfoRepo
+    fun bindLocalVersionInfoRepo(versionLocalInfoRepoImpl: LocalVersionInfoRepoImpl): LocalVersionInfoRepo
 
     @Named("git")
     @Binds
