@@ -22,6 +22,8 @@ roomRuntime = "2.6.1"
 ksp = "2.0.21-1.0.27"
 runtimeLivedata = "1.7.6"
 gson = "2.8.9"
+glideCompose = "1.0.0-alpha.1"
+glide = "4.16.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,7 +56,8 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRunt
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
 google-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide-compose = { module = "com.github.bumptech.glide:compose", version.ref = "glideCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

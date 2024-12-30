@@ -110,4 +110,8 @@ dependencies {
 
     // Gson
     implementation(libs.google.gson)
+
+    // Glide
+    implementation(libs.glide)
+    implementation(libs.glide.compose)
 }
