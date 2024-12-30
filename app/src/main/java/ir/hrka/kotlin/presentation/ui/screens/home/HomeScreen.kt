@@ -5,23 +5,26 @@ import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,9 +34,13 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -48,12 +55,17 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.request.RequestOptions
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.SOURCE_URL
+import ir.hrka.kotlin.core.utilities.ExecutionState
+import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.KotlinTopics
 import ir.hrka.kotlin.core.utilities.Screen.About
-import ir.hrka.kotlin.core.utilities.Screen.CoroutineTopics
+import ir.hrka.kotlin.domain.entities.db.Course
 
 @SuppressLint("SwitchIntDef")
 @Composable
@@ -61,8 +73,10 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
 
     val viewModel: HomeViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
+    val executionState by viewModel.executionState.collectAsState()
+    val failedState by viewModel.failedState.collectAsState()
     val configuration = LocalConfiguration.current
-    val scrollState = rememberScrollState()
+    val coursesList by viewModel.coursesList.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -79,15 +93,42 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
             ORIENTATION_PORTRAIT -> PortraitScreen(
                 navHostController,
                 innerPaddings,
-                scrollState
+                executionState,
+                failedState,
+                coursesList
             )
 
             ORIENTATION_LANDSCAPE -> LandscapeScreen(
                 navHostController,
                 innerPaddings,
-                scrollState
+                executionState,
+                failedState,
+                coursesList
             )
         }
+    }
+
+    LaunchedEffect(Unit) {
+        if (executionState == ExecutionState.Start) {
+            viewModel.setExecutionState(ExecutionState.Loading)
+            viewModel.getCoursesListFromGit()
+        }
+    }
+
+    LaunchedEffect(coursesList) {
+        if (executionState != ExecutionState.Stop)
+            when (coursesList) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    viewModel.setExecutionState(ExecutionState.Stop)
+                }
+
+                is Resource.Error -> {
+                    viewModel.setExecutionState(ExecutionState.Stop)
+                    viewModel.setFailedState(true)
+                }
+            }
     }
 
     BackHandler {
@@ -99,147 +140,65 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
 fun PortraitScreen(
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
-    scrollState: ScrollState
+    executionState: ExecutionState,
+    failedState: Boolean,
+    coursesList: Resource<List<Course>>
 ) {
-    Column(
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(innerPaddings)
-            .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .fillMaxSize()
+            .padding(innerPaddings),
+        contentAlignment = Alignment.TopCenter
     ) {
-        ElevatedCard(
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(if (failedState) 1f else 0f),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(60.dp),
+                painter = painterResource(R.drawable.error),
+                contentDescription = null
+            )
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                text = "Failed to fetch the data",
+                textAlign = TextAlign.Center
+            )
+        }
+
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                .heightIn(max = 3000.dp)
         ) {
-            ConstraintLayout(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                val (img, title, desc, btn) = createRefs()
-
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
-                        .constrainAs(img) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        },
-                    painter = painterResource(R.drawable.kotlin),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .constrainAs(title) {
-                            top.linkTo(img.bottom)
-                            start.linkTo(parent.start)
-                        },
-                    text = stringResource(R.string.home_screen_kotlin_learning_title),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                        .constrainAs(desc) {
-                            top.linkTo(title.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        },
-                    text = stringResource(R.string.home_screen_kotlin_learning_description),
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        lineHeight = 12.sp
-                    ),
-                )
-
-                Button(
-                    modifier = Modifier.constrainAs(btn) {
-                        top.linkTo(img.bottom)
-                        end.linkTo(parent.end, margin = 16.dp)
-                        bottom.linkTo(img.bottom)
-                    },
-                    onClick = { navHostController.navigate(KotlinTopics()) }
-                ) {
-                    Text(stringResource(R.string.home_screen_start_learning_btn))
+            coursesList.data?.let {
+                items(it.size) { index ->
+                    CourseItem(
+                        ORIENTATION_PORTRAIT,
+                        navHostController,
+                        it[index]
+                    )
                 }
             }
         }
 
-        ElevatedCard(
+        CircularProgressIndicator(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 24.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
-            ConstraintLayout(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                val (img, title, desc, btn) = createRefs()
-
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
-                        .constrainAs(img) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        },
-                    painter = painterResource(R.drawable.coroutine),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .constrainAs(title) {
-                            top.linkTo(img.bottom)
-                            start.linkTo(parent.start)
-                        },
-                    text = stringResource(R.string.home_screen_coroutine_learning_title),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                        .constrainAs(desc) {
-                            top.linkTo(title.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        },
-                    text = stringResource(R.string.home_screen_coroutine_learning_description),
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        lineHeight = 12.sp
-                    ),
-                )
-
-                Button(
-                    modifier = Modifier.constrainAs(btn) {
-                        top.linkTo(img.bottom)
-                        end.linkTo(parent.end, margin = 16.dp)
-                        bottom.linkTo(img.bottom)
-                    },
-                    onClick = { navHostController.navigate(CoroutineTopics()) }
-                ) {
-                    Text(stringResource(R.string.home_screen_start_learning_btn))
-                }
-            }
-        }
+                .width(50.dp)
+                .height(50.dp)
+                .alpha(if (executionState == ExecutionState.Loading) 1f else 0f)
+                .align(Alignment.Center),
+            strokeWidth = 2.dp
+        )
     }
 }
 
@@ -247,141 +206,65 @@ fun PortraitScreen(
 fun LandscapeScreen(
     navHostController: NavHostController,
     innerPaddings: PaddingValues,
-    scrollState: ScrollState
+    executionState: ExecutionState,
+    failedState: Boolean,
+    coursesList: Resource<List<Course>>
 ) {
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPaddings)
-            .horizontalScroll(scrollState),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(innerPaddings),
+        contentAlignment = Alignment.CenterStart
     ) {
-        ElevatedCard(
+
+        Column(
             modifier = Modifier
-                .width(400.dp)
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                .fillMaxSize()
+                .alpha(if (failedState) 1f else 0f),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ConstraintLayout {
-                val (img, title, desc, btn) = createRefs()
+            Icon(
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(60.dp),
+                painter = painterResource(R.drawable.error),
+                contentDescription = null
+            )
 
-                Image(
-                    modifier = Modifier
-                        .height(120.dp)
-                        .constrainAs(img) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        },
-                    painter = painterResource(R.drawable.kotlin),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
-                        .constrainAs(title) {
-                            top.linkTo(img.bottom)
-                            start.linkTo(parent.start)
-                        },
-                    text = stringResource(R.string.home_screen_kotlin_learning_title),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                        .constrainAs(desc) {
-                            top.linkTo(title.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        },
-                    text = stringResource(R.string.home_screen_kotlin_learning_description),
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        lineHeight = 12.sp
-                    ),
-                )
-
-                Button(
-                    modifier = Modifier.constrainAs(btn) {
-                        top.linkTo(img.bottom)
-                        end.linkTo(parent.end, margin = 16.dp)
-                        bottom.linkTo(img.bottom)
-                    },
-                    onClick = { navHostController.navigate(KotlinTopics()) }
-                ) {
-                    Text(stringResource(R.string.home_screen_start_learning_btn))
-                }
-            }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                text = "Failed to fetch the data",
+                textAlign = TextAlign.Center
+            )
         }
 
-        ElevatedCard(
+        LazyRow(
             modifier = Modifier
-                .width(400.dp)
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                .fillMaxHeight()
+                .widthIn(max = 3000.dp)
         ) {
-            ConstraintLayout {
-                val (img, title, desc, btn) = createRefs()
-
-                Image(
-                    modifier = Modifier
-                        .height(120.dp)
-                        .constrainAs(img) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        },
-                    painter = painterResource(R.drawable.coroutine),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
-                        .constrainAs(title) {
-                            top.linkTo(img.bottom)
-                            start.linkTo(parent.start)
-                        },
-                    text = stringResource(R.string.home_screen_coroutine_learning_title),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                        .constrainAs(desc) {
-                            top.linkTo(title.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        },
-                    text = stringResource(R.string.home_screen_coroutine_learning_description),
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        lineHeight = 12.sp
+            coursesList.data?.let {
+                items(it.size) { index ->
+                    CourseItem(
+                        ORIENTATION_LANDSCAPE,
+                        navHostController,
+                        it[index]
                     )
-                )
-
-                Button(
-                    modifier = Modifier.constrainAs(btn) {
-                        top.linkTo(img.bottom)
-                        end.linkTo(parent.end, margin = 16.dp)
-                        bottom.linkTo(img.bottom)
-                    },
-                    onClick = { navHostController.navigate(CoroutineTopics()) }
-                ) {
-                    Text(stringResource(R.string.home_screen_coming_soon_btn))
                 }
             }
         }
+
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(50.dp)
+                .height(50.dp)
+                .alpha(if (executionState == ExecutionState.Loading) 1f else 0f)
+                .align(Alignment.Center),
+            strokeWidth = 2.dp
+        )
     }
 }
 
@@ -421,6 +304,99 @@ fun HomeAppBar(
             }
         }
     )
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun CourseItem(
+    orientation: Int,
+    navHostController: NavHostController,
+    course: Course
+) {
+    ElevatedCard(
+        modifier =
+        if (orientation == ORIENTATION_PORTRAIT)
+            Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+        else
+            Modifier
+                .fillMaxHeight()
+                .width(400.dp)
+                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        ConstraintLayout(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            val (img, title, desc, btn) = createRefs()
+
+            GlideImage(
+                model = course.courseBanner,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(if (orientation == ORIENTATION_PORTRAIT) 150.dp else 120.dp)
+                    .constrainAs(img) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                requestBuilderTransform = {
+                    it.apply(
+                        RequestOptions()
+                            .error(R.drawable.error)
+                    )
+                },
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+            )
+
+            Text(
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                    .constrainAs(title) {
+                        top.linkTo(img.bottom)
+                        start.linkTo(parent.start)
+                    },
+                text = course.courseTitle,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                    .constrainAs(desc) {
+                        top.linkTo(title.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                text = course.courseDesc,
+                style = TextStyle(
+                    fontSize = 10.sp,
+                    lineHeight = 12.sp
+                ),
+            )
+
+            Button(
+                modifier = Modifier.constrainAs(btn) {
+                    top.linkTo(img.bottom)
+                    end.linkTo(parent.end, margin = 16.dp)
+                    bottom.linkTo(img.bottom)
+                },
+                onClick = { if (course.isActive) navHostController.navigate(KotlinTopics()) }
+            ) {
+                Text(
+                    if (course.isActive)
+                        stringResource(R.string.home_screen_start_learning_btn)
+                    else
+                        stringResource(R.string.home_screen_coming_soon_btn)
+                )
+            }
+        }
+    }
 }
 
 @Preview(
