@@ -11,6 +11,7 @@ import ir.hrka.kotlin.data.repositories.db.WriteDBCoroutineTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.db.WriteDBKotlinTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.db.WriteDBTopicPointsRepoImpl
+import ir.hrka.kotlin.data.repositories.git.GitCoursesRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitTopicPointsRepoImpl
 import ir.hrka.kotlin.data.repositories.preference.VersionDataRepoImpl
 import ir.hrka.kotlin.data.repositories.preference.VersionLocalInfoRepoImpl
@@ -22,8 +23,10 @@ import ir.hrka.kotlin.domain.repositories.preference.VersionDataRepo
 import ir.hrka.kotlin.domain.repositories.db.ReadDBTopicsRepo
 import ir.hrka.kotlin.domain.repositories.db.WriteDBCoroutineTopicsRepo
 import ir.hrka.kotlin.domain.repositories.db.WriteDBTopicPointsRepo
+import ir.hrka.kotlin.domain.repositories.git.CoursesRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicPointsRepo
 import ir.hrka.kotlin.domain.repositories.preference.VersionLocalInfoRepo
+import javax.inject.Named
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -58,4 +61,8 @@ interface RepositoryModule {
 
     @Binds
     fun bindVersionLocalInfoRepo(versionLocalInfoRepoImpl: VersionLocalInfoRepoImpl): VersionLocalInfoRepo
+
+    @Named("git")
+    @Binds
+    fun bindGitCoursesRepoImpl(gitCoursesRepoImpl: GitCoursesRepoImpl): CoursesRepo
 }
