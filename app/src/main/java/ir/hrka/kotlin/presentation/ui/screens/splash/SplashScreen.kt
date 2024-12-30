@@ -55,9 +55,9 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     val executionState by viewModel.executionState.collectAsState()
     val versionsInfo by viewModel.versionsInfo.collectAsState()
     val updateState by viewModel.updateState.collectAsState()
-    val coursesVersionId by viewModel.coursesLocalVersionId.collectAsState()
-    val kotlinVersionId by viewModel.kotlinLocalVersionId.collectAsState()
-    val coroutineVersionId by viewModel.coroutineLocalVersionId.collectAsState()
+    val coursesVersionId by viewModel.coursesVersionId.collectAsState()
+    val kotlinVersionId by viewModel.kotlinVersionId.collectAsState()
+    val coroutineVersionId by viewModel.coroutineVersionId.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

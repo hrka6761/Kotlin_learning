@@ -17,7 +17,7 @@ class GitCoursesRepoImpl @Inject constructor(
     private val gitAPI: GitAPI
 ) : CoursesRepo {
 
-    override suspend fun getCourses(): Resource<List<Course>> {
+    override suspend fun getCourses(): Resource<List<Course>?> {
         return try {
             val response = gitAPI.getCourses()
 

@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import ir.hrka.kotlin.core.Constants.DATABASE_NAME
 import ir.hrka.kotlin.data.datasource.db.AppDatabase
 import ir.hrka.kotlin.data.datasource.db.interactions.CoroutineTopicsDao
+import ir.hrka.kotlin.data.datasource.db.interactions.CoursesDao
 import ir.hrka.kotlin.data.datasource.db.interactions.KotlinTopicsDao
 import ir.hrka.kotlin.data.datasource.db.interactions.PointsDao
 import ir.hrka.kotlin.data.datasource.db.interactions.SnippetCodesDao
@@ -29,6 +30,10 @@ class DBModule {
             AppDatabase::class.java,
             DATABASE_NAME
         ).build()
+
+    @Singleton
+    @Provides
+    fun provideCoursesDao(db: AppDatabase): CoursesDao = db.coursesDao()
 
     @Singleton
     @Provides

@@ -10,26 +10,41 @@ import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.db.Course
+import ir.hrka.kotlin.domain.usecases.db.cources.ClearDBCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.db.cources.GetDBCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.db.cources.PutDBCoursesUseCase
 import ir.hrka.kotlin.domain.usecases.git.kotlin.read.GetGitCoursesUseCase
 import ir.hrka.kotlin.presentation.GlobalData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    @Named("IO") private val io: CoroutineDispatcher,
     private val globalData: GlobalData,
-    private val getGitCoursesUseCase: GetGitCoursesUseCase
+    private val getGitCoursesUseCase: GetGitCoursesUseCase,
+    private val getDBCoursesUseCase: GetDBCoursesUseCase,
+    private val clearDBCoursesUseCase: ClearDBCoursesUseCase,
+    private val putDBCoursesUseCase: PutDBCoursesUseCase
 ) : ViewModel() {
 
-    private val _coursesList: MutableStateFlow<Resource<List<Course>>> =
+    val hasCoursesUpdate = globalData._hasCoursesUpdate
+    val coursesVersionId = globalData._coursesVersionId
+    private val _courses: MutableStateFlow<Resource<List<Course>?>> =
         MutableStateFlow(Resource.Initial())
-    val coursesList: StateFlow<Resource<List<Course>>> = _coursesList
+    val courses: StateFlow<Resource<List<Course>?>> = _courses
     private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val failedState: StateFlow<Boolean> = _failedState
+    private val _saveCourseOnDBResult: MutableStateFlow<Resource<Boolean>> =
+        MutableStateFlow(Resource.Initial())
+    val saveCourseOnDBResult: StateFlow<Resource<Boolean>> = _saveCourseOnDBResult
 
 
     fun setExecutionState(state: ExecutionState) {
@@ -46,9 +61,33 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getCoursesListFromGit() {
-        viewModelScope.launch {
-            _coursesList.value = Resource.Loading()
-            _coursesList.value = getGitCoursesUseCase()
+        viewModelScope.launch(io) {
+            _courses.value = Resource.Loading()
+            _courses.value = getGitCoursesUseCase()
+        }
+    }
+
+    fun getCoursesListFromDB() {
+        viewModelScope.launch(io) {
+            _courses.value = Resource.Loading()
+            _courses.value = getDBCoursesUseCase()
+        }
+    }
+
+    fun saveCoursesOnDB() {
+        viewModelScope.launch(io) {
+            val clearDiffered = async { clearDBCoursesUseCase() }
+            val clearResult = clearDiffered.await()
+
+            if (clearResult is Resource.Error) {
+                _saveCourseOnDBResult.value = clearResult
+                return@launch
+            }
+
+            _courses.value.data?.let {
+                val saveDiffered = async { putDBCoursesUseCase(it) }
+                _saveCourseOnDBResult.value = saveDiffered.await()
+            }
         }
     }
 }

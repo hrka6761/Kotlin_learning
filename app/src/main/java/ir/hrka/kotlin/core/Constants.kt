@@ -54,6 +54,9 @@ object Constants {
     const val DB_DELETE_KOTLIN_TOPICS_POINTS_ERROR_CODE = 3009
     const val DB_DELETE_POINT_SUB_POINTS_ERROR_CODE = 3010
     const val DB_DELETE_POINT_SNIPPET_CODES_ERROR_CODE = 3011
+    const val DB_READ_COURSES_ERROR_CODE = 3012
+    const val DB_WRITE_COURSES_ERROR_CODE = 3013
+    const val DB_CLEAR_COURSES_TABLE_ERROR_CODE = 3014
 
     const val MANDATORY = "mandatory"
     const val NON_MANDATORY = "non_mandatory"

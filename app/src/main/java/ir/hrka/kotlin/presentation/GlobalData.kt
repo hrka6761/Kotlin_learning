@@ -13,61 +13,55 @@ class GlobalData @Inject constructor() {
 
     private var _versionsInfo: VersionsInfo? = null
     private var _lastVersionId: Int? = null
-    var _coursesVersionId: Int? = null
-    var _kotlinVersionId: Int? = null
-    var _coroutineVersionId: Int? = null
-    var _hasCoursesUpdate: Boolean? = null
-    var _hasKotlinTopicsUpdate: Boolean? = null
-    var _hasCoroutineTopicsUpdate: Boolean? = null
-    var _hasKotlinTopicsPointsUpdate: Boolean? = null
-    var _hasCoroutineTopicsPointsUpdate: Boolean? = null
-    var _updatedKotlinTopics: List<Int>? = null
-    var _updatedCoroutineTopics: List<Int>? = null
-    private var versionsList: List<Version>? = null
-    private var currentVersionIndex: Int? = null
-    private var lastVersionIndex: Int? = null
-    private var newVersionsList: List<Version>? = null
+    private var _versionsList: List<Version>? = null
+    private var _coursesVersionId = -1
+    private var _kotlinVersionId = -1
+    private var _coroutineVersionId = -1
+    var _hasCoursesUpdate = false
+    var _hasKotlinTopicsUpdate = false
+    var _hasCoroutineTopicsUpdate = false
+    var _hasKotlinTopicsPointsUpdate = false
+    var _hasCoroutineTopicsPointsUpdate = false
+    var _updatedKotlinTopics: List<Int> = mutableListOf()
+    var _updatedCoroutineTopics: List<Int> = mutableListOf()
 
 
     fun initGlobalData(
         versionsInfo: VersionsInfo?,
-        lastVersionId: Int?,
         coursesVersionId: Int,
         kotlinVersionId: Int,
         coroutineVersionId: Int
     ) {
         _versionsInfo = versionsInfo
-        _lastVersionId = lastVersionId
+        _lastVersionId = _versionsInfo?.lastVersionId
+        _versionsList = _versionsInfo?.versions
         _coursesVersionId = coursesVersionId
         _kotlinVersionId = kotlinVersionId
         _coroutineVersionId = coroutineVersionId
 
-        versionsList = _versionsInfo?.versions
-        currentVersionIndex = _kotlinVersionId
-        lastVersionIndex = _lastVersionId?.minus(1)
-
-        if (currentVersionIndex != null || lastVersionIndex != null)
-            newVersionsList = versionsList?.subList(currentVersionIndex!!, lastVersionIndex!!)
-
-        if (_versionsInfo != null) {
-            checkCoursesUpdate()
-            checkKotlinTopicsUpdate()
-            checkCoroutineTopicsUpdate()
-            checkKotlinTopicsPointsUpdate()
-            checkCoroutineTopicsPointsUpdate()
-        }
+        checkCoursesUpdate()
+        checkKotlinTopicsUpdate()
+        checkCoroutineTopicsUpdate()
+        checkKotlinTopicsPointsUpdate()
+        checkCoroutineTopicsPointsUpdate()
     }
 
 
     private fun checkCoursesUpdate() {
-        if (_coursesVersionId == _lastVersionId) {
-            _hasKotlinTopicsUpdate = false
+        if (_versionsInfo == null) return
+        if (_coursesVersionId == _lastVersionId) return
+
+        if (_coursesVersionId == -1) {
+            _hasCoursesUpdate = true
             return
         }
 
-        if (!newVersionsList.isNullOrEmpty()) {
+        val nextVersionsList = _versionsList?.subList(_coursesVersionId, _lastVersionId!!)
+
+
+        if (!nextVersionsList.isNullOrEmpty()) {
             _hasCoursesUpdate =
-                newVersionsList?.any { version -> version.versionType == VersionType.UpdateCourses.name }
+                nextVersionsList.any { version -> version.versionType == VersionType.UpdateCourses.name }
         }
     }
 
@@ -77,9 +71,18 @@ class GlobalData @Inject constructor() {
             return
         }
 
+        val versionsList = _versionsInfo?.versions
+        val currentVersionIndex = _kotlinVersionId!!
+        val lastVersionIndex = _lastVersionId?.minus(1) ?: -1
+        val newVersionsList =
+            if (currentVersionIndex > 0 || lastVersionIndex > 0)
+                versionsList?.subList(currentVersionIndex, lastVersionIndex)
+            else
+                null
+
         if (!newVersionsList.isNullOrEmpty()) {
             _hasKotlinTopicsUpdate =
-                newVersionsList?.any { version -> version.versionType == VersionType.UpdateKotlinTopics.name }
+                newVersionsList.any { version -> version.versionType == VersionType.UpdateKotlinTopics.name }
         }
     }
 
@@ -90,9 +93,18 @@ class GlobalData @Inject constructor() {
             return
         }
 
+        val versionsList = _versionsInfo?.versions
+        val currentVersionIndex = _coroutineVersionId!!
+        val lastVersionIndex = _lastVersionId?.minus(1) ?: -1
+        val newVersionsList =
+            if (currentVersionIndex > 0 || lastVersionIndex > 0)
+                versionsList?.subList(currentVersionIndex, lastVersionIndex)
+            else
+                null
+
         if (!newVersionsList.isNullOrEmpty()) {
             _hasCoroutineTopicsUpdate =
-                newVersionsList?.any { version -> version.versionType == VersionType.UpdateCoroutineTopics.name }
+                newVersionsList.any { version -> version.versionType == VersionType.UpdateCoroutineTopics.name }
         }
     }
 
@@ -102,11 +114,20 @@ class GlobalData @Inject constructor() {
             return
         }
 
+        val versionsList = _versionsInfo?.versions
+        val currentVersionIndex = _kotlinVersionId!!
+        val lastVersionIndex = _lastVersionId?.minus(1) ?: -1
+        val newVersionsList =
+            if (currentVersionIndex > 0 || lastVersionIndex > 0)
+                versionsList?.subList(currentVersionIndex, lastVersionIndex)
+            else
+                null
+
         if (!newVersionsList.isNullOrEmpty()) {
             var hasKotlinTopicsPointsUpdate = false
             var updatedKotlinTopics: MutableSet<Int>? = null
 
-            newVersionsList?.forEach { newVersion ->
+            newVersionsList.forEach { newVersion ->
                 if (newVersion.versionType == VersionType.UpdateKotlinTopicPoints.name) {
                     hasKotlinTopicsPointsUpdate = true
 
@@ -128,11 +149,20 @@ class GlobalData @Inject constructor() {
             return
         }
 
+        val versionsList = _versionsInfo?.versions
+        val currentVersionIndex = _coroutineVersionId!!
+        val lastVersionIndex = _lastVersionId?.minus(1) ?: -1
+        val newVersionsList =
+            if (currentVersionIndex > 0 || lastVersionIndex > 0)
+                versionsList?.subList(currentVersionIndex, lastVersionIndex)
+            else
+                null
+
         if (!newVersionsList.isNullOrEmpty()) {
             var hasCoroutineTopicsPointsUpdate = false
             var updatedCoroutineTopics: MutableSet<Int>? = null
 
-            newVersionsList?.forEach { newVersion ->
+            newVersionsList.forEach { newVersion ->
                 if (newVersion.versionType == VersionType.UpdateCoroutineTopicPoints.name) {
                     hasCoroutineTopicsPointsUpdate = true
 

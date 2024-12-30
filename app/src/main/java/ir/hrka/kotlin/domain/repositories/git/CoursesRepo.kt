@@ -5,5 +5,5 @@ import ir.hrka.kotlin.domain.entities.db.Course
 
 interface CoursesRepo {
 
-    suspend fun getCourses(): Resource<List<Course>>
+    suspend fun getCourses(): Resource<List<Course>?>
 }

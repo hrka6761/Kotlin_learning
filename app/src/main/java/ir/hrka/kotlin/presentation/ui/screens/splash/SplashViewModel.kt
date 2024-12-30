@@ -49,15 +49,15 @@ class SplashViewModel @Inject constructor(
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _updateState: MutableStateFlow<Int> = MutableStateFlow(UPDATE_UNKNOWN_STATE)
     val updateState: StateFlow<Int> = _updateState
-    private val _kotlinLocalVersionId: MutableStateFlow<Resource<Int?>> =
+    private val _kotlinVersionId: MutableStateFlow<Resource<Int?>> =
         MutableStateFlow(Resource.Initial())
-    val kotlinLocalVersionId: StateFlow<Resource<Int?>> = _kotlinLocalVersionId
-    private val _coursesLocalVersionId: MutableStateFlow<Resource<Int?>> =
+    val kotlinVersionId: StateFlow<Resource<Int?>> = _kotlinVersionId
+    private val _coursesVersionId: MutableStateFlow<Resource<Int?>> =
         MutableStateFlow(Resource.Initial())
-    val coursesLocalVersionId: StateFlow<Resource<Int?>> = _coursesLocalVersionId
-    private val _coroutineLocalVersionId: MutableStateFlow<Resource<Int?>> =
+    val coursesVersionId: StateFlow<Resource<Int?>> = _coursesVersionId
+    private val _coroutineVersionId: MutableStateFlow<Resource<Int?>> =
         MutableStateFlow(Resource.Initial())
-    val coroutineLocalVersionId: StateFlow<Resource<Int?>> = _coroutineLocalVersionId
+    val coroutineVersionId: StateFlow<Resource<Int?>> = _coroutineVersionId
 
 
     fun setExecutionState(state: ExecutionState) {
@@ -93,35 +93,32 @@ class SplashViewModel @Inject constructor(
 
     fun getCoursesVersionId() {
         viewModelScope.launch(io) {
-            _coursesLocalVersionId.value = Resource.Loading()
-            _coursesLocalVersionId.value = getKotlinVersionIdUseCase()
+            _coursesVersionId.value = Resource.Loading()
+            _coursesVersionId.value = getKotlinVersionIdUseCase()
         }
     }
 
     fun getKotlinVersionId() {
         viewModelScope.launch(io) {
-            _kotlinLocalVersionId.value = Resource.Loading()
-            _kotlinLocalVersionId.value = getKotlinVersionIdUseCase()
+            _kotlinVersionId.value = Resource.Loading()
+            _kotlinVersionId.value = getKotlinVersionIdUseCase()
         }
     }
 
     fun getCoroutineVersionId() {
         viewModelScope.launch(io) {
-            _coroutineLocalVersionId.value = Resource.Loading()
-            _coroutineLocalVersionId.value = getCoroutineVersionIdUseCase()
+            _coroutineVersionId.value = Resource.Loading()
+            _coroutineVersionId.value = getCoroutineVersionIdUseCase()
         }
     }
 
     fun initGlobalData() {
-        _versionsInfo.value.data?.let { versionsInfo ->
-            globalData.initGlobalData(
-                versionsInfo = versionsInfo,
-                lastVersionId = _versionsInfo.value.data?.lastVersionId,
-                coursesVersionId = _coursesLocalVersionId.value.data ?: DEFAULT_VERSION_ID,
-                kotlinVersionId = _kotlinLocalVersionId.value.data ?: DEFAULT_VERSION_ID,
-                coroutineVersionId = _coroutineLocalVersionId.value.data ?: DEFAULT_VERSION_ID
-            )
-        }
+        globalData.initGlobalData(
+            versionsInfo = _versionsInfo.value.data,
+            coursesVersionId = _coursesVersionId.value.data ?: DEFAULT_VERSION_ID,
+            kotlinVersionId = _kotlinVersionId.value.data ?: DEFAULT_VERSION_ID,
+            coroutineVersionId = _coroutineVersionId.value.data ?: DEFAULT_VERSION_ID
+        )
     }
 
     fun goToUpdate(activity: MainActivity) {
