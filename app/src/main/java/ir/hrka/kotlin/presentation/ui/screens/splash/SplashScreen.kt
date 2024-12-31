@@ -1,6 +1,5 @@
 package ir.hrka.kotlin.presentation.ui.screens.splash
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,7 +38,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.stringResource
 import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATE_UNKNOWN_STATE
 import ir.hrka.kotlin.core.Constants.UPDATE_STATE
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
@@ -53,7 +51,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     val viewModel: SplashViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
     val executionState by viewModel.executionState.collectAsState()
-    val versionsInfo by viewModel.versionsInfo.collectAsState()
+    val changelog by viewModel.changelog.collectAsState()
     val updateState by viewModel.updateState.collectAsState()
     val coursesVersionId by viewModel.coursesVersionId.collectAsState()
     val kotlinVersionId by viewModel.kotlinVersionId.collectAsState()
@@ -190,13 +188,13 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
     LaunchedEffect(Unit) {
         if (executionState == Start) {
             viewModel.setExecutionState(Loading)
-            viewModel.getAppVersions()
+            viewModel.getAppChangelog()
         }
     }
 
-    LaunchedEffect(versionsInfo) {
+    LaunchedEffect(changelog) {
         if (executionState != Stop)
-            when (versionsInfo) {
+            when (changelog) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {

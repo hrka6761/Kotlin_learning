@@ -1,7 +1,7 @@
 package ir.hrka.kotlin.domain.usecases.db.kotlin.write
 
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.domain.repositories.db.WriteDBKotlinTopicsRepo
+import ir.hrka.kotlin.domain.repositories.db.write.WriteDBKotlinTopicsRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

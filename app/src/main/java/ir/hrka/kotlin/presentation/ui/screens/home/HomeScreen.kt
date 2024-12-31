@@ -3,7 +3,6 @@ package ir.hrka.kotlin.presentation.ui.screens.home
 import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -61,9 +60,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.request.RequestOptions
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.Constants.SOURCE_URL
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.KotlinTopics
@@ -79,7 +76,9 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
     val executionState by viewModel.executionState.collectAsState()
     val failedState by viewModel.failedState.collectAsState()
     val configuration = LocalConfiguration.current
-    val coursesList by viewModel.courses.collectAsState()
+    val courses by viewModel.courses.collectAsState()
+    val saveCourseOnDBResult by viewModel.saveCourseOnDBResult.collectAsState()
+    val updateCoursesVersionIdResult by viewModel.updateCoursesVersionIdResult.collectAsState()
 
 
     Scaffold(
@@ -99,7 +98,7 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
                 innerPaddings,
                 executionState,
                 failedState,
-                coursesList
+                courses
             )
 
             ORIENTATION_LANDSCAPE -> LandscapeScreen(
@@ -107,7 +106,7 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
                 innerPaddings,
                 executionState,
                 failedState,
-                coursesList
+                courses
             )
         }
     }
@@ -115,39 +114,58 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
     LaunchedEffect(Unit) {
         if (executionState == ExecutionState.Start) {
             viewModel.setExecutionState(ExecutionState.Loading)
-            when (viewModel.hasCoursesUpdate) {
-                null -> {
-                    if (viewModel.coursesVersionId == DEFAULT_VERSION_ID)
-                        viewModel.getCoursesListFromGit()
-                    else
-                        viewModel.getCoursesListFromDB()
-                }
-
-                true -> {
-                    viewModel.getCoursesListFromGit()
-                }
-
-                false -> {
-                    viewModel.getCoursesListFromDB()
-                }
-            }
+            if (viewModel.hasCoursesUpdate)
+                viewModel.getCoursesFromGit()
+            else
+                viewModel.getCoursesFromDB()
         }
     }
 
-    LaunchedEffect(coursesList) {
+    LaunchedEffect(courses) {
         if (executionState != ExecutionState.Stop)
-            when (coursesList) {
+            when (courses) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    viewModel.setExecutionState(ExecutionState.Stop)
-//                    if (viewModel.hasCoursesUpdate == true)
+                    if (viewModel.hasCoursesUpdate)
                         viewModel.saveCoursesOnDB()
+                    else
+                        viewModel.setExecutionState(ExecutionState.Stop)
                 }
 
                 is Resource.Error -> {
                     viewModel.setExecutionState(ExecutionState.Stop)
                     viewModel.setFailedState(true)
+                }
+            }
+    }
+
+    LaunchedEffect(saveCourseOnDBResult) {
+        if (executionState != ExecutionState.Stop)
+            when (saveCourseOnDBResult) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    viewModel.updateCoursesVersionId()
+                }
+
+                is Resource.Error -> {
+                    viewModel.setExecutionState(ExecutionState.Stop)
+                }
+            }
+    }
+
+    LaunchedEffect(updateCoursesVersionIdResult) {
+        if (executionState != ExecutionState.Stop)
+            when (updateCoursesVersionIdResult) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    viewModel.setExecutionState(ExecutionState.Stop)
+                }
+
+                is Resource.Error -> {
+                    viewModel.setExecutionState(ExecutionState.Stop)
                 }
             }
     }

@@ -3,11 +3,9 @@ package ir.hrka.kotlin.domain.usecases.git.coroutine.read
 import ir.hrka.kotlin.core.errors.unknownError
 import ir.hrka.kotlin.core.utilities.Course.Coroutine
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.string_utilities.decodeBase64
-import ir.hrka.kotlin.core.utilities.string_utilities.extractVersionNameFromGradleContent
 import ir.hrka.kotlin.core.utilities.string_utilities.isTopicVisualized
 import ir.hrka.kotlin.domain.entities.db.CoroutineTopic
-import ir.hrka.kotlin.domain.repositories.git.ChangelogRepo
+import ir.hrka.kotlin.domain.repositories.ChangelogRepo
 import ir.hrka.kotlin.domain.repositories.git.ReadGitTopicsRepo
 import javax.inject.Inject
 
@@ -26,11 +24,7 @@ class GetGitCoroutineTopicsListUseCase @Inject constructor(
         if (topicsListResult is Resource.Error)
             return Resource.Error(topicsListResult.error ?: unknownError)
 
-        val versionName = appInfoResult
-            .data
-            ?.content
-            ?.decodeBase64()
-            ?.extractVersionNameFromGradleContent() ?: ""
+        val versionName =  ""
 
         val gitFilesDataList = topicsListResult.data ?: listOf()
         val sortedGitFilesDataListList = gitFilesDataList.sortedBy { item -> item.id }

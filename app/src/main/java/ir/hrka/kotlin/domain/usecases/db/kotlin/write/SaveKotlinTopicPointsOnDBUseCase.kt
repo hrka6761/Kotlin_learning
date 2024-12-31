@@ -5,8 +5,8 @@ import ir.hrka.kotlin.domain.entities.PointData
 import ir.hrka.kotlin.domain.entities.db.Point
 import ir.hrka.kotlin.domain.entities.db.SnippetCode
 import ir.hrka.kotlin.domain.entities.db.SubPoint
-import ir.hrka.kotlin.domain.repositories.db.ReadDBTopicPointsRepo
-import ir.hrka.kotlin.domain.repositories.db.WriteDBTopicPointsRepo
+import ir.hrka.kotlin.domain.repositories.db.read.ReadDBTopicPointsRepo
+import ir.hrka.kotlin.domain.repositories.db.write.WriteDBTopicPointsRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async

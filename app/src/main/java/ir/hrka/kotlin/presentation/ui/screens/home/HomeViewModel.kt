@@ -6,14 +6,16 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.hrka.kotlin.core.Constants
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.db.Course
-import ir.hrka.kotlin.domain.usecases.db.cources.ClearDBCoursesUseCase
-import ir.hrka.kotlin.domain.usecases.db.cources.GetDBCoursesUseCase
-import ir.hrka.kotlin.domain.usecases.db.cources.PutDBCoursesUseCase
-import ir.hrka.kotlin.domain.usecases.git.kotlin.read.GetGitCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.RemoveDBCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.GetDBCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.SaveDBCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.GetGitCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.SaveCoursesVersionIdUseCase
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -29,22 +31,26 @@ class HomeViewModel @Inject constructor(
     private val globalData: GlobalData,
     private val getGitCoursesUseCase: GetGitCoursesUseCase,
     private val getDBCoursesUseCase: GetDBCoursesUseCase,
-    private val clearDBCoursesUseCase: ClearDBCoursesUseCase,
-    private val putDBCoursesUseCase: PutDBCoursesUseCase
+    private val removeDBCoursesUseCase: RemoveDBCoursesUseCase,
+    private val saveDBCoursesUseCase: SaveDBCoursesUseCase,
+    private val saveCoursesVersionIdUseCase: SaveCoursesVersionIdUseCase
 ) : ViewModel() {
 
-    val hasCoursesUpdate = globalData._hasCoursesUpdate
-    val coursesVersionId = globalData._coursesVersionId
-    private val _courses: MutableStateFlow<Resource<List<Course>?>> =
-        MutableStateFlow(Resource.Initial())
-    val courses: StateFlow<Resource<List<Course>?>> = _courses
+    val hasCoursesUpdate = globalData.hasCoursesUpdate
+    private val lastVersionId = globalData.lastVersionId
     private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val failedState: StateFlow<Boolean> = _failedState
+    private val _courses: MutableStateFlow<Resource<List<Course>?>> =
+        MutableStateFlow(Resource.Initial())
+    val courses: StateFlow<Resource<List<Course>?>> = _courses
     private val _saveCourseOnDBResult: MutableStateFlow<Resource<Boolean>> =
         MutableStateFlow(Resource.Initial())
     val saveCourseOnDBResult: StateFlow<Resource<Boolean>> = _saveCourseOnDBResult
+    private val _updateCoursesVersionIdResult: MutableStateFlow<Resource<Boolean?>> =
+        MutableStateFlow(Resource.Initial())
+    val updateCoursesVersionIdResult: StateFlow<Resource<Boolean?>> = _updateCoursesVersionIdResult
 
 
     fun setExecutionState(state: ExecutionState) {
@@ -60,14 +66,14 @@ class HomeViewModel @Inject constructor(
         context.startActivity(intent)
     }
 
-    fun getCoursesListFromGit() {
+    fun getCoursesFromGit() {
         viewModelScope.launch(io) {
             _courses.value = Resource.Loading()
             _courses.value = getGitCoursesUseCase()
         }
     }
 
-    fun getCoursesListFromDB() {
+    fun getCoursesFromDB() {
         viewModelScope.launch(io) {
             _courses.value = Resource.Loading()
             _courses.value = getDBCoursesUseCase()
@@ -76,7 +82,7 @@ class HomeViewModel @Inject constructor(
 
     fun saveCoursesOnDB() {
         viewModelScope.launch(io) {
-            val clearDiffered = async { clearDBCoursesUseCase() }
+            val clearDiffered = async { removeDBCoursesUseCase() }
             val clearResult = clearDiffered.await()
 
             if (clearResult is Resource.Error) {
@@ -85,9 +91,17 @@ class HomeViewModel @Inject constructor(
             }
 
             _courses.value.data?.let {
-                val saveDiffered = async { putDBCoursesUseCase(it) }
+                val saveDiffered = async { saveDBCoursesUseCase(it) }
                 _saveCourseOnDBResult.value = saveDiffered.await()
             }
+        }
+    }
+
+    fun updateCoursesVersionId() {
+        viewModelScope.launch(io) {
+            val versionId = lastVersionId ?: Constants.DEFAULT_VERSION_ID
+            _updateCoursesVersionIdResult.value = Resource.Loading()
+            _updateCoursesVersionIdResult.value = saveCoursesVersionIdUseCase(versionId)
         }
     }
 }
