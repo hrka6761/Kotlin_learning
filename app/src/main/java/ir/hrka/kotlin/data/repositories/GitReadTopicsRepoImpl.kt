@@ -12,12 +12,12 @@ import ir.hrka.kotlin.data.datasource.git.GitAPI
 import ir.hrka.kotlin.domain.entities.GitFileData
 import ir.hrka.kotlin.domain.entities.KotlinTopicsData
 import ir.hrka.kotlin.domain.entities.db.Topic
-import ir.hrka.kotlin.domain.repositories.TopicsRepo
+import ir.hrka.kotlin.domain.repositories.ReadTopicsRepo
 import javax.inject.Inject
 
-class GitTopicsRepoImpl @Inject constructor(
+class GitReadTopicsRepoImpl @Inject constructor(
     private val gitAPI: GitAPI
-) : TopicsRepo {
+) : ReadTopicsRepo {
 
     override suspend fun getKotlinTopics(): Resource<List<Topic>?> {
         return try {

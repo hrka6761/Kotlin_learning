@@ -7,12 +7,12 @@ import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.db.interactions.KotlinTopicsDao
 import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.domain.entities.db.Topic
-import ir.hrka.kotlin.domain.repositories.WriteDBKotlinTopicsRepo
+import ir.hrka.kotlin.domain.repositories.WriteKotlinTopicsRepo
 import javax.inject.Inject
 
-class WriteDBKotlinTopicsRepoImpl @Inject constructor(
+class WriteKotlinTopicsRepoImpl @Inject constructor(
     private val kotlinTopicsDao: KotlinTopicsDao
-) : WriteDBKotlinTopicsRepo {
+) : WriteKotlinTopicsRepo {
 
     override suspend fun saveKotlinTopicsOnDB(topics: List<Topic>): Resource<Boolean?> {
         return try {

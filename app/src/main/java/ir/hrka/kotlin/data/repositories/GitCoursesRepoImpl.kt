@@ -10,12 +10,12 @@ import ir.hrka.kotlin.data.datasource.git.GitAPI
 import ir.hrka.kotlin.domain.entities.CoursesData
 import ir.hrka.kotlin.domain.entities.GitFileData
 import ir.hrka.kotlin.domain.entities.db.Course
-import ir.hrka.kotlin.domain.repositories.GetCoursesRepo
+import ir.hrka.kotlin.domain.repositories.ReadCoursesRepo
 import javax.inject.Inject
 
 class GitCoursesRepoImpl @Inject constructor(
     private val gitAPI: GitAPI
-) : GetCoursesRepo {
+) : ReadCoursesRepo {
 
     override suspend fun getCourses(): Resource<List<Course>?> {
         return try {

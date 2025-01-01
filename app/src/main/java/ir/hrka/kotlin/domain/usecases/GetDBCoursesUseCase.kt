@@ -1,10 +1,10 @@
 package ir.hrka.kotlin.domain.usecases
 
-import ir.hrka.kotlin.domain.repositories.GetCoursesRepo
+import ir.hrka.kotlin.domain.repositories.ReadCoursesRepo
 import javax.inject.Inject
 import javax.inject.Named
 
-class GetDBCoursesUseCase @Inject constructor(@Named("db") private val getCoursesRepo: GetCoursesRepo) {
+class GetDBCoursesUseCase @Inject constructor(@Named("db") private val readCoursesRepo: ReadCoursesRepo) {
 
-    suspend operator fun invoke() = getCoursesRepo.getCourses()
+    suspend operator fun invoke() = readCoursesRepo.getCourses()
 }

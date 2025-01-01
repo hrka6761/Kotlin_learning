@@ -1,9 +1,9 @@
 package ir.hrka.kotlin.domain.usecases
 
-import ir.hrka.kotlin.domain.repositories.ChangelogRepo
+import ir.hrka.kotlin.domain.repositories.ReadChangelogRepo
 import javax.inject.Inject
 
-class GetChangelogUseCase @Inject constructor(private val changelogRepo: ChangelogRepo) {
+class GetChangelogUseCase @Inject constructor(private val readChangelogRepo: ReadChangelogRepo) {
 
-    suspend operator fun invoke() = changelogRepo.getChangeLog()
+    suspend operator fun invoke() = readChangelogRepo.getChangeLog()
 }

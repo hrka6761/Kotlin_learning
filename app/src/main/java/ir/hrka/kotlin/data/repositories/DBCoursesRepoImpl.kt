@@ -5,12 +5,12 @@ import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.db.interactions.CoursesDao
 import ir.hrka.kotlin.domain.entities.db.Course
-import ir.hrka.kotlin.domain.repositories.GetCoursesRepo
+import ir.hrka.kotlin.domain.repositories.ReadCoursesRepo
 import javax.inject.Inject
 
 class DBCoursesRepoImpl @Inject constructor(
     private val coursesDao: CoursesDao
-) : GetCoursesRepo {
+) : ReadCoursesRepo {
 
     override suspend fun getCourses(): Resource<List<Course>?> {
         return try {

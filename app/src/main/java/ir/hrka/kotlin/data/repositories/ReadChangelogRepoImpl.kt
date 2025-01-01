@@ -9,10 +9,10 @@ import ir.hrka.kotlin.core.utilities.string_utilities.decodeBase64
 import ir.hrka.kotlin.data.datasource.git.GitAPI
 import ir.hrka.kotlin.domain.entities.GitFileData
 import ir.hrka.kotlin.domain.entities.VersionsInfo
-import ir.hrka.kotlin.domain.repositories.ChangelogRepo
+import ir.hrka.kotlin.domain.repositories.ReadChangelogRepo
 import javax.inject.Inject
 
-class ChangelogRepoImpl @Inject constructor(private val gitAPI: GitAPI) : ChangelogRepo {
+class ReadChangelogRepoImpl @Inject constructor(private val gitAPI: GitAPI) : ReadChangelogRepo {
 
     override suspend fun getChangeLog(): Resource<VersionsInfo?> {
         return try {

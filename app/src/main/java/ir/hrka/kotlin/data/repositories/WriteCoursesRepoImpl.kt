@@ -6,12 +6,12 @@ import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.db.interactions.CoursesDao
 import ir.hrka.kotlin.domain.entities.db.Course
-import ir.hrka.kotlin.domain.repositories.WriteDBCoursesRepo
+import ir.hrka.kotlin.domain.repositories.WriteCoursesRepo
 import javax.inject.Inject
 
-class WriteDBCoursesRepoImpl @Inject constructor(
+class WriteCoursesRepoImpl @Inject constructor(
     private val coursesDao: CoursesDao
-) : WriteDBCoursesRepo {
+) : WriteCoursesRepo {
 
     override suspend fun saveCoursesListOnDB(courses: List<Course>): Resource<Boolean> {
         return try {

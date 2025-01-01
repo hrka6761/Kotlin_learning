@@ -6,13 +6,13 @@ import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.db.interactions.CoroutineTopicsDao
 import ir.hrka.kotlin.data.datasource.db.interactions.KotlinTopicsDao
 import ir.hrka.kotlin.domain.entities.db.Topic
-import ir.hrka.kotlin.domain.repositories.TopicsRepo
+import ir.hrka.kotlin.domain.repositories.ReadTopicsRepo
 import javax.inject.Inject
 
-class DBTopicsRepoImpl @Inject constructor(
+class DBReadTopicsRepoImpl @Inject constructor(
     private val kotlinTopicsDao: KotlinTopicsDao,
     private val coroutineTopicsDao: CoroutineTopicsDao
-) : TopicsRepo{
+) : ReadTopicsRepo{
 
     override suspend fun getKotlinTopics(): Resource<List<Topic>?> {
         return try {
