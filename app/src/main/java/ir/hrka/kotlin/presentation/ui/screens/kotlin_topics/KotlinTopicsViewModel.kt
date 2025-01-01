@@ -125,4 +125,9 @@ class KotlinTopicsViewModel @Inject constructor(
             _updateKotlinVersionIdResult.value = saveKotlinVersionIdUseCase(versionId)
         }
     }
+
+    fun updateKotlinVersionIdInGlobalData() {
+        globalData.hasKotlinTopicsUpdate = false
+        globalData.hasKotlinTopicsPointsUpdate = false
+    }
 }

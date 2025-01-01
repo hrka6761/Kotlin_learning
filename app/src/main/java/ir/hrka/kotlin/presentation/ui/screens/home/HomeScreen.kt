@@ -162,6 +162,7 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
                 is Resource.Loading -> {}
                 is Resource.Success -> {
                     viewModel.setExecutionState(ExecutionState.Stop)
+                    viewModel.updateCoursesVersionIdInGlobalData()
                 }
 
                 is Resource.Error -> {

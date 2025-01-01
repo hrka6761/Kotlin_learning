@@ -6,7 +6,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.Constants
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
@@ -103,5 +102,9 @@ class HomeViewModel @Inject constructor(
             _updateCoursesVersionIdResult.value = Resource.Loading()
             _updateCoursesVersionIdResult.value = saveCoursesVersionIdUseCase(versionId)
         }
+    }
+
+    fun updateCoursesVersionIdInGlobalData() {
+        globalData.hasCoursesUpdate = false
     }
 }

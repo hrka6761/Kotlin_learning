@@ -215,6 +215,8 @@ fun KotlinTopicsScreen(
 
                     if (viewModel.hasKotlinTopicsPointsUpdate)
                         viewModel.getKotlinTopicsFromDB()
+
+                    viewModel.updateKotlinVersionIdInGlobalData()
                 }
 
                 is Resource.Error -> {
@@ -292,8 +294,8 @@ fun KotlinTopicItem(
                     .size(50.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .constrainAs(image) {
-                        top.linkTo(parent.top, margin = 10.dp)
-                        start.linkTo(parent.start, margin = 10.dp)
+                        top.linkTo(parent.top)
+                        start.linkTo(id.end, margin = 8.dp)
                         bottom.linkTo(parent.bottom)
                     },
                 requestBuilderTransform = {
@@ -318,6 +320,7 @@ fun KotlinTopicItem(
                     .constrainAs(id) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
+                        bottom.linkTo(parent.bottom)
                     }
             ) {
                 Text(
@@ -330,9 +333,9 @@ fun KotlinTopicItem(
 
             Column(
                 modifier = Modifier.constrainAs(data) {
-                    top.linkTo(parent.top, margin = 8.dp)
+                    top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
-                    start.linkTo(image.end, margin = 10.dp)
+                    start.linkTo(image.end, margin = 8.dp)
                 },
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start

@@ -4,7 +4,7 @@
     {
       "topic_id": 1,
       "topic_title": "Basic",
-      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
+      "topic_image": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin/topics_image/basic.png",
       "points_number": 29,
       "has_visualizer": false,
       "is_active": true
