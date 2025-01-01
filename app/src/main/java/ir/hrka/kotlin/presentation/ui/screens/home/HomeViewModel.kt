@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.core.Constants
+import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
@@ -80,26 +81,25 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun saveCoursesOnDB() {
+    fun saveCoursesOnDB(courses: List<Course>) {
         viewModelScope.launch(io) {
-            val clearDiffered = async { removeDBCoursesUseCase() }
-            val clearResult = clearDiffered.await()
+            _saveCourseOnDBResult.value = Resource.Loading()
 
-            if (clearResult is Resource.Error) {
-                _saveCourseOnDBResult.value = clearResult
+            val removeDiffered = async { removeDBCoursesUseCase() }
+            val removeResult = removeDiffered.await()
+
+            if (removeResult is Resource.Error) {
+                _saveCourseOnDBResult.value = removeResult
                 return@launch
             }
 
-            _courses.value.data?.let {
-                val saveDiffered = async { saveDBCoursesUseCase(it) }
-                _saveCourseOnDBResult.value = saveDiffered.await()
-            }
+            _saveCourseOnDBResult.value = saveDBCoursesUseCase(courses)
         }
     }
 
     fun updateCoursesVersionId() {
         viewModelScope.launch(io) {
-            val versionId = lastVersionId ?: Constants.DEFAULT_VERSION_ID
+            val versionId = lastVersionId ?: DEFAULT_VERSION_ID
             _updateCoursesVersionIdResult.value = Resource.Loading()
             _updateCoursesVersionIdResult.value = saveCoursesVersionIdUseCase(versionId)
         }

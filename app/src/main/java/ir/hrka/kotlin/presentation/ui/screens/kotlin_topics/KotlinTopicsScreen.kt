@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.presentation.ui.screens.kotlin_topics
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,10 +8,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -25,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -37,10 +39,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,41 +53,36 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.request.RequestOptions
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.Constants.UPDATED_ID_KEY
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Screen.KotlinTopicPoints
-import ir.hrka.kotlin.core.utilities.string_utilities.extractFileName
-import ir.hrka.kotlin.core.utilities.string_utilities.splitByCapitalLetters
-import ir.hrka.kotlin.domain.entities.db.KotlinTopic
+import ir.hrka.kotlin.domain.entities.db.Topic
 
 @Composable
 fun KotlinTopicsScreen(
     activity: MainActivity,
-    navHostController: NavHostController,
-    gitVersionName: String?,
-    gitVersionSuffix: String?
+    navHostController: NavHostController
 ) {
 
     val viewModel: KotlinTopicsViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
-    val kotlinTopics by viewModel.kotlinTopics.collectAsState()
+    val kotlinTopics by viewModel.topics.collectAsState()
     val executionState by viewModel.executionState.collectAsState()
     val failedState by viewModel.failedState.collectAsState()
-    val hasUpdateForKotlinTopicsList by viewModel.hasUpdateForKotlinTopicsList.collectAsState()
-    val hasUpdateForKotlinTopicsContent by viewModel.hasUpdateForKotlinTopicsContent.collectAsState()
-    val saveKotlinTopicsListResult by viewModel.saveKotlinTopicsListResult.collectAsState()
+    val saveKotlinTopicsResult by viewModel.saveKotlinTopicsResult.collectAsState()
     val updateKotlinTopicsOnDBResult by viewModel.updateKotlinTopicsOnDBResult.collectAsState()
+    val updateKotlinVersionIdResult by viewModel.updateKotlinVersionIdResult.collectAsState()
     val updatedId = navHostController.currentBackStackEntry
         ?.savedStateHandle
         ?.get<Int>(UPDATED_ID_KEY)
-
-
-    updatedId?.let { id -> viewModel.updateKotlinTopicsList(id - 1) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -120,7 +120,7 @@ fun KotlinTopicsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
-                    text = "Failed to fetch the data",
+                    text = stringResource(R.string.failed_to_fetch_the_data),
                     textAlign = TextAlign.Center
                 )
             }
@@ -152,25 +152,78 @@ fun KotlinTopicsScreen(
     LaunchedEffect(Unit) {
         if (executionState == Start) {
             viewModel.setExecutionState(Loading)
-            viewModel.checkNewUpdateForKotlinTopicsList(gitVersionName)
-        }
-    }
 
-    LaunchedEffect(hasUpdateForKotlinTopicsList) {
-        if (executionState != Stop) {
-            if (hasUpdateForKotlinTopicsList == true)
+            if (viewModel.hasKotlinTopicsUpdate) {
                 viewModel.getKotlinTopicsFromGit()
-            else if (hasUpdateForKotlinTopicsList == false)
-                viewModel.checkNewUpdateForKotlinTopicsContent(gitVersionName)
+                return@LaunchedEffect
+            }
+
+            if (viewModel.hasKotlinTopicsPointsUpdate) {
+                viewModel.updateKotlinTopicsOnDB()
+                return@LaunchedEffect
+            }
+
+            viewModel.getKotlinTopicsFromDB()
         }
     }
 
-    LaunchedEffect(hasUpdateForKotlinTopicsContent) {
+    LaunchedEffect(kotlinTopics) {
         if (executionState != Stop) {
-            if (hasUpdateForKotlinTopicsContent == true)
-                viewModel.updateKotlinTopicsInDatabase(gitVersionSuffix)
-            else if (hasUpdateForKotlinTopicsContent == false)
-                viewModel.getKotlinTopicsFromDatabase()
+            when (kotlinTopics) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+
+                is Resource.Success -> {
+                    if (viewModel.hasKotlinTopicsUpdate)
+                        kotlinTopics.data?.let { viewModel.saveKotlinTopicsOnDB(it) }
+                    else
+                        viewModel.setExecutionState(Stop)
+                }
+
+                is Resource.Error -> {
+                    viewModel.setExecutionState(Stop)
+                    viewModel.setFailedState(true)
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(saveKotlinTopicsResult) {
+        if (executionState != Stop) {
+            when (saveKotlinTopicsResult) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    viewModel.updateKotlinVersionId()
+                }
+
+                is Resource.Error -> {
+                    viewModel.setExecutionState(Stop)
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(updateKotlinVersionIdResult) {
+        if (executionState != Stop) {
+            when (updateKotlinVersionIdResult) {
+                is Resource.Initial -> {}
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    if (viewModel.hasKotlinTopicsUpdate)
+                        viewModel.setExecutionState(Stop)
+
+                    if (viewModel.hasKotlinTopicsPointsUpdate)
+                        viewModel.getKotlinTopicsFromDB()
+                }
+
+                is Resource.Error -> {
+                    if (viewModel.hasKotlinTopicsPointsUpdate)
+                        viewModel.getKotlinTopicsFromDB()
+                    else
+                        viewModel.setExecutionState(Stop)
+                }
+            }
         }
     }
 
@@ -180,79 +233,11 @@ fun KotlinTopicsScreen(
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    viewModel.saveVersionName(gitVersionName!!)
-                    viewModel.getKotlinTopicsFromDatabase()
+                    viewModel.updateKotlinVersionId()
                 }
 
                 is Resource.Error -> {
-                    viewModel.setExecutionState(Stop)
-                    snackBarHostState.showSnackbar(
-                        message = updateKotlinTopicsOnDBResult.error?.errorMsg ?: "",
-                        duration = SnackbarDuration.Short
-                    )
-                }
-            }
-        }
-    }
-
-    LaunchedEffect(kotlinTopics) {
-        if (executionState != Stop) {
-            when (kotlinTopics) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {
-                    if (hasUpdateForKotlinTopicsList == true) {
-                        snackBarHostState.showSnackbar(
-                            message = activity.getString(R.string.fetching_new_kotlin_topics_list_msg),
-                            duration = SnackbarDuration.Long
-                        )
-                    }
-                }
-
-                is Resource.Success -> {
-                    if (kotlinTopics.data?.isEmpty() != false) {
-                        viewModel.setExecutionState(Stop)
-                        viewModel.setFailedState(true)
-                        snackBarHostState.showSnackbar(
-                            message = activity.getString(R.string.no_kotlin_topics_msg),
-                            duration = SnackbarDuration.Long
-                        )
-                        return@LaunchedEffect
-                    }
-
-                    if (hasUpdateForKotlinTopicsList == true)
-                        viewModel.saveKotlinTopicsOnDB()
-                    else
-                        viewModel.setExecutionState(Stop)
-                }
-
-                is Resource.Error -> {
-                    viewModel.setExecutionState(Stop)
-                    viewModel.setFailedState(true)
-                    snackBarHostState.showSnackbar(
-                        message = kotlinTopics.error?.errorMsg.toString(),
-                        duration = SnackbarDuration.Long
-                    )
-                }
-            }
-        }
-    }
-
-    LaunchedEffect(saveKotlinTopicsListResult) {
-        if (executionState != Stop) {
-            when (saveKotlinTopicsListResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    viewModel.saveVersionName(gitVersionName!!)
-                    viewModel.setExecutionState(Stop)
-                }
-
-                is Resource.Error -> {
-                    viewModel.setExecutionState(Stop)
-                    snackBarHostState.showSnackbar(
-                        message = saveKotlinTopicsListResult.error?.errorMsg.toString(),
-                        duration = SnackbarDuration.Long
-                    )
+                    viewModel.getKotlinTopicsFromDB()
                 }
             }
         }
@@ -278,9 +263,10 @@ fun KotlinTopicsAppBar(navHostController: NavHostController) {
     )
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun KotlinTopicItem(
-    kotlinTopics: KotlinTopic,
+    topic: Topic,
     navHostController: NavHostController,
 ) {
     ElevatedCard(
@@ -292,61 +278,109 @@ fun KotlinTopicItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer)
+                .alpha(if (topic.isActive) 1f else 0.3f)
                 .clickable {
-                    navHostController.navigate(
-                        KotlinTopicPoints.appendArg(
-                            kotlinTopics.name,
-                            kotlinTopics.hasUpdated,
-                            kotlinTopics.id
-                        )
-                    )
+
                 }
                 .padding(8.dp)
         ) {
-            val (id, title, label) = createRefs()
+            val (id, image, data, updateLabel) = createRefs()
+
+            GlideImage(
+                model = topic.topicImage,
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .constrainAs(image) {
+                        top.linkTo(parent.top, margin = 10.dp)
+                        start.linkTo(parent.start, margin = 10.dp)
+                        bottom.linkTo(parent.bottom)
+                    },
+                requestBuilderTransform = {
+                    it.apply(
+                        RequestOptions()
+                            .error(R.drawable.error)
+                    )
+                },
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+            )
 
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .width(35.dp)
-                    .height(35.dp)
+                    .width(25.dp)
+                    .height(25.dp)
                     .background(
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(50)
                     )
                     .constrainAs(id) {
+                        top.linkTo(parent.top)
                         start.linkTo(parent.start)
                     }
             ) {
                 Text(
-                    fontSize = 16.sp,
+                    fontSize = 12.sp,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
-                    text = kotlinTopics.id.toString(),
+                    text = topic.topicId.toString(),
                 )
             }
 
-            Text(
-                modifier = Modifier.constrainAs(title) {
-                    start.linkTo(id.end, margin = 8.dp)
-                    top.linkTo(parent.top)
+            Column(
+                modifier = Modifier.constrainAs(data) {
+                    top.linkTo(parent.top, margin = 8.dp)
                     bottom.linkTo(parent.bottom)
+                    start.linkTo(image.end, margin = 10.dp)
                 },
-                text = kotlinTopics.name
-                    .extractFileName()
-                    .splitByCapitalLetters(),
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
 
-            if (kotlinTopics.hasUpdated)
+                Text(
+                    modifier = Modifier
+                        .padding(end = 8.dp),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Start,
+                    text = topic.topicTitle,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier.size(12.dp),
+                        painter = painterResource(R.drawable.point_number),
+                        contentDescription = ""
+                    )
+
+                    Text(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp,
+                        text = topic.pointsNumber.toString()
+                    )
+                }
+
+                if (topic.hasVisualizer)
+                    Icon(
+                        modifier = Modifier
+                            .size(20.dp),
+                        painter = painterResource(R.drawable.visualization),
+                        contentDescription = ""
+                    )
+            }
+
+            if (topic.hasUpdate)
                 Icon(
                     modifier = Modifier
-                        .width(25.dp)
-                        .height(25.dp)
-                        .constrainAs(label) {
-                            end.linkTo(parent.end, margin = 8.dp)
-                            top.linkTo(parent.top)
+                        .width(20.dp)
+                        .height(20.dp)
+                        .constrainAs(updateLabel) {
+                            end.linkTo(parent.end, margin = 4.dp)
                             bottom.linkTo(parent.bottom)
                         },
                     painter = painterResource(R.drawable.download_update),
@@ -361,11 +395,15 @@ fun KotlinTopicItem(
 @Composable
 fun KotlinTopicsScreenPreview() {
     KotlinTopicItem(
-        KotlinTopic(
-            id = 12,
-            name = "Basic",
-            versionName = "0.0.0",
-            hasUpdated = true
+        Topic(
+            topicDBId = 1,
+            topicId = 12,
+            topicTitle = "Common classes and functions",
+            topicImage = "",
+            pointsNumber = 29,
+            hasVisualizer = false,
+            isActive = true,
+            hasUpdate = true
         ),
         rememberNavController()
     )

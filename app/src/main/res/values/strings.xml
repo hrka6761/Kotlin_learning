@@ -14,10 +14,10 @@
     <string name="new_version_dialog_desc_install_permission">Please allow to install app from this source.%1$s</string>
     <string name="downloading_notification_desc">Downloading new version of kotlin cheat sheet app.</string>
     <string name="downloading_notification_title">Kotlin cheat sheet</string>
-    <string name="fetching_new_kotlin_topics_list_msg">Fetching new kotlin kotlinTopics list from github.</string>
-    <string name="fetching_new_coroutine_topics_list_msg">Fetching new coroutine kotlinTopics list from github.</string>
+    <string name="fetching_new_kotlin_topics_list_msg">Fetching new kotlin topics list from github.</string>
+    <string name="fetching_new_coroutine_topics_list_msg">Fetching new coroutine topics list from github.</string>
     <string name="fetching_new_points_list_msg">Fetching new points list from github.</string>
-    <string name="no_kotlin_topics_msg">There are no kotlin kotlinTopics available in the database.</string>
+    <string name="no_kotlin_topics_msg">There are no kotlin topics available in the database.</string>
     <string name="updated_label_txt">Update</string>
     <string name="profile_screen_author_name">Hamidreza Karami</string>
     <string name="profile_screen_github_repo_address">https://github.com/hrka6761/Kotlin_cheat_sheet.git</string>
@@ -40,4 +40,5 @@
     <string name="home_screen_coming_soon_btn">Coming soon</string>
     <string name="visualization_page_desc">You can see the visualization of the topic raised on this page.</string>
     <string name="visualization_page_title">Play Visualizer</string>
+    <string name="failed_to_fetch_the_data">Failed to fetch the data</string>
 </resources>

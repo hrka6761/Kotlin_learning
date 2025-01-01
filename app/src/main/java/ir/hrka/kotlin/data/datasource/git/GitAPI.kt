@@ -17,6 +17,10 @@ interface GitAPI {
     suspend fun getCourses(): Response<GitFileData>
 
     @Headers("Accept: application/vnd.github.v3+json")
+    @GET("courses/kotlin/kotlin_topics_list.json")
+    suspend fun getKotlinTopics(): Response<GitFileData>
+
+    @Headers("Accept: application/vnd.github.v3+json")
     @GET("app/src/main/java/ir/hrka/kotlin/cours/{courseName}")
     suspend fun getTopicsList(@Path("courseName") courseName: String): Response<List<GitFileData>>
 

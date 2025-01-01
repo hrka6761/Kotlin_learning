@@ -8,7 +8,7 @@ import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.repositories.GetCoursesRepo
 import javax.inject.Inject
 
-class GetDBCoursesRepoImpl @Inject constructor(
+class DBCoursesRepoImpl @Inject constructor(
     private val coursesDao: CoursesDao
 ) : GetCoursesRepo {
 

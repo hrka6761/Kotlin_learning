@@ -128,7 +128,7 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
                 is Resource.Loading -> {}
                 is Resource.Success -> {
                     if (viewModel.hasCoursesUpdate)
-                        viewModel.saveCoursesOnDB()
+                        courses.data?.let { viewModel.saveCoursesOnDB(it) }
                     else
                         viewModel.setExecutionState(ExecutionState.Stop)
                 }
@@ -209,7 +209,7 @@ fun PortraitScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
-                text = "Failed to fetch the data",
+                text = stringResource(R.string.failed_to_fetch_the_data),
                 textAlign = TextAlign.Center
             )
         }
@@ -275,7 +275,7 @@ fun LandscapeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
-                text = "Failed to fetch the data",
+                text = stringResource(R.string.failed_to_fetch_the_data),
                 textAlign = TextAlign.Center
             )
         }

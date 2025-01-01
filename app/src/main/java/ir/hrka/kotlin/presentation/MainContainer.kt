@@ -61,23 +61,9 @@ fun AppContent() {
                 HomeScreen(activity, navHostController)
             }
             composable(
-                route = "${KotlinTopics()}/{${KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME}}/{${KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX}}",
-                arguments = listOf(
-                    navArgument(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME) {
-                        type = NavType.StringType
-                    },
-                    navArgument(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX) {
-                        type = NavType.StringType
-                    },
-                )
-            ) { backStackEntry ->
-
-                val gitVersionName =
-                    backStackEntry.arguments?.getString(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_NAME)
-                val gitVersionSuffix =
-                    backStackEntry.arguments?.getString(KOTLIN_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX)
-
-                KotlinTopicsScreen(activity, navHostController, gitVersionName, gitVersionSuffix)
+                route = KotlinTopics()
+            ) {
+                KotlinTopicsScreen(activity, navHostController)
             }
             composable(
                 route = "${CoroutineTopics()}/{${COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_NAME}}/{${COROUTINE_TOPICS_SCREEN_ARGUMENT_VERSION_SUFFIX}}",

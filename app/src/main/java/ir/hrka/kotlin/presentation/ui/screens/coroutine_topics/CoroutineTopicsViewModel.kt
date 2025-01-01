@@ -17,7 +17,6 @@ import ir.hrka.kotlin.domain.usecases.db.coroutine.read.GetDBCoroutineTopicsList
 import ir.hrka.kotlin.domain.usecases.db.coroutine.write.ClearCoroutineTopicsTableUseCase
 import ir.hrka.kotlin.domain.usecases.db.coroutine.write.SaveCoroutineTopicsOnDBUseCase
 import ir.hrka.kotlin.domain.usecases.db.coroutine.write.UpdateCoroutineTopicsStateUseCase
-import ir.hrka.kotlin.domain.usecases.git.coroutine.read.GetGitCoroutineTopicsListUseCase
 import ir.hrka.kotlin.domain.usecases.preference.LoadCurrentCoroutineCourseVersionNameUseCase
 import ir.hrka.kotlin.domain.usecases.preference.SaveCurrentCoroutineCourseVersionNameUseCase
 import ir.hrka.kotlin.presentation.GlobalData
@@ -33,7 +32,6 @@ import javax.inject.Named
 class CoroutineTopicsViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val globalData: GlobalData,
-    private val getGitCoroutineTopicsListUseCase: GetGitCoroutineTopicsListUseCase,
     private val getDBCoroutineTopicsListUseCase: GetDBCoroutineTopicsListUseCase,
     private val loadCurrentCoroutineCourseVersionNameUseCase: LoadCurrentCoroutineCourseVersionNameUseCase,
     private val saveCurrentCoroutineCourseVersionNameUseCase: SaveCurrentCoroutineCourseVersionNameUseCase,
@@ -77,7 +75,7 @@ class CoroutineTopicsViewModel @Inject constructor(
     fun getCoroutineTopicsFromGit() {
         viewModelScope.launch(io) {
             _coroutineTopics.value = Resource.Loading()
-            _coroutineTopics.value = getGitCoroutineTopicsListUseCase()
+
         }
     }
 

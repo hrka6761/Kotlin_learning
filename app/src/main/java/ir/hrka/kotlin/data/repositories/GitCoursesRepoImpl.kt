@@ -13,7 +13,7 @@ import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.repositories.GetCoursesRepo
 import javax.inject.Inject
 
-class GetGitCoursesRepoImpl @Inject constructor(
+class GitCoursesRepoImpl @Inject constructor(
     private val gitAPI: GitAPI
 ) : GetCoursesRepo {
 

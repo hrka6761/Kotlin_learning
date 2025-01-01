@@ -3,20 +3,20 @@ package ir.hrka.kotlin.data.datasource.db.interactions
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import ir.hrka.kotlin.domain.entities.db.KotlinTopic
+import ir.hrka.kotlin.domain.entities.db.Topic
 
 @Dao
 interface KotlinTopicsDao {
 
     @Insert
-    suspend fun insertTopics(vararg kotlinTopics: KotlinTopic)
+    suspend fun insertTopics(vararg topics: Topic)
 
-    @Query("SELECT * FROM kotlin_topic")
-    suspend fun getTopics(): List<KotlinTopic>
+    @Query("SELECT * FROM topic")
+    suspend fun getTopics(): List<Topic>
 
-    @Query("DELETE FROM kotlin_topic")
+    @Query("DELETE FROM topic")
     suspend fun deleteTopics()
 
-    @Query("UPDATE kotlin_topic SET has_updated = :hasUpdated WHERE id = :id")
-    suspend fun updateTopicState(id: Int, hasUpdated: Boolean)
+    @Query("UPDATE topic SET has_update = :hasUpdated WHERE topic_db_id = :topicDBId")
+    suspend fun updateTopicState(topicDBId: Int, hasUpdated: Boolean)
 }

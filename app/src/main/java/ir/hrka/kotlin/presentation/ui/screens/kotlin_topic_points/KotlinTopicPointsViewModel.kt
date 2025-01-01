@@ -75,8 +75,8 @@ class KotlinTopicPointsViewModel @Inject constructor(
 
     fun updateTopicState(topicId: Int) {
         viewModelScope.launch(io) {
-            _updateTopicsOnDBResult.value =
-                updateKotlinTopicsStateUseCase(topicId, hasContentUpdated = false)
+//            _updateTopicsOnDBResult.value =
+//                updateKotlinTopicsStateUseCase(topicId, hasContentUpdated = false)
         }
     }
 }

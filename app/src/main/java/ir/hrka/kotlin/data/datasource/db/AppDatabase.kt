@@ -10,7 +10,7 @@ import ir.hrka.kotlin.data.datasource.db.interactions.SnippetCodesDao
 import ir.hrka.kotlin.data.datasource.db.interactions.SubPointsDao
 import ir.hrka.kotlin.domain.entities.db.CoroutineTopic
 import ir.hrka.kotlin.domain.entities.db.Course
-import ir.hrka.kotlin.domain.entities.db.KotlinTopic
+import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.domain.entities.db.Point
 import ir.hrka.kotlin.domain.entities.db.SnippetCode
 import ir.hrka.kotlin.domain.entities.db.SubPoint
@@ -18,7 +18,7 @@ import ir.hrka.kotlin.domain.entities.db.SubPoint
 @Database(
     entities = [
         Course::class,
-        KotlinTopic::class,
+        Topic::class,
         CoroutineTopic::class,
         Point::class,
         SubPoint::class,

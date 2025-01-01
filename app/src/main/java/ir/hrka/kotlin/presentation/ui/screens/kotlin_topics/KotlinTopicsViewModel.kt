@@ -3,23 +3,17 @@ package ir.hrka.kotlin.presentation.ui.screens.kotlin_topics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_NAME
-import ir.hrka.kotlin.core.errors.unknownError
+import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.string_utilities.extractMajorFromVersionName
-import ir.hrka.kotlin.core.utilities.string_utilities.extractMinorFromVersionName
-import ir.hrka.kotlin.core.utilities.string_utilities.extractPatchFromVersionName
-import ir.hrka.kotlin.core.utilities.string_utilities.extractUpdatedKotlinTopicsListFromVersionName
-import ir.hrka.kotlin.domain.entities.db.KotlinTopic
-import ir.hrka.kotlin.domain.usecases.db.kotlin.write.ClearKotlinTopicsTableUseCase
-import ir.hrka.kotlin.domain.usecases.db.kotlin.read.GetDBKotlinTopicsListUseCase
-import ir.hrka.kotlin.domain.usecases.git.kotlin.read.GetGitKotlinTopicsListUseCase
-import ir.hrka.kotlin.domain.usecases.preference.LoadCurrentKotlinCourseVersionNameUseCase
-import ir.hrka.kotlin.domain.usecases.db.kotlin.write.SaveKotlinTopicsOnDBUseCase
-import ir.hrka.kotlin.domain.usecases.preference.SaveCurrentKotlinCourseVersionNameUseCase
-import ir.hrka.kotlin.domain.usecases.db.kotlin.write.UpdateKotlinTopicsStateUseCase
+import ir.hrka.kotlin.domain.entities.db.Topic
+import ir.hrka.kotlin.domain.usecases.GetDBKotlinTopicsUseCase
+import ir.hrka.kotlin.domain.usecases.RemoveDBKotlinTopicsUseCase
+import ir.hrka.kotlin.domain.usecases.GetGitKotlinTopicsUseCase
+import ir.hrka.kotlin.domain.usecases.SaveKotlinTopicsOnDBUseCase
+import ir.hrka.kotlin.domain.usecases.SaveKotlinVersionIdUseCase
+import ir.hrka.kotlin.domain.usecases.UpdateKotlinStateTopicsUseCase
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -33,35 +27,35 @@ import javax.inject.Named
 class KotlinTopicsViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val globalData: GlobalData,
-    private val getGitKotlinTopicsListUseCase: GetGitKotlinTopicsListUseCase,
-    private val getDBKotlinTopicsListUseCase: GetDBKotlinTopicsListUseCase,
-    private val loadCurrentKotlinCourseVersionNameUseCase: LoadCurrentKotlinCourseVersionNameUseCase,
-    private val saveCurrentKotlinCourseVersionNameUseCase: SaveCurrentKotlinCourseVersionNameUseCase,
-    private val clearKotlinTopicsTableUseCase: ClearKotlinTopicsTableUseCase,
+    private val getGitKotlinTopicsUseCase: GetGitKotlinTopicsUseCase,
+    private val getDBKotlinTopicsUseCase: GetDBKotlinTopicsUseCase,
     private val saveKotlinTopicsOnDBUseCase: SaveKotlinTopicsOnDBUseCase,
-    private val updateKotlinTopicsStateUseCase: UpdateKotlinTopicsStateUseCase
+    private val removeDBKotlinTopicsUseCase: RemoveDBKotlinTopicsUseCase,
+    private val saveKotlinVersionIdUseCase: SaveKotlinVersionIdUseCase,
+    private val updateKotlinStateTopicsUseCase: UpdateKotlinStateTopicsUseCase
 ) : ViewModel() {
 
-    private val _kotlinTopics: MutableStateFlow<Resource<List<KotlinTopic>?>> =
-        MutableStateFlow(Resource.Initial())
-    val kotlinTopics: StateFlow<Resource<List<KotlinTopic>?>> = _kotlinTopics
+    val hasKotlinTopicsUpdate = globalData.hasKotlinTopicsUpdate
+    val hasKotlinTopicsPointsUpdate = globalData.hasKotlinTopicsPointsUpdate
+    val updatedKotlinTopics = globalData.updatedKotlinTopics
+    private val lastVersionId = globalData.lastVersionId
     private val _executionState: MutableStateFlow<ExecutionState> = MutableStateFlow(Start)
     val executionState: MutableStateFlow<ExecutionState> = _executionState
-    private val _hasUpdateForKotlinTopicsList: MutableStateFlow<Boolean?> = MutableStateFlow(null)
-    val hasUpdateForKotlinTopicsList: StateFlow<Boolean?> = _hasUpdateForKotlinTopicsList
-    private val _hasUpdateForKotlinTopicsContent: MutableStateFlow<Boolean?> =
-        MutableStateFlow(null)
-    val hasUpdateForKotlinTopicsContent: StateFlow<Boolean?> = _hasUpdateForKotlinTopicsContent
-    private val _saveKotlinTopicsListResult: MutableStateFlow<Resource<Boolean>> =
-        MutableStateFlow(Resource.Initial())
-    val saveKotlinTopicsListResult: StateFlow<Resource<Boolean>> = _saveKotlinTopicsListResult
-    private val _updateKotlinTopicsOnDBResult: MutableStateFlow<Resource<Boolean>> =
-        MutableStateFlow(Resource.Initial())
-    val updateKotlinTopicsOnDBResult: MutableStateFlow<Resource<Boolean>> =
-        _updateKotlinTopicsOnDBResult
-    private lateinit var currentVersionName: String
     private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val failedState: StateFlow<Boolean> = _failedState
+    private val _topics: MutableStateFlow<Resource<List<Topic>?>> =
+        MutableStateFlow(Resource.Initial())
+    val topics: StateFlow<Resource<List<Topic>?>> = _topics
+    private val _saveKotlinTopicsResult: MutableStateFlow<Resource<Boolean?>> =
+        MutableStateFlow(Resource.Initial())
+    val saveKotlinTopicsResult: StateFlow<Resource<Boolean?>> = _saveKotlinTopicsResult
+    private val _updateKotlinTopicsOnDBResult: MutableStateFlow<Resource<Boolean?>> =
+        MutableStateFlow(Resource.Initial())
+    val updateKotlinTopicsOnDBResult: MutableStateFlow<Resource<Boolean?>> =
+        _updateKotlinTopicsOnDBResult
+    private val _updateKotlinVersionIdResult: MutableStateFlow<Resource<Boolean?>> =
+        MutableStateFlow(Resource.Initial())
+    val updateKotlinVersionIdResult: StateFlow<Resource<Boolean?>> = _updateKotlinVersionIdResult
 
 
     fun setExecutionState(state: ExecutionState) {
@@ -74,128 +68,61 @@ class KotlinTopicsViewModel @Inject constructor(
 
     fun getKotlinTopicsFromGit() {
         viewModelScope.launch(io) {
-            _kotlinTopics.value = Resource.Loading()
-            _kotlinTopics.value = getGitKotlinTopicsListUseCase()
+            _topics.value = Resource.Loading()
+            _topics.value = getGitKotlinTopicsUseCase()
         }
     }
 
-    fun getKotlinTopicsFromDatabase() {
+    fun getKotlinTopicsFromDB() {
         viewModelScope.launch(io) {
-            _kotlinTopics.value = Resource.Loading()
-            _kotlinTopics.value = getDBKotlinTopicsListUseCase()
+            _topics.value = Resource.Loading()
+            _topics.value = getDBKotlinTopicsUseCase()
         }
     }
 
-    fun checkNewUpdateForKotlinTopicsList(gitVersionName: String?) {
+    fun saveKotlinTopicsOnDB(kotlinTopics: List<Topic>) {
         viewModelScope.launch(io) {
-            currentVersionName =
-                (loadCurrentKotlinCourseVersionNameUseCase().data ?: DEFAULT_VERSION_NAME)
-                    .ifEmpty { DEFAULT_VERSION_NAME }
+            _saveKotlinTopicsResult.value = Resource.Loading()
 
-            if (gitVersionName.isNullOrEmpty()) {
-                _hasUpdateForKotlinTopicsList.value = false
+            val removeDiffered = async { removeDBKotlinTopicsUseCase() }
+            val removeResult = removeDiffered.await()
+
+            if (removeResult is Resource.Error) {
+                _saveKotlinTopicsResult.value = removeResult
                 return@launch
             }
 
-            val currentVersionMajorDiffered =
-                async { currentVersionName.extractMajorFromVersionName() }
-            val gitVersionMajorDiffered =
-                async { gitVersionName.extractMajorFromVersionName() }
-
-            val gitVersionMajor = gitVersionMajorDiffered.await()
-            val currentVersionMajor = currentVersionMajorDiffered.await()
-
-            if (gitVersionMajor != currentVersionMajor) {
-                _hasUpdateForKotlinTopicsList.value = true
-                return@launch
-            }
-
-            val currentVersionMinorDiffered =
-                async { currentVersionName.extractMinorFromVersionName() }
-            val gitVersionMinorDiffered =
-                async { gitVersionName.extractMinorFromVersionName() }
-
-            val gitVersionMinor = gitVersionMinorDiffered.await()
-            val currentVersionMinor = currentVersionMinorDiffered.await()
-
-            if (gitVersionMinor != currentVersionMinor) {
-                _hasUpdateForKotlinTopicsList.value = true
-                return@launch
-            }
-
-            _hasUpdateForKotlinTopicsList.value = false
+            _saveKotlinTopicsResult.value = saveKotlinTopicsOnDBUseCase(kotlinTopics)
         }
     }
 
-    fun checkNewUpdateForKotlinTopicsContent(gitVersionName: String?) {
+    fun updateKotlinTopicsOnDB() {
         viewModelScope.launch(io) {
-            if (gitVersionName.isNullOrEmpty()) {
-                _hasUpdateForKotlinTopicsContent.value = false
-                return@launch
+            _updateKotlinTopicsOnDBResult.value = Resource.Loading()
+
+            var successResult: Resource<Boolean?>? = null
+            var errorResult: Resource<Boolean?>? = null
+
+            updateKotlinStateTopicsUseCase(
+                topicsIds = updatedKotlinTopics.toIntArray(),
+                state = false
+            ).forEach { result ->
+                if (result is Resource.Error)
+                    errorResult = result
+                else
+                    successResult = result
             }
 
-            val currentVersionPatchDiffered =
-                async { currentVersionName.extractPatchFromVersionName() }
-            val gitVersionPatchDiffered =
-                async { gitVersionName.extractPatchFromVersionName() }
-
-            val gitVersionPatch = gitVersionPatchDiffered.await()
-            val currentVersionPatch = currentVersionPatchDiffered.await()
-
-            if (gitVersionPatch != currentVersionPatch) {
-                if ((gitVersionPatch - currentVersionPatch) > 1) {
-                    _hasUpdateForKotlinTopicsList.value = true
-                    return@launch
-                }
-                _hasUpdateForKotlinTopicsContent.value = true
-                return@launch
-            }
-
-            _hasUpdateForKotlinTopicsContent.value = false
+            _updateKotlinTopicsOnDBResult.value =
+                if (errorResult != null) errorResult!! else successResult!!
         }
     }
 
-    fun updateKotlinTopicsInDatabase(gitVersionSuffix: String?) {
-        if (gitVersionSuffix.isNullOrEmpty()) {
-            _updateKotlinTopicsOnDBResult.value = Resource.Error(unknownError)
-            return
-        }
-
+    fun updateKotlinVersionId() {
         viewModelScope.launch(io) {
-            val updatedKotlinTopicsList =
-                gitVersionSuffix.extractUpdatedKotlinTopicsListFromVersionName()
-
-            updateKotlinTopicsOnDBResult.value = updateKotlinTopicsStateUseCase(
-                *updatedKotlinTopicsList.toIntArray(),
-                hasContentUpdated = true
-            )
+            val versionId = lastVersionId ?: DEFAULT_VERSION_ID
+            _updateKotlinVersionIdResult.value = Resource.Loading()
+            _updateKotlinVersionIdResult.value = saveKotlinVersionIdUseCase(versionId)
         }
-    }
-
-    fun saveKotlinTopicsOnDB() {
-        viewModelScope.launch(io) {
-            val clearDiffered = async { clearKotlinTopicsTableUseCase() }
-            val clearResult = clearDiffered.await()
-
-            if (clearResult is Resource.Error) {
-                _saveKotlinTopicsListResult.value = clearResult
-                return@launch
-            }
-
-            _kotlinTopics.value.data?.let {
-                val saveDiffered = async { saveKotlinTopicsOnDBUseCase(it) }
-                _saveKotlinTopicsListResult.value = saveDiffered.await()
-            }
-        }
-    }
-
-    fun saveVersionName(gitVersionName: String) {
-        viewModelScope.launch(io) {
-            saveCurrentKotlinCourseVersionNameUseCase(gitVersionName)
-        }
-    }
-
-    fun updateKotlinTopicsList(id: Int) {
-        _kotlinTopics.value.data?.get(id)?.hasUpdated = false
     }
 }

@@ -6,7 +6,7 @@ object Constants {
 
     const val SPLASH_SCREEN = "splash"
     const val HOME_SCREEN = "home"
-    const val KOTLIN_TOPICS_SCREEN = "kotlinTopics"
+    const val KOTLIN_TOPICS_SCREEN = "topics"
     const val COROUTINE_TOPICS_SCREEN = "coroutineTopics"
     const val KOTLIN_TOPIC_POINTS_SCREEN = "kotlinTopicPoints"
     const val COROUTINE_TOPIC_POINTS_SCREEN = "coroutineTopicPoints"

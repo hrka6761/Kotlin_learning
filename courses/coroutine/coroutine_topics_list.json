@@ -4,8 +4,10 @@
     {
       "topic_id": 1,
       "topic_title": "Sequential programming",
+      "topic_image": "",
       "points_number": 4,
-      "has_visualizer": true
+      "has_visualizer": true,
+      "is_Active": true
     }
   ]
 }

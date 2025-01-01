@@ -1,7 +1,5 @@
 package ir.hrka.kotlin.presentation
 
-import android.util.Log
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.utilities.VersionType
 import ir.hrka.kotlin.domain.entities.Version
 import ir.hrka.kotlin.domain.entities.VersionsInfo
@@ -22,8 +20,8 @@ class GlobalData @Inject constructor() {
     var hasCoroutineTopicsUpdate = false
     var hasKotlinTopicsPointsUpdate = false
     var hasCoroutineTopicsPointsUpdate = false
-    var updatedKotlinTopics: List<Int> = mutableListOf()
-    var updatedCoroutineTopics: List<Int> = mutableListOf()
+    var updatedKotlinTopics: MutableSet<Int> = mutableSetOf()
+    var updatedCoroutineTopics: MutableSet<Int> = mutableSetOf()
 
 
     fun initGlobalData(
@@ -40,10 +38,8 @@ class GlobalData @Inject constructor() {
         _coroutineVersionId = coroutineVersionId
 
         checkCoursesUpdate()
-        checkKotlinTopicsUpdate()
-        checkCoroutineTopicsUpdate()
-        checkKotlinTopicsPointsUpdate()
-        checkCoroutineTopicsPointsUpdate()
+        checkKotlinUpdate()
+        checkCoroutineUpdate()
     }
 
 
@@ -58,26 +54,61 @@ class GlobalData @Inject constructor() {
 
         val nextVersionsList = _versionsList?.subList(_coursesVersionId, lastVersionId!!)
 
-
         if (!nextVersionsList.isNullOrEmpty()) {
             hasCoursesUpdate =
                 nextVersionsList.any { version -> version.versionType == VersionType.UpdateCourses.name }
         }
     }
 
-    private fun checkKotlinTopicsUpdate() {
+    private fun checkKotlinUpdate() {
+        if (_versionsInfo == null && _kotlinVersionId > 0) return
+        if (_kotlinVersionId == lastVersionId) return
 
+        if (_kotlinVersionId == -1) {
+            hasKotlinTopicsUpdate = true
+            hasKotlinTopicsPointsUpdate = true
+            return
+        }
+
+        val nextVersionsList = _versionsList?.subList(_kotlinVersionId, lastVersionId!!)
+
+        if (!nextVersionsList.isNullOrEmpty()) {
+            hasKotlinTopicsUpdate =
+                nextVersionsList.any { version -> version.versionType == VersionType.UpdateKotlinTopics.name }
+            hasKotlinTopicsPointsUpdate =
+                nextVersionsList.any { version -> version.versionType == VersionType.UpdateKotlinTopicPoints.name }
+        }
+
+        if (hasKotlinTopicsPointsUpdate)
+            nextVersionsList?.forEach { version ->
+                if (version.versionType == VersionType.UpdateKotlinTopicPoints.name)
+                    version.updatedKotlinTopics?.toList()?.let { updatedKotlinTopics.addAll(it) }
+            }
     }
 
-    private fun checkCoroutineTopicsUpdate() {
+    private fun checkCoroutineUpdate() {
+        if (_versionsInfo == null && _coroutineVersionId > 0) return
+        if (_coroutineVersionId == lastVersionId) return
 
-    }
+        if (_coroutineVersionId == -1) {
+            hasCoroutineTopicsUpdate = true
+            hasCoroutineTopicsPointsUpdate = true
+            return
+        }
 
-    private fun checkKotlinTopicsPointsUpdate() {
+        val nextVersionsList = _versionsList?.subList(_coroutineVersionId, lastVersionId!!)
 
-    }
+        if (!nextVersionsList.isNullOrEmpty()) {
+            hasCoroutineTopicsUpdate =
+                nextVersionsList.any { version -> version.versionType == VersionType.UpdateCoroutineTopics.name }
+            hasCoroutineTopicsPointsUpdate =
+                nextVersionsList.any { version -> version.versionType == VersionType.UpdateCoroutineTopicPoints.name }
+        }
 
-    private fun checkCoroutineTopicsPointsUpdate() {
-
+        if (hasCoroutineTopicsPointsUpdate)
+            nextVersionsList?.forEach { version ->
+                if (version.versionType == VersionType.UpdateCoroutineTopicPoints.name)
+                    version.updatedCoroutineTopics?.toList()?.let { updatedCoroutineTopics.addAll(it) }
+            }
     }
 }

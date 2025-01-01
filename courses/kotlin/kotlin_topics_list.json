@@ -4,128 +4,170 @@
     {
       "topic_id": 1,
       "topic_title": "Basic",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 29,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 2,
       "topic_title": "Class",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 10,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 3,
       "topic_title": "Abstract class",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 9,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 4,
       "topic_title": "Interface",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 10,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 5,
       "topic_title": "Inheritance",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 17,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 6,
       "topic_title": "Common classes and functions",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 5,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 7,
       "topic_title": "Access modifiers",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 9,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 8,
       "topic_title": "Data class",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 10,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 9,
       "topic_title": "Enum class",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 12,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 10,
       "topic_title": "Sealed class and interface",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 9,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 11,
       "topic_title": "Object expression",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 7,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 12,
       "topic_title": "Object declaration",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 6,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 13,
       "topic_title": "Nested and inner classes",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 5,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 14,
       "topic_title": "Functional interface",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 3,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 15,
       "topic_title": "Functions",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 29,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 16,
       "topic_title": "Scope functions",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 8,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 17,
       "topic_title": "Extensions",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 15,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 18,
       "topic_title": "Delegation",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 18,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 19,
       "topic_title": "Generics",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 13,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
       "topic_id": 20,
       "topic_title": "Type alias",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 6,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     },
     {
-      "topic_id": 20,
+      "topic_id": 21,
       "topic_title": "Inline class",
+      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 12,
-      "has_visualizer": false
+      "has_visualizer": false,
+      "is_active": true
     }
   ]
 }
