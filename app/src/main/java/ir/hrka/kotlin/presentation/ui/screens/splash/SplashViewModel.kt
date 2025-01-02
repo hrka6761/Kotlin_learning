@@ -18,10 +18,10 @@ import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.VersionsInfo
-import ir.hrka.kotlin.domain.usecases.GetChangelogUseCase
-import ir.hrka.kotlin.domain.usecases.GetCoroutineVersionIdUseCase
-import ir.hrka.kotlin.domain.usecases.GetCoursesVersionIdUseCase
-import ir.hrka.kotlin.domain.usecases.GetKotlinVersionIdUseCase
+import ir.hrka.kotlin.domain.usecases.git.GetChangelogUseCase
+import ir.hrka.kotlin.domain.usecases.preference.GetCoroutineVersionIdUseCase
+import ir.hrka.kotlin.domain.usecases.preference.GetCoursesVersionIdUseCase
+import ir.hrka.kotlin.domain.usecases.preference.GetKotlinVersionIdUseCase
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow

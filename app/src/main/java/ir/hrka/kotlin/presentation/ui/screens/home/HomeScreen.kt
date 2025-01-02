@@ -63,7 +63,7 @@ import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.SOURCE_URL
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Screen.KotlinTopics
+import ir.hrka.kotlin.core.utilities.Screen.Topic
 import ir.hrka.kotlin.core.utilities.Screen.About
 import ir.hrka.kotlin.domain.entities.db.Course
 
@@ -426,7 +426,7 @@ fun CourseItem(
                     end.linkTo(parent.end, margin = 16.dp)
                     bottom.linkTo(img.bottom)
                 },
-                onClick = { if (course.isActive) navHostController.navigate(KotlinTopics()) }
+                onClick = { if (course.isActive) navHostController.navigate(Topic()) }
             ) {
                 Text(
                     if (course.isActive)

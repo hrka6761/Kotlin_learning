@@ -2,13 +2,11 @@ package ir.hrka.kotlin.data.datasource.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import ir.hrka.kotlin.data.datasource.db.interactions.CoroutineTopicsDao
-import ir.hrka.kotlin.data.datasource.db.interactions.CoursesDao
-import ir.hrka.kotlin.data.datasource.db.interactions.KotlinTopicsDao
-import ir.hrka.kotlin.data.datasource.db.interactions.PointsDao
-import ir.hrka.kotlin.data.datasource.db.interactions.SnippetCodesDao
-import ir.hrka.kotlin.data.datasource.db.interactions.SubPointsDao
-import ir.hrka.kotlin.domain.entities.db.CoroutineTopic
+import ir.hrka.kotlin.data.datasource.db.interactions.CourseDao
+import ir.hrka.kotlin.data.datasource.db.interactions.TopicDao
+import ir.hrka.kotlin.data.datasource.db.interactions.PointDao
+import ir.hrka.kotlin.data.datasource.db.interactions.SnippetCodeDao
+import ir.hrka.kotlin.data.datasource.db.interactions.SubPointDao
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.domain.entities.db.Point
@@ -19,7 +17,6 @@ import ir.hrka.kotlin.domain.entities.db.SubPoint
     entities = [
         Course::class,
         Topic::class,
-        CoroutineTopic::class,
         Point::class,
         SubPoint::class,
         SnippetCode::class
@@ -27,10 +24,9 @@ import ir.hrka.kotlin.domain.entities.db.SubPoint
     version = 1
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun coursesDao(): CoursesDao
-    abstract fun kotlinTopicsDao(): KotlinTopicsDao
-    abstract fun coroutineTopicsDao(): CoroutineTopicsDao
-    abstract fun pointsDao(): PointsDao
-    abstract fun supPointsDao(): SubPointsDao
-    abstract fun snippetCodesDao(): SnippetCodesDao
+    abstract fun coursesDao(): CourseDao
+    abstract fun kotlinTopicsDao(): TopicDao
+    abstract fun pointsDao(): PointDao
+    abstract fun supPointsDao(): SubPointDao
+    abstract fun snippetCodesDao(): SnippetCodeDao
 }

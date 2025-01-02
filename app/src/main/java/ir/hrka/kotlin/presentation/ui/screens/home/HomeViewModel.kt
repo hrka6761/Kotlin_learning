@@ -11,11 +11,11 @@ import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.db.Course
-import ir.hrka.kotlin.domain.usecases.RemoveDBCoursesUseCase
-import ir.hrka.kotlin.domain.usecases.GetDBCoursesUseCase
-import ir.hrka.kotlin.domain.usecases.SaveDBCoursesUseCase
-import ir.hrka.kotlin.domain.usecases.GetGitCoursesUseCase
-import ir.hrka.kotlin.domain.usecases.SaveCoursesVersionIdUseCase
+import ir.hrka.kotlin.domain.usecases.db.RemoveDBCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.db.GetDBCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.db.SaveCoursesOnDBUseCase
+import ir.hrka.kotlin.domain.usecases.git.GetGitCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.preference.SaveCoursesVersionIdUseCase
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
     private val getGitCoursesUseCase: GetGitCoursesUseCase,
     private val getDBCoursesUseCase: GetDBCoursesUseCase,
     private val removeDBCoursesUseCase: RemoveDBCoursesUseCase,
-    private val saveDBCoursesUseCase: SaveDBCoursesUseCase,
+    private val saveCoursesOnDBUseCase: SaveCoursesOnDBUseCase,
     private val saveCoursesVersionIdUseCase: SaveCoursesVersionIdUseCase
 ) : ViewModel() {
 
@@ -92,7 +92,7 @@ class HomeViewModel @Inject constructor(
                 return@launch
             }
 
-            _saveCourseOnDBResult.value = saveDBCoursesUseCase(courses)
+            _saveCourseOnDBResult.value = saveCoursesOnDBUseCase(courses)
         }
     }
 

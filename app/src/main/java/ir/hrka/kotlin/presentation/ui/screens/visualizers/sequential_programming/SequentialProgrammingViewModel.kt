@@ -42,7 +42,7 @@ class SequentialProgrammingViewModel @Inject constructor(
     }
 
     fun runAllTasks() {
-//        I had to use another thread for visualization and manually named the thread name and ID here.
+//        I had to use another thread to visualize and manually named the thread name and ID here.
         Thread {
             val threadData = ThreadData(
                 "2",

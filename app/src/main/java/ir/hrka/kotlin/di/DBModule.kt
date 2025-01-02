@@ -9,12 +9,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ir.hrka.kotlin.core.Constants.DATABASE_NAME
 import ir.hrka.kotlin.data.datasource.db.AppDatabase
-import ir.hrka.kotlin.data.datasource.db.interactions.CoroutineTopicsDao
-import ir.hrka.kotlin.data.datasource.db.interactions.CoursesDao
-import ir.hrka.kotlin.data.datasource.db.interactions.KotlinTopicsDao
-import ir.hrka.kotlin.data.datasource.db.interactions.PointsDao
-import ir.hrka.kotlin.data.datasource.db.interactions.SnippetCodesDao
-import ir.hrka.kotlin.data.datasource.db.interactions.SubPointsDao
+import ir.hrka.kotlin.data.datasource.db.interactions.CourseDao
+import ir.hrka.kotlin.data.datasource.db.interactions.TopicDao
+import ir.hrka.kotlin.data.datasource.db.interactions.PointDao
+import ir.hrka.kotlin.data.datasource.db.interactions.SnippetCodeDao
+import ir.hrka.kotlin.data.datasource.db.interactions.SubPointDao
 import javax.inject.Singleton
 
 
@@ -33,25 +32,21 @@ class DBModule {
 
     @Singleton
     @Provides
-    fun provideCoursesDao(db: AppDatabase): CoursesDao = db.coursesDao()
+    fun provideCoursesDao(db: AppDatabase): CourseDao = db.coursesDao()
 
     @Singleton
     @Provides
-    fun provideKotlinTopicsDao(db: AppDatabase): KotlinTopicsDao = db.kotlinTopicsDao()
+    fun provideKotlinTopicsDao(db: AppDatabase): TopicDao = db.kotlinTopicsDao()
 
     @Singleton
     @Provides
-    fun provideCoroutineTopicsDao(db: AppDatabase): CoroutineTopicsDao = db.coroutineTopicsDao()
+    fun providePointDao(db: AppDatabase): PointDao = db.pointsDao()
 
     @Singleton
     @Provides
-    fun providePointDao(db: AppDatabase): PointsDao = db.pointsDao()
+    fun provideSubPointDao(db: AppDatabase): SubPointDao = db.supPointsDao()
 
     @Singleton
     @Provides
-    fun provideSubPointDao(db: AppDatabase): SubPointsDao = db.supPointsDao()
-
-    @Singleton
-    @Provides
-    fun provideSnippetCodeDao(db: AppDatabase): SnippetCodesDao = db.snippetCodesDao()
+    fun provideSnippetCodeDao(db: AppDatabase): SnippetCodeDao = db.snippetCodesDao()
 }

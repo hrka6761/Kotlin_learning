@@ -2,7 +2,6 @@ package ir.hrka.kotlin.domain.entities
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import ir.hrka.kotlin.core.utilities.string_utilities.extractFileIdByName
 
 @JsonClass(generateAdapter = true)
 data class GitFileData(
@@ -18,7 +17,4 @@ data class GitFileData(
     @field:Json val content: String?,
     @field:Json val encoding: String?,
     @field:Json(name = "_links") val links: Links?,
-) {
-    val id: Long by lazy { name.extractFileIdByName() }
-    var hasContentUpdated: Boolean = true
-}
+)
