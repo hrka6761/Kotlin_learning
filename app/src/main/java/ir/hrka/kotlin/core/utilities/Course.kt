@@ -1,7 +1,11 @@
 package ir.hrka.kotlin.core.utilities
 
-enum class Course(val courseName: String) {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-    Kotlin("kotlin"),
-    Coroutine("coroutine");
+@Parcelize
+enum class Course(val courseName: String, val topicsFileName: String): Parcelable {
+
+    Kotlin("kotlin", "kotlin_topics_list.json"),
+    Coroutine("coroutine", "coroutine_topics_list.json");
 }

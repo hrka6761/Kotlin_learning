@@ -1,16 +1,20 @@
 package ir.hrka.kotlin.presentation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import ir.hrka.kotlin.core.Constants.ARGUMENT_KOTLIN_TOPIC_ID
 import ir.hrka.kotlin.core.Constants.ARGUMENT_KOTLIN_TOPIC
 import ir.hrka.kotlin.core.Constants.ARGUMENT_KOTLIN_TOPIC_UPDATE_STATE
+import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import ir.hrka.kotlin.core.utilities.Screen.Topic
@@ -25,6 +29,7 @@ import ir.hrka.kotlin.presentation.ui.screens.splash.SplashScreen
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.sequential_programming.SequentialProgrammingScreen
 import ir.hrka.kotlin.presentation.ui.theme.KotlinTheme
 
+@SuppressLint("NewApi")
 @Composable
 fun AppContent() {
     val navHostController = rememberNavController()
@@ -47,9 +52,14 @@ fun AppContent() {
                 HomeScreen(activity, navHostController)
             }
             composable(
-                route = Topic()
-            ) {
-                KotlinTopicsScreen(activity, navHostController)
+                route = Topic(),
+                arguments = listOf(
+                    navArgument("") { type = NavType.ParcelableType(Course::class.java) }
+                )
+            ) { entry ->
+                val course = entry.arguments?.getParcelable("", Course::class.java) ?: Course.Kotlin
+
+                KotlinTopicsScreen(activity, navHostController, course)
             }
             composable(
                 route = Point()

@@ -11,9 +11,9 @@ import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.db.Course
-import ir.hrka.kotlin.domain.usecases.db.RemoveDBCoursesUseCase
-import ir.hrka.kotlin.domain.usecases.db.GetDBCoursesUseCase
-import ir.hrka.kotlin.domain.usecases.db.SaveCoursesOnDBUseCase
+import ir.hrka.kotlin.domain.usecases.db.courses.RemoveDBCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.db.courses.GetDBCoursesUseCase
+import ir.hrka.kotlin.domain.usecases.db.courses.SaveCoursesOnDBUseCase
 import ir.hrka.kotlin.domain.usecases.git.GetGitCoursesUseCase
 import ir.hrka.kotlin.domain.usecases.preference.SaveCoursesVersionIdUseCase
 import ir.hrka.kotlin.presentation.GlobalData

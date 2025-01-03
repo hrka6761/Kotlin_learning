@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName
 data class Course(
     @PrimaryKey(autoGenerate = true) @SerializedName("course_db_id") val courseDBId: Int,
     @SerializedName("course_id") val courseId: Int,
+    @SerializedName("course_name") val courseName: String,
     @SerializedName("course_title") val courseTitle: String,
     @SerializedName("course_description") val courseDesc: String,
     @SerializedName("course_banner") val courseBanner: String,

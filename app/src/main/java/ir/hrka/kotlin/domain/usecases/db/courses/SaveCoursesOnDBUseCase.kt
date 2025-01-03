@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.domain.usecases.db
+package ir.hrka.kotlin.domain.usecases.db.courses
 
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.repositories.write.WriteCoursesRepo

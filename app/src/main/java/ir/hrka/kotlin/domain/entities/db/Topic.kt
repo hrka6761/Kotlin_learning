@@ -10,6 +10,7 @@ data class Topic(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "topic_db_id") val topicDBId: Long,
     @ColumnInfo(name = "has_update") var hasUpdate: Boolean = true,
     @SerializedName("topic_id") val topicId: Int,
+    @SerializedName("course") val course: String,
     @SerializedName("topic_title") val topicTitle: String,
     @SerializedName("topic_image") val topicImage: String,
     @SerializedName("points_number") val pointsNumber: Int,

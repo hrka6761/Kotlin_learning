@@ -11,11 +11,11 @@ interface TopicDao {
     @Insert
     suspend fun insertTopics(vararg topics: Topic)
 
-    @Query("SELECT * FROM topic")
-    suspend fun getTopics(): List<Topic>
+    @Query("SELECT * FROM topic WHERE course = :courseName")
+    suspend fun getTopics(courseName: String): List<Topic>
 
-    @Query("DELETE FROM topic")
-    suspend fun deleteTopics()
+    @Query("DELETE FROM topic WHERE course = :courseName")
+    suspend fun deleteTopics(courseName: String)
 
     @Query("UPDATE topic SET has_update = :hasUpdated WHERE topic_db_id = :topicDBId")
     suspend fun updateTopicState(topicDBId: Int, hasUpdated: Boolean)

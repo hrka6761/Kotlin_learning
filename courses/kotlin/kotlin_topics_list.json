@@ -3,6 +3,7 @@
   "topics": [
     {
       "topic_id": 1,
+      "course": "kotlin",
       "topic_title": "Basic",
       "topic_image": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin/topics_image/basic.png",
       "points_number": 29,
@@ -11,6 +12,7 @@
     },
     {
       "topic_id": 2,
+      "course": "kotlin",
       "topic_title": "Class",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 10,
@@ -19,6 +21,7 @@
     },
     {
       "topic_id": 3,
+      "course": "kotlin",
       "topic_title": "Abstract class",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 9,
@@ -27,6 +30,7 @@
     },
     {
       "topic_id": 4,
+      "course": "kotlin",
       "topic_title": "Interface",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 10,
@@ -35,6 +39,7 @@
     },
     {
       "topic_id": 5,
+      "course": "kotlin",
       "topic_title": "Inheritance",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 17,
@@ -43,6 +48,7 @@
     },
     {
       "topic_id": 6,
+      "course": "kotlin",
       "topic_title": "Common classes and functions",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 5,
@@ -51,6 +57,7 @@
     },
     {
       "topic_id": 7,
+      "course": "kotlin",
       "topic_title": "Access modifiers",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 9,
@@ -59,6 +66,7 @@
     },
     {
       "topic_id": 8,
+      "course": "kotlin",
       "topic_title": "Data class",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 10,
@@ -67,6 +75,7 @@
     },
     {
       "topic_id": 9,
+      "course": "kotlin",
       "topic_title": "Enum class",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 12,
@@ -75,6 +84,7 @@
     },
     {
       "topic_id": 10,
+      "course": "kotlin",
       "topic_title": "Sealed class and interface",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 9,
@@ -83,6 +93,7 @@
     },
     {
       "topic_id": 11,
+      "course": "kotlin",
       "topic_title": "Object expression",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 7,
@@ -91,6 +102,7 @@
     },
     {
       "topic_id": 12,
+      "course": "kotlin",
       "topic_title": "Object declaration",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 6,
@@ -99,6 +111,7 @@
     },
     {
       "topic_id": 13,
+      "course": "kotlin",
       "topic_title": "Nested and inner classes",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 5,
@@ -107,6 +120,7 @@
     },
     {
       "topic_id": 14,
+      "course": "kotlin",
       "topic_title": "Functional interface",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 3,
@@ -115,6 +129,7 @@
     },
     {
       "topic_id": 15,
+      "course": "kotlin",
       "topic_title": "Functions",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 29,
@@ -123,6 +138,7 @@
     },
     {
       "topic_id": 16,
+      "course": "kotlin",
       "topic_title": "Scope functions",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 8,
@@ -131,6 +147,7 @@
     },
     {
       "topic_id": 17,
+      "course": "kotlin",
       "topic_title": "Extensions",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 15,
@@ -139,6 +156,7 @@
     },
     {
       "topic_id": 18,
+      "course": "kotlin",
       "topic_title": "Delegation",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 18,
@@ -147,6 +165,7 @@
     },
     {
       "topic_id": 19,
+      "course": "kotlin",
       "topic_title": "Generics",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 13,
@@ -155,6 +174,7 @@
     },
     {
       "topic_id": 20,
+      "course": "kotlin",
       "topic_title": "Type alias",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 6,
@@ -163,6 +183,7 @@
     },
     {
       "topic_id": 21,
+      "course": "kotlin",
       "topic_title": "Inline class",
       "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
       "points_number": 12,

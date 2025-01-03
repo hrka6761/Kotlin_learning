@@ -4,6 +4,7 @@ import ir.hrka.kotlin.domain.entities.GitFileData
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Path
 
 interface GitAPI {
 
@@ -16,6 +17,9 @@ interface GitAPI {
     suspend fun getCourses(): Response<GitFileData>
 
     @Headers("Accept: application/vnd.github.v3+json")
-    @GET("courses/kotlin/kotlin_topics_list.json")
-    suspend fun getKotlinTopics(): Response<GitFileData>
+    @GET("courses/{course_directory_name}/{topics_file_name}")
+    suspend fun getCourseTopics(
+        @Path("course_directory_name") courseName: String,
+        @Path("topics_file_name") topicsFileName: String
+    ): Response<GitFileData>
 }

@@ -61,13 +61,15 @@ import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.Constants.UPDATED_TOPIC_ID_KEY
+import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.db.Topic
 
 @Composable
 fun KotlinTopicsScreen(
     activity: MainActivity,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    course: Course
 ) {
 
     val viewModel: TopicViewModel = hiltViewModel()
@@ -161,7 +163,7 @@ fun KotlinTopicsScreen(
                 return@LaunchedEffect
             }
 
-            viewModel.getKotlinTopicsFromDB()
+            viewModel.getKotlinTopicsFromDB(course)
         }
     }
 
@@ -173,7 +175,7 @@ fun KotlinTopicsScreen(
 
                 is Resource.Success -> {
                     if (viewModel.hasKotlinTopicsUpdate)
-                        kotlinTopics.data?.let { viewModel.saveKotlinTopicsOnDB(it) }
+                        kotlinTopics.data?.let { viewModel.saveKotlinTopicsOnDB(course, it) }
                     else
                         viewModel.setExecutionState(Stop)
                 }
@@ -212,14 +214,14 @@ fun KotlinTopicsScreen(
                         viewModel.setExecutionState(Stop)
 
                     if (viewModel.hasKotlinTopicsPointsUpdate)
-                        viewModel.getKotlinTopicsFromDB()
+                        viewModel.getKotlinTopicsFromDB(course)
 
                     viewModel.updateKotlinVersionIdInGlobalData()
                 }
 
                 is Resource.Error -> {
                     if (viewModel.hasKotlinTopicsPointsUpdate)
-                        viewModel.getKotlinTopicsFromDB()
+                        viewModel.getKotlinTopicsFromDB(course)
                     else
                         viewModel.setExecutionState(Stop)
                 }
@@ -237,7 +239,7 @@ fun KotlinTopicsScreen(
                 }
 
                 is Resource.Error -> {
-                    viewModel.getKotlinTopicsFromDB()
+                    viewModel.getKotlinTopicsFromDB(course)
                 }
             }
         }
@@ -398,13 +400,14 @@ fun KotlinTopicsScreenPreview() {
     KotlinTopicItem(
         Topic(
             topicDBId = 1,
+            hasUpdate = true,
             topicId = 12,
+            course = "kotlin",
             topicTitle = "Common classes and functions",
             topicImage = "",
             pointsNumber = 29,
             hasVisualizer = false,
-            isActive = true,
-            hasUpdate = true
+            isActive = true
         ),
         rememberNavController()
     )

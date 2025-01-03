@@ -1,11 +1,10 @@
 package ir.hrka.kotlin.data.repositories.git
 
-import android.util.Log
 import com.google.gson.Gson
 import ir.hrka.kotlin.core.Constants.READ_FILE_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.RETROFIT_ERROR_CODE
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.errors.Error
+import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.string_utilities.decodeBase64
 import ir.hrka.kotlin.data.datasource.git.GitAPI
@@ -19,9 +18,12 @@ class ReadGitTopicsRepoImpl @Inject constructor(
     private val gitAPI: GitAPI
 ) : ReadTopicsRepo {
 
-    override suspend fun getKotlinTopics(): Resource<List<Topic>?> {
+    override suspend fun getTopics(course: Course): Resource<List<Topic>?> {
         return try {
-            val response = gitAPI.getKotlinTopics()
+            val response = gitAPI.getCourseTopics(
+                courseName = course.courseName,
+                topicsFileName = course.topicsFileName
+            )
 
             if (response.isSuccessful) {
                 val kotlinTopicFileData = response.body()
@@ -31,7 +33,7 @@ class ReadGitTopicsRepoImpl @Inject constructor(
                         return Resource.Error(
                             Error(
                                 READ_FILE_ERROR_CODE,
-                                "Access to the kotlin topics is not possible."
+                                "Can't read topics from the github."
                             )
                         )
                     }
@@ -47,7 +49,6 @@ class ReadGitTopicsRepoImpl @Inject constructor(
                 )
             }
         } catch (e: Exception) {
-            Log.i(TAG, "getKotlinTopics: ${e.message}")
             Resource.Error(
                 Error(
                     errorCode = RETROFIT_ERROR_CODE,
@@ -55,10 +56,6 @@ class ReadGitTopicsRepoImpl @Inject constructor(
                 )
             )
         }
-    }
-
-    override suspend fun getCoroutineTopics(): Resource<List<Topic>?> {
-        TODO("Not yet implemented")
     }
 
 
