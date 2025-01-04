@@ -1,0 +1,58 @@
+{
+  "topic_id": 6,
+  "topic_name": "Common Classes/Functions",
+  "points": [
+    {
+      "id": 1,
+      "point": "`Unit`",
+      "sub_points": [
+        "It is an object that oly have a method (toString)."
+      ],
+      "snippet_codes": [
+        " public object Unit {\n     override fun toString(): String = \"kotlin.Unit\"\n }"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "`Any`",
+      "sub_points": [
+        "It is parent of all classes in kotlin.",
+        "Directly when the class is not derived from any class and indirect when the class is derived from a class."
+      ],
+      "snippet_codes": [
+        " public open class Any {\n     public open operator fun equals(other: Any?): Boolean\n     public open fun hashCode(): Int\n     public open fun toString(): String\n }"
+      ]
+    },
+    {
+      "id": 3,
+      "point": "`Nothing`",
+      "sub_points": [
+        "It is a regular class that has not any instance because its constructor is private.",
+        "If a function has the return type of Nothing, it means that it never returns (always throws an exception)."
+      ],
+      "snippet_codes": [
+        " public class Nothing private constructor()"
+      ]
+    },
+    {
+      "id": 4,
+      "point": "In the following cases if person.name = null s is Nothing.",
+      "sub_points": null,
+      "snippet_codes": [
+        " val s = person.name ?: return\n val s = person.name ?: throw NullPointerException()"
+      ]
+    },
+    {
+      "id": 5,
+      "point": "`TODO()`",
+      "sub_points": [
+        "It returns Nothing and throws exception.",
+        "It is a standard function of kotlin that is used in the body of functions that is not implemented yet."
+      ],
+      "snippet_codes": [
+        " public inline fun TODO(): Nothing = throw NotImplementedError()",
+        " public inline fun TODO(reason: String): Nothing =\n     throw NotImplementedError(\"$reason\")"
+      ]
+    }
+  ]
+}

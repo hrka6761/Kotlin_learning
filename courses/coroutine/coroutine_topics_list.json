@@ -2,9 +2,10 @@
   "topics_number": 1,
   "topics": [
     {
-      "topic_id": 1,
+      "topic_id": 22,
       "course": "coroutine",
       "topic_title": "Sequential programming",
+      "topic_file_name": "sequential_programming.json",
       "topic_image": "",
       "points_number": 4,
       "has_visualizer": true,

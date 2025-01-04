@@ -1,0 +1,62 @@
+{
+  "topic_id": 3,
+  "topic_name": "Abstract class",
+  "points": [
+    {
+      "id": 1,
+      "point": "Abstract class is open and public by default.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "We cannot instantiate from an abstract class directly.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "Abstract class can contain constructor but this constructor is only used to inheritance not instantiation.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "Abstract class can contain both abstract and concrete members.",
+      "sub_points": null,
+      "snippet_codes": [
+        " abstract class job constructor(val jobName: String) {\n\n     abstract val Salary: Long\n     var taxPercentage: Int = 10\n\n     constructor(jobName: String, jobId: Int) : this(jobName) {}\n\n     companion object {\n         const val COUNTRY = \"Iran\"\n     }\n\n     fun getJobNameAndId(): String {\n         return \"jobId = $jobId - jobName = $jobName\"\n     }\n\n     abstract fun calculateTax()\n }"
+      ]
+    },
+    {
+      "id": 5,
+      "point": "Abstract members is open and public by default.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "Concrete members must be open for overriding.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 7,
+      "point": "An abstract member can not be private.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 8,
+      "point": "'final' modifier is incompatible with 'abstract' because abstract must be open to implementation.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 9,
+      "point": "Abstract properties cannot be have custom getter and setter.",
+      "sub_points": null,
+      "snippet_codes": null
+    }
+  ]
+}

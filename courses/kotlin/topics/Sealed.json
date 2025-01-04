@@ -1,0 +1,73 @@
+{
+  "topic_id": 10,
+  "topic_name": "Sealed",
+  "points": [
+    {
+      "id": 1,
+      "point": "Sealed classes and interfaces provide controlled inheritance of a class hierarchies.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "All direct subclasses of a sealed class are known at compile time.",
+      "sub_points": [
+        "Direct subclasses are classes that are derived at the first level."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "A sealed class itself is always an abstract class, and as a result, can't be instantiated directly.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "Each enum constant exists only as a single instance, while subclasses of a sealed class may have multiple instances.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "Constructors of sealed classes can have one of two visibilities.",
+      "sub_points": [
+        "Protected (by default)",
+        "Private"
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "We can override function of interface that implemented by sealed class in every sub class or by own sealed class.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 7,
+      "point": "Sealed class can contain abstract member that must be implemented by all sub classes.",
+      "sub_points": null,
+      "snippet_codes": [
+        " interface KotlinInterface1 {\n     fun fun1()\n }",
+        " interface KotlinInterface2 {\n     fun fun2()\n }",
+        " sealed class sealedClass(val value: Int) :\n     KotlinInterface1,\n     KotlinInterface2 {\n\n     class Child1(value: Int) : SealedClass(value) {\n         override val absValue: Int\n             get() = { ... }\n\n         override fun absFun() { ... }\n         override fun fun2() { ... }\n     }\n     class Child2(value: Int) : SealedClass(value) {\n         override val absValue: Int\n             get() = { ... }\n\n         override fun absFun() { ... }\n         override fun fun2() { ... }\n     }\n     data class Child3(value: Int) : SealedClass(value) {\n         override val absValue: Int\n             get() = { ... }\n\n         override fun absFun() { ... }\n         override fun fun2() { ... }\n     }\n\n     abstract val absValue: Int\n     abstract fun absFun()\n }"
+      ]
+    },
+    {
+      "id": 8,
+      "point": "A sealed interface can be derived from another interface then sub classes must be implemented its members.",
+      "sub_points": null,
+      "snippet_codes": [
+        " sealed interface sealedInterface {\n     data object Impl1 : sealedInterface {\n         override fun fun3() { ... }\n     }\n\n     data class Impl2(val value: Int) : sealedInterface {\n         override fun fun3() { ... }\n     }\n\n     class Impl3(val value: Int) : sealedInterface {\n         override fun fun3() { ... }\n     }\n\n\n     fun fun3()\n }"
+      ]
+    },
+    {
+      "id": 9,
+      "point": "When you combine sealed classes or interfaces with the when expression, you can cover the behavior of all possible subclasses and ensure that no new subclasses are created to affect your code adversely (you don't need to add an else clause).",
+      "sub_points": null,
+      "snippet_codes": [
+        " val instance: SealedClass\n\n when(instance) {\n     is SealedClass.Child1 -> { ... }\n     is SealedClass.Child2 -> { ... }\n     is SealedClass.Child3 -> { ... }\n }"
+      ]
+    }
+  ]
+}

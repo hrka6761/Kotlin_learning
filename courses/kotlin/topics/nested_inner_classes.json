@@ -1,0 +1,46 @@
+{
+  "topic_id": 13,
+  "topic_name": "Object declaration",
+  "points": [
+    {
+      "id": 1,
+      "point": "We can nest classes in classes, interfaces in classes, classes in interfaces, and interfaces in interfaces.",
+      "sub_points": null,
+      "snippet_codes": [
+        " class KotlinClass {\n     class NestedClass { ... }\n }",
+        " class KotlinClass {\n     interface NestedInterface { ... }\n }",
+        " class KotlinInterface {\n     class NestedClass { ... }\n }",
+        " class KotlinInterface {\n     interface NestedInterface { ... }\n }"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "A nested class marked as inner can access the members of its outer class.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "Inner classes carry a reference to an object of an outer class.",
+      "sub_points": [
+        "We can access the member of outer class in the inner class.",
+        "We cannot access the member of outer class in the nested class."
+      ],
+      "snippet_codes": [
+        " class KotlinClass {\n     val outerProperty: Int = 1\n\n     fun outerFun(value: Int) { ... }\n\n     class NestedClass {\n          outerFun(outerProperty)\n     }\n }"
+      ]
+    },
+    {
+      "id": 4,
+      "point": "An inner class is like a regular nested class in java, but a nested class is like static nested class in java.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "A nested class in an interface is like static nested class in java.",
+      "sub_points": null,
+      "snippet_codes": null
+    }
+  ]
+}

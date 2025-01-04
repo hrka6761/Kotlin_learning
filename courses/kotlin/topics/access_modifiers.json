@@ -1,0 +1,70 @@
+{
+  "topic_id": 7,
+  "topic_name": "Access modifiers",
+  "points": [
+    {
+      "id": 1,
+      "point": "There are four visibility modifiers in Kotlin.",
+      "sub_points": [
+        "`private`",
+        "`protected`",
+        "`internal`",
+        "`public`"
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "`private` means that the member is visible inside class or file only.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "`protected` means that the member has the same visibility as one marked as private, but that it is also visible in subclasses.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "`internal` means that any client inside this module who sees the declaring class sees its internal members(a module is a set of Kotlin files compiled together).",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "`public` means that any client who sees the declaring class sees its public members.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "If you don't use a visibility modifier, public is used by default.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 7,
+      "point": "The protected modifier is not available for top-level declarations.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 8,
+      "point": "When we declare a class private, we cannot inherit from it anywhere except in the same file or class.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 9,
+      "point": "When we declare a class private, we can only inherit from it when the subClass is internal or private.",
+      "sub_points": null,
+      "snippet_codes": [
+        " internal open class TopLevelClassA()",
+        " private open class TopLevelClassB()",
+        " private class Derived1 : TopLevelClassA()\n internal class Derived2 : TopLevelClassA()",
+        " private class Derived3 : TopLevelClassB()"
+      ]
+    }
+  ]
+}

@@ -17,6 +17,6 @@ interface TopicDao {
     @Query("DELETE FROM topic WHERE course = :courseName")
     suspend fun deleteTopics(courseName: String)
 
-    @Query("UPDATE topic SET has_update = :hasUpdated WHERE topic_db_id = :topicDBId")
-    suspend fun updateTopicState(topicDBId: Int, hasUpdated: Boolean)
+    @Query("UPDATE topic SET has_update = :hasUpdated WHERE id = :id")
+    suspend fun updateTopicState(id: Int, hasUpdated: Boolean)
 }

@@ -1,0 +1,62 @@
+{
+  "topic_id": 11,
+  "topic_name": "Object expression",
+  "points": [
+    {
+      "id": 1,
+      "point": "Sometimes you need to create an object that is a slight modification of some class, without explicitly declaring a new subclass for it.",
+      "sub_points": null,
+      "snippet_codes": [
+        " open class KotlinClass {\n     open fun fun1() {\n         // KotlinClass implementation\n     }\n }",
+        " val anonymousObject = object : KotlinClass {\n     override fun fun1() {\n         // Anonymous object implementation\n     }\n }"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "Object expressions create objects of anonymous classes (anonymous objects).",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "When an anonymous object is used as a type of a local or private but not inline declaration (function or property), all its members are accessible via this function or property.",
+      "sub_points": null,
+      "snippet_codes": [
+        " // anonymousObject is <anonymous object: Any>\n private val anonymousObject = object : KotlinClass {\n     val value: Int\n\n     override fun fun1() {\n         // Anonymous object implementation\n     }\n }\n\n // Can call value by anonymousObject\n anonymousObject.value",
+        " // anonymousObject is Any\n val anonymousObject = object : KotlinClass {\n     val value: Int\n\n     override fun fun1() {\n         // Anonymous object implementation\n     }\n }\n // Cannot call value by anonymousObject"
+      ]
+    },
+    {
+      "id": 4,
+      "point": "If a function or property is public or private inline, its actual type is.",
+      "sub_points": [
+        "Any if the anonymous object doesn't have a declared supertype.",
+        "The declared supertype of the anonymous object, if there is exactly one such type.",
+        "The explicitly declared type if there is more than one declared supertype."
+      ],
+      "snippet_codes": [
+        " // anonymousObject is Any\n val anonymousObject = object : KotlinClass { ... }\n\n // Returned anonymousObject Any\n fun getAnonymousObject() = object : KotlinClass { ... }",
+        " // anonymousObject is KotlinClass\n val anonymousObject: KotlinClass =\n    object : KotlinClass { ... }\n\n // Returned anonymousObject KotlinClass\n fun getAnonymousObject(): KotlinClass =\n    object : KotlinClass { ... }",
+        " interface KotlinInterface {  ...  }\n\n // anonymousObject is KotlinInterface\n val anonymousObject: KotlinInterface =\n    object : KotlinClass, KotlinInterface { ... }\n\n // Returned anonymousObject KotlinInterface\n fun getAnonymousObject(): KotlinInterface =\n    object : KotlinClass, KotlinInterface { ... }"
+      ]
+    },
+    {
+      "id": 5,
+      "point": "In all these cases, members added in the anonymous object are not accessible unless the property or function is private.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "If an object expression inherits from more than one class or interface, the members added to the anonymous object are not accessible, and we must explicitly declare the property type or return type to the function.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 7,
+      "point": "Overridden members are accessible if they are declared in the actual type of the function or property.",
+      "sub_points": null,
+      "snippet_codes": null
+    }
+  ]
+}

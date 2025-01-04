@@ -1,0 +1,78 @@
+{
+  "topic_id": 8,
+  "topic_name": "Data Class",
+  "points": [
+    {
+      "id": 1,
+      "point": "Data classes in Kotlin are primarily used to hold data.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "The primary constructor must have at least one parameter.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "All primary constructor parameters must be marked as val or var.",
+      "sub_points": null,
+      "snippet_codes": [
+        " data class DataClass(val value: Int, var variable: String, ...)"
+      ]
+    },
+    {
+      "id": 4,
+      "point": "Data classes can't be abstract, open, sealed, or inner.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "Compiler generates following members for data class.",
+      "sub_points": [
+        "equals()",
+        "hashCode()",
+        "toString()",
+        "componentN()",
+        "copy()"
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "If there are explicit implementations of equals(), hashCode(), or toString() in the data class body or final implementations in a superclass, then these functions are not generated, and the existing implementations are used.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 7,
+      "point": "Providing explicit implementations for the componentN() and copy() functions is not allowed.",
+      "sub_points": [
+        "We can not override copy() and componentN()."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 8,
+      "point": "The compiler only uses the properties defined inside the primary constructor for the automatically generated functions.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 9,
+      "point": "Data classes and destructuring declarations.",
+      "sub_points": null,
+      "snippet_codes": [
+        " val data = DataClass(1, \"a\")\n val (int, string) = data"
+      ]
+    },
+    {
+      "id": 10,
+      "point": "The standard library provides the `Pair` and `Triple` classes as data class.",
+      "sub_points": null,
+      "snippet_codes": null
+    }
+  ]
+}

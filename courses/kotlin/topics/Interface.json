@@ -1,0 +1,68 @@
+{
+  "topic_id": 4,
+  "topic_name": "Interface",
+  "points": [
+    {
+      "id": 1,
+      "point": "Interface is open and public by default.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "An interface cannot contain any constructor.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "A property declared in an interface can either be abstract or provide implementations for accessors.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "Interface can't have properties with initializers because it cannot have state.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "Interface can contains abstract and concrete methods.",
+      "sub_points": null,
+      "snippet_codes": [
+        " interface Employer {\n\n     val travelExpenses: Long\n\n     var salary: Long\n         get() = MINIMUM_SALARY +\n                 travelExpenses -\n                 calculateInsurance()\n         set(value) {\n             MINIMUM_SALARY\n         }\n\n     companion object {\n         const val MINIMUM_SALARY = 12_000_000L\n     }\n\n     fun calculateInsurance(): Long {\n         return MINIMUM_SALARY * 10 / 100\n     }\n\n     fun work()\n }"
+      ]
+    },
+    {
+      "id": 6,
+      "point": "We cannot instantiate from an Interface directly.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 7,
+      "point": "What makes them different from abstract classes is that interfaces cannot store state.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 8,
+      "point": "Properties declared in interfaces can't have backing fields, and therefore accessors declared in interfaces can't reference them.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 9,
+      "point": "Concrete member is open by default in an interface.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 10,
+      "point": "We can't use `final` keyword in an interface.",
+      "sub_points": null,
+      "snippet_codes": null
+    }
+  ]
+}

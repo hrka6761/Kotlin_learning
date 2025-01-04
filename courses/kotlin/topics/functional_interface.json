@@ -1,0 +1,31 @@
+{
+  "topic_id": 14,
+  "topic_name": "Functional Interface",
+  "points": [
+    {
+      "id": 1,
+      "point": "An interface with only one abstract method is called a functional interface, or a Single Abstract Method (SAM) interface.",
+      "sub_points": [
+        "The functional interface can have several non-abstract members."
+      ],
+      "snippet_codes": [
+        " interface SingleAbstractInterface {\n     fun singleAbstractFunction()\n }",
+        " fun interface SAM1 {\n     fun singleAbstractFun()\n }\n\n fun interface SAM2 {\n     fun singleAbstractFun()\n     fun concreteFunction() {\n         // Do something\n     }\n }"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "We can instantiate from functional interface like below.",
+      "sub_points": null,
+      "snippet_codes": [
+        " val sam1 = SAM1 { // singleAbstractFun implementation }\n val sam2 = SAM2 { // singleAbstractFun implementation }"
+      ]
+    },
+    {
+      "id": 3,
+      "point": "Fun interfaces cannot have abstract properties.",
+      "sub_points": null,
+      "snippet_codes": null
+    }
+  ]
+}

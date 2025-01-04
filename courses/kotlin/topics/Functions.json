@@ -1,0 +1,249 @@
+{
+  "topic_id": 15,
+  "topic_name": "Functions",
+  "points": [
+    {
+      "id": 1,
+      "point": "If a function does not return a useful value, its return type is Unit.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "Inside a function, a vararg parameter of type T is visible as an array of T.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "Only one parameter can be marked as vararg.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "If you already have an array and want to pass its contents to the function, use the spread operator.",
+      "sub_points": [
+        "prefix the array with *."
+      ],
+      "snippet_codes": [
+        " fun fun1(vararg ints: Int) {\n      if (ints is Array<Int>) {} // true\n }",
+        " val intArray = [1,2,3]\n fun1(intArray)"
+      ]
+    },
+    {
+      "id": 5,
+      "point": "There are three type of function scope.",
+      "sub_points": [
+        "Top level function (in a file).",
+        "Local function (in a function).",
+        "Member function (in a class)."
+      ],
+      "snippet_codes": [
+        " class KotlinClass() {\n     infix fun infixFun(a: Int) {}\n }",
+        " infix fun KotlinClass.infixFun(a: Int) {}",
+        " val kotlinClass = KotlinClass()\n kotlinClass infixFun 1"
+      ]
+    },
+    {
+      "id": 6,
+      "point": "Infix function",
+      "sub_points": [
+        "They must be member functions or extension functions.",
+        "They must have a single parameter.",
+        "The parameter must not accept variable number of arguments and must have no default value."
+      ],
+      "snippet_codes": [
+        " class KotlinClass() {\n     infix fun infixFun(a: Int) {}\n }",
+        " infix fun KotlinClass.infixFun(a: Int) {}",
+        " val kotlinClass = KotlinClass()\n kotlinClass infixFun 1"
+      ]
+    },
+    {
+      "id": 7,
+      "point": "tailrec function",
+      "sub_points": [
+        "It is a recursive function that is optimized by the compiler to prevent stack overflow errors by reusing the same stack frame for recursive calls."
+      ],
+      "snippet_codes": [
+        " tailrec fun factorial(n: Int, acc: Int = 1): Int {\n     return if (n <= 1) acc else factorial(n - 1, acc * n)\n }"
+      ]
+    },
+    {
+      "id": 8,
+      "point": "In the `tailrec` function, optimization is only possible if the recursive call is the last operation in the function.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 9,
+      "point": "You cannot use tail recursion when there is more code after the recursive call, within try/catch/finally blocks, or on open functions.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 10,
+      "point": "Kotlin functions are first-class, which means they can be stored in variables and data structures, and can be passed as arguments to and returned from other higher-order functions.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 11,
+      "point": "higher-order function",
+      "sub_points": [
+        "It is a function that takes functions as parameters, or returns a function."
+      ],
+      "snippet_codes": [
+        " fun highOrderFunction(function1: (String) -> Unit):\n             (str: String, Int) -> Boolean {\n\n     val returnedFun = { str: String, int: Int -> false }\n\n     return returnedFun\n }"
+      ]
+    },
+    {
+      "id": 12,
+      "point": "Function literals are functions that are not declared but are passed immediately as an expression.",
+      "sub_points": null,
+      "snippet_codes": [
+        " fun highOrderFunction1(\n      function1: () -> Unit,\n      function2: (str: String, Int) -> Boolean\n ) { ... }\n\n fun <T> highOrderFunction2(\n      function: (List<T>) -> Int\n ): Int { ... }",
+        " // Here, we passed an anonymous function\n highOrderFunction1(\n     fun() {},\n     fun(str: String, int: Int): Boolean {\n         return !(int > 2 && str.isNotEmpty())\n     })\n // here, we passed an lambda expression\n highOrderFunction1({}, { str, int -> !(int > 2 && str.isNotEmpty()) })\n // here, we passed an callback reference\n highOrderFunction2(List<String>::size)"
+      ]
+    },
+    {
+      "id": 13,
+      "point": "Lambda expressions and anonymous functions are function literals.",
+      "sub_points": null,
+      "snippet_codes": [
+        " val lambdaExpression1: (Int, Int) -> Int = { x, y -> x + y }\n\n val lambdaExpression2: (String) -> Unit = { str -> ... }\n\n val lambdaExpression3 = { i: Int, str: String -> String\n     ...\n     str\n }",
+        " val anonymousFunction1 = fun(int: Int): Boolean = int > 0\n\n val anonymousFunction2 = fun(str: String, int: Int) {\n     ...\n }"
+      ]
+    },
+    {
+      "id": 14,
+      "point": "If an exception is thrown from an lambda passed into high order function rest of the code after it dose not execute.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 15,
+      "point": "We can use a callable reference to an existing declaration.",
+      "sub_points": null,
+      "snippet_codes": [
+        " //a top-level, local, member, or extension function\n ::isOdd\n String::toInt\n //a top-level, member, or extension property\n List<Int>::size\n // a constructor\n ::Regex",
+        " val callableReferenceFunction1 = ::anonymousFunction1\n val callableReferenceFunction2 = List<String>::size"
+      ]
+    },
+    {
+      "id": 16,
+      "point": "A lambda expression or anonymous function (as well as a local function and an object expression) can access its closure, which includes the variables declared in the outer scope.",
+      "sub_points": null,
+      "snippet_codes": [
+        " val lambda = { str: String -> Log.i(Tag, str) }\n highOrderFunction(lambda)\n // lambda can access to highOrderFunction members"
+      ]
+    },
+    {
+      "id": 17,
+      "point": "Using higher-order functions imposes certain runtime penalties.",
+      "sub_points": [
+        "each function is an object.",
+        "each function captures a closure."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 18,
+      "point": "A closure is a scope of variables that can be accessed in the body of the function.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 19,
+      "point": "Inline functions",
+      "sub_points": [
+        "When you mark a function as inline, the Kotlin compiler replaces the function call with the actual function body. his avoids creating a function object and stack frame for each call, which reduces overhead and can improve performance.",
+        "This is particularly beneficial for short and frequently called functions.",
+        "You can use return inside a lambda passed to an inline function to return from the enclosing function."
+      ],
+      "snippet_codes": [
+        " inline fun inlineFunction(block: () -> Unit) {\n     block()\n }"
+      ]
+    },
+    {
+      "id": 20,
+      "point": "Avoid inlining large functions because the generated code to grow.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 21,
+      "point": "The inline modifier affects both the function itself and the lambdas passed to it and all of those will be inlined into the call site.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 22,
+      "point": "We can not use local function in inline functions.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 23,
+      "point": "If you don't want all of the lambdas passed to an inline function to be inlined, mark some of your function parameters with the `noinline` modifier.",
+      "sub_points": null,
+      "snippet_codes": [
+        " inline fun inlineFunction(noinline block1: () -> Unit) {\n     block1()\n }"
+      ]
+    },
+    {
+      "id": 24,
+      "point": "Use the reified modifier to make the type parameter accessible inside the inline function.",
+      "sub_points": [
+        "No reflection is needed and normal operators like !is and as are now available for you to use."
+      ],
+      "snippet_codes": [
+        " inline fun <reified T> reifiedType(value: T): Boolean {\n     val clazz = KotlinClass()\n\n     return clazz is T\n }"
+      ]
+    },
+    {
+      "id": 25,
+      "point": "Normal functions (not marked as inline) cannot have reified parameters.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 26,
+      "point": "The inline modifier can be used on accessors of properties that don't have backing fields.",
+      "sub_points": [
+        "inline property cannot have backing field.",
+        "inline modifier is not allowed on virtual members.",
+        "In an interface only private or final members can be inlined."
+      ],
+      "snippet_codes": [
+        " inline val inlinedValue: Int\n     get() { ... }\n\n inline var inlinedVariable: Int\n     get() { ... }\n     set(value) { ... }"
+      ]
+    },
+    {
+      "id": 27,
+      "point": "At the call site, inline accessors are inlined as regular inline functions.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 28,
+      "point": "operator functions",
+      "sub_points": [
+        "To implement an operator function, provide a member function or an extension function with a specific name for the corresponding type."
+      ],
+      "snippet_codes": [
+        " // Int function\n public operator fun plus(other: Int): Int"
+      ]
+    },
+    {
+      "id": 29,
+      "point": "suspend functions",
+      "sub_points": [
+        "When we mark a function with `suspend`, we can only use this function in coroutines or another suspend function."
+      ],
+      "snippet_codes": [
+        " suspend fun suspendFun() { ... }"
+      ]
+    }
+  ]
+}

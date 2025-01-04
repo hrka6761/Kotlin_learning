@@ -1,0 +1,145 @@
+{
+  "topic_id": 5,
+  "topic_name": "Inheritance",
+  "points": [
+    {
+      "id": 1,
+      "point": "All classes in Kotlin have a common superclass, `Any`, which is the default superclass for a class with no supertypes declared.",
+      "sub_points": [
+        "Every kotlin class is an Any."
+      ],
+      "snippet_codes": [
+        " class KotlinClass {  ...  }\n\n if(KotlinClass is Any) {\n     // Do something\n }"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "Each class can only derive from one class but can implement multiple interfaces.",
+      "sub_points": null,
+      "snippet_codes": [
+        " open class KotlinClass {  ...  }\n interface KotlinInterface1 {  ...  }\n interface KotlinInterface2 {  ...  }\n interface KotlinInterface3 {  ...  }",
+        " class DerivedClass : KotlinClass(), KotlinInterface1,\n     KotlinInterface2,\n     KotlinInterface3, ..."
+      ]
+    },
+    {
+      "id": 3,
+      "point": "An interface can derive from other interfaces.",
+      "sub_points": null,
+      "snippet_codes": [
+        " interface DerivedInterface : KotlinInterface1, KotlinInterface2,\n    KotlinInterface3, ..."
+      ]
+    },
+    {
+      "id": 4,
+      "point": "By default, Kotlin classes are final and cannot have any sub classes.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "By default, all functions of Kotlin classes are final an cannot be overridden these in subclasses.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "We can use the override keyword as part of the property declaration in a primary constructor.",
+      "sub_points": null,
+      "snippet_codes": [
+        " interface KotlinInterface {\n    val value: Int\n    ...\n }",
+        " class KotlinClass(override val value: Int)\n     : KotlinInterface {\n    ...\n }"
+      ]
+    },
+    {
+      "id": 7,
+      "point": "We can use the override keyword as part of the property declaration in the body.",
+      "sub_points": null,
+      "snippet_codes": [
+        " class KotlinClass : KotlinInterface() {\n     override val value: Int\n         get() = {\n             // Do something\n         }\n    ...\n }",
+        " class KotlinClass : KotlinInterface() {\n     override val value: Int = 1\n    ...\n }"
+      ]
+    },
+    {
+      "id": 8,
+      "point": "We can also override a val property with a var property, but not vice versa.",
+      "sub_points": null,
+      "snippet_codes": [
+        " class KotlinClass(override var value: Int) : KotlinInterface {\n     ...\n }",
+        " class KotlinClass : KotlinInterface() {\n     override var value: Int\n         get() = {\n             // Do something\n         }\n         set(value) {\n             // Do something\n         }\n    ...\n }",
+        " class KotlinClass : KotlinInterface() {\n     override var value: Int = 1\n    ...\n }"
+      ]
+    },
+    {
+      "id": 9,
+      "point": "We can to prohibit re-overriding by using final.",
+      "sub_points": [
+        "This members can no longer be overridden in subclasses."
+      ],
+      "snippet_codes": [
+        " interface KotlinInterface {\n    val value: Long\n    fun fun1()\n    ...\n }",
+        " class KotlinClass : KotlinInterface {\n    final override value: Long = 1L\n\n    final override fun1() {\n        // Do something\n    }\n }"
+      ]
+    },
+    {
+      "id": 10,
+      "point": "An overriding function is not allowed to specify default values for its parameters.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 11,
+      "point": "We can't call companion members of superclass by the subclass.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 12,
+      "point": "If there is no open modifier on a function, declaring a method with the same signature in a subclass is not allowed, either with override or without it.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 13,
+      "point": "In a subclass can call its superclass functions and property accessor implementations using the super keyword.",
+      "sub_points": null,
+      "snippet_codes": [
+        " abstract KotlinAbstractClass {\n\n    open var variable: String\n        get() {\n            // KotlinAbstractClass implementation\n        }\n        set(value) {\n            // KotlinAbstractClass implementation\n        }\n\n    open fun fun1() {\n        // KotlinAbstractClass implementation\n    }\n    ...\n }",
+        " class KotlinClass : KotlinAbstractClass {\n\n    var variable: String\n        get() {\n            super.variable\n            ...\n        }\n        set(value) {\n            super.variable\n            ...\n        }\n\n    override fun1() {\n        super.fun1()\n        ...\n    }\n }"
+      ]
+    },
+    {
+      "id": 14,
+      "point": "During the construction of a new instance of a derived class, the base class initialization is done as the first step.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 15,
+      "point": "If a same function is declared in the both super class and interface, (or a same concrete function into two interface) must be implemented in sub class.",
+      "sub_points": null,
+      "snippet_codes": [
+        " open class KotlinClass {\n     open fun fun1() {\n         // KotlinClass implementation\n     }\n }",
+        " interface KotlinInterface1 {\n     fun fun1()\n\n     fun fun2() {\n        // KotlinInterface1 implementation\n     }\n }",
+        " interface KotlinInterface2 {\n     fun fun2() {\n        // KotlinInterface2 implementation\n     }\n }",
+        " class DerivedClass : KotlinClass(), KotlinInterface1,\n     KotlinInterface2 {\n\n     override fun fun1() {\n         // DerivedClass implementation\n     }\n\n     override fun fun2() {\n        // DerivedClass implementation\n     }\n }"
+      ]
+    },
+    {
+      "id": 16,
+      "point": "To denote the supertype from which the inherited implementation is taken,\n * use super qualified by the supertype name in angle brackets.",
+      "sub_points": null,
+      "snippet_codes": [
+        " class DerivedClass : KotlinClass(), KotlinInterface1,\n     KotlinInterface2 {\n\n     override fun fun1() {\n         super<KotlinClass>.fun1()\n         ...\n     }\n\n     fun fun2() {\n        super<KotlinInterface2>.fun2()\n        super<KotlinInterface1>.fun2()\n        ...\n     }\n }"
+      ]
+    },
+    {
+      "id": 17,
+      "point": "In the subclass, we cannot reduce the access level of the member but we can increase.",
+      "sub_points": [
+        "If it public in super class, we cannot reduce to protected or private.",
+        "If it protected in super class, we can increase to public."
+      ],
+      "snippet_codes": null
+    }
+  ]
+}

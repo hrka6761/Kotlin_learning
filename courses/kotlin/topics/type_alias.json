@@ -1,0 +1,45 @@
+{
+  "topic_id": 20,
+  "topic_name": "Type Alias",
+  "points": [
+    {
+      "id": 1,
+      "point": "Type aliases provide alternative names for existing types.",
+      "sub_points": null,
+      "snippet_codes": [
+        " typealias FI = FunctionalInterface\n typealias lambda = (String, Int) -> Boolean\n typealias Generic = GenericClass<String, Int, Long>\n typealias NestedClass = OuterClass.NestedClass\n typealias Inner = OuterClass.InnerClass",
+        " val fi: FI = FI()\n val lambda: lambda = {str, int -> false}\n val generic: Generic = Generic()\n val nestedClass: NestedClass = NestedClass()\n val inner: Inner = Inner()"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "Type aliases do not introduce new types. They are equivalent to the corresponding underlying types.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "If the type name is too long you can introduce a different shorter name and use the new one instead.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "It's useful to shorten long generic types.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "It's useful to provide different aliases for function types.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "It's useful to have new names for inner and nested classes.",
+      "sub_points": null,
+      "snippet_codes": null
+    }
+  ]
+}

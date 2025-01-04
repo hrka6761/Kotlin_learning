@@ -1,0 +1,46 @@
+{
+  "topic_id": 12,
+  "topic_name": "Object declaration",
+  "points": [
+    {
+      "id": 1,
+      "point": "It is used to implementation of the Singleton pattern in kotlin.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "An object can derive from a class or implement interfaces.",
+      "sub_points": null,
+      "snippet_codes": [
+        " object DerivedObject : KotlinClass(),\n     KotlinInterface1, KotlinInterface2, ... { ... }"
+      ]
+    },
+    {
+      "id": 3,
+      "point": "Object declarations can't be local (that is, they can't be nested directly inside a function), but they can be nested into other object declarations or non-inner classes.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "Just like data classes in data object the compiler generates toString(), equals(), hashCode().",
+      "sub_points": null,
+      "snippet_codes": [
+        " data object DataObject { ... }"
+      ]
+    },
+    {
+      "id": 5,
+      "point": "You can't provide a custom equals or hashCode implementation for a data object.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "Data object does not have copy() and componentN().",
+      "sub_points": null,
+      "snippet_codes": null
+    }
+  ]
+}

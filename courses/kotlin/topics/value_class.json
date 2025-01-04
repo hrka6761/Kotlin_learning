@@ -1,0 +1,88 @@
+{
+  "topic_id": 21,
+  "topic_name": "Value class",
+  "points": [
+    {
+      "id": 1,
+      "point": "Sometimes it is useful to wrap a value in a class to create a more domain-specific type, However, it introduces runtime overhead due to additional heap allocations, To solve such issues, Kotlin introduces a special kind of class called an inline class.",
+      "sub_points": [
+        "Inline classes are a subset of value-based classes."
+      ],
+      "snippet_codes": [
+        " // For JVM backends\n @JvmInline\n value class ValueClass (val value: Int)"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "In the inline classes data of the class is inlined into its usages.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "Inline classes don't have an identity and can only hold values.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "An inline class must have a single property initialized in the primary constructor.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "Inline classes allowed to declare properties and functions, have an init block and secondary constructors.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "Inline class properties cannot have backing fields.",
+      "sub_points": [
+        "They can only have simple computable properties (no lateinit /delegated properties)."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 7,
+      "point": "Value classes can be only final.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 8,
+      "point": "Value classes cannot extend other classes.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 9,
+      "point": "value classes are allowed to inherit from interfaces.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 10,
+      "point": "In the generated code, the Kotlin compiler keeps a wrapper for each inline class, inline class instances can be represented at runtime either as wrappers or as the underlying type.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 11,
+      "point": "As a rule of thumb, inline classes are boxed whenever they are used as another type.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 12,
+      "point": "Inline classes can also have a generic type parameter as the underlying type",
+      "sub_points": [
+        "In this case, the compiler maps it to Any? or, generally, to the upper bound of the type parameter."
+      ],
+      "snippet_codes": [
+        " @JvmInline\n value class ValueClass<T>(val value: T)"
+      ]
+    }
+  ]
+}

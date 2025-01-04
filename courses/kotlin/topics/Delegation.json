@@ -1,0 +1,171 @@
+{
+  "topic_id": 18,
+  "topic_name": "Delegation",
+  "points": [
+    {
+      "id": 1,
+      "point": "The Delegation pattern has proven to be a good alternative to implementation inheritance, and Kotlin supports it natively requiring zero boilerplate code.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "By using the 'by' keyword we can delegate an interface implementation to the implemented class without writing all of functions to call implementations",
+      "sub_points": null,
+      "snippet_codes": [
+        " interface Base {\n\n     val value: Int\n     var variable: String\n\n     fun fun1()\n     fun fun2()\n     fun fun3()\n     fun fun4()\n     fun fun5()\n     fun fun6()\n     fun fun7()\n }",
+        " class BaseImpl1() : Base {\n     override val value: Int\n         get() = 1\n     override var variable: String\n         get() = \"BaseImpl1\"\n         set(value) {}\n\n     override fun fun1() { BaseImpl1 implementation }\n     override fun fun2() { BaseImpl1 implementation }\n     override fun fun3() { BaseImpl1 implementation }\n     override fun fun4() { BaseImpl1 implementation }\n     override fun fun5() { BaseImpl1 implementation }\n     override fun fun6() { BaseImpl1 implementation }\n     override fun fun7() { BaseImpl1 implementation }\n }",
+        " class BaseImpl2() : Base {\n     override val value: Int\n         get() = 2\n     override var variable: String\n         get() = \"BaseImpl2\"\n         set(value) {}\n\n     override fun fun1() { BaseImpl2 implementation }\n     override fun fun2() { BaseImpl2 implementation }\n     override fun fun3() { BaseImpl2 implementation }\n     override fun fun4() { BaseImpl2 implementation }\n     override fun fun5() { BaseImpl2 implementation }\n     override fun fun6() { BaseImpl2 implementation }\n     override fun fun7() { BaseImpl2 implementation }\n }",
+        " class DelegateClass1(baseImplementation: Base) :\n        Base by baseImplementation"
+      ]
+    },
+    {
+      "id": 3,
+      "point": "The compiler will use your override implementations instead of those in the delegate object.",
+      "sub_points": null,
+      "snippet_codes": [
+        " class DelegateClass2(baseImplementation: Base) :\n        Base by baseImplementation {\n\n     override val value1: Int\n         get() = 3\n\n     override fun fun1() { DelegateClass2 implementation }\n }"
+      ]
+    },
+    {
+      "id": 4,
+      "point": "Lazy properties",
+      "sub_points": [
+        "The value is computed only on first access."
+      ],
+      "snippet_codes": [
+        " val lazyProperty: String by lazy (\n     mode = LazyThreadSafetyMode.SYNCHRONIZED,\n     initializer = {\n         return@lazy \"str\"\n     }\n )"
+      ]
+    },
+    {
+      "id": 5,
+      "point": "lazy() is a function that takes a lambda and returns an instance of Lazy<T>, which can serve as a delegate for implementing a lazy property. The first call to get() executes the lambda passed to lazy() and remembers the result. Subsequent calls to get() simply return the remembered result.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "The property that be delegated by lazy must be as a val no var.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 7,
+      "point": "Storing properties in a map",
+      "sub_points": [
+        "We can use the map instance itself as the delegate for a delegated property."
+      ],
+      "snippet_codes": [
+        " class Data1(map: Map<String, String?>) {\n     val p1: String by map\n     val p2: Int by map\n }",
+        " class Data2(map: MutableMap<String, String?>) {\n     var p1: String by map\n     var p2: Int by map\n }",
+        " val data1 = mapOf<String, Any?>(\n      Pair(\"p1\", \"str\"), Pair(\"p2\", 1)\n )\n Data1(data1)",
+        " val data2 = mutableMapOf<String, Any?>(\n      Pair(\"p1\", \"str\"), Pair(\"p2\", 1)\n * )\n Data2(data2)"
+      ]
+    },
+    {
+      "id": 8,
+      "point": "Modes of lazy are",
+      "sub_points": [
+        "SYNCHRONIZED(default): The value is computed only in one thread, but all threads will see the same value.",
+        "PUBLICATION: If the synchronization of the initialization delegate is not required to allow multiple threads to execute it simultaneously.",
+        "NONE: If you're sure that the initialization will always happen in the same thread as the one where you use the property."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 9,
+      "point": "Observable properties",
+      "sub_points": [
+        "observable() takes two arguments, the initial value and a handler for modifications the handler is called every time you assign to the property."
+      ],
+      "snippet_codes": [
+        " var observableProperty: String by Delegates.observable(\n         initialValue = \"value1\",\n         onChange = { prop, old, new ->\n             ...\n         }\n     )"
+      ]
+    },
+    {
+      "id": 10,
+      "point": "vetoable properties",
+      "sub_points": [
+        "If you want to intercept assignments and veto them."
+      ],
+      "snippet_codes": [
+        " var vetoableProperty: Long by Delegates.vetoable(\n         initialValue = 1L,\n         onChange = { prop, old, new ->\n             ...\n         }\n     )"
+      ]
+    },
+    {
+      "id": 11,
+      "point": "A property can delegate its getter and setter to another property.",
+      "sub_points": null,
+      "snippet_codes": [
+        " val delegatedAnotherProperty: Int by ::lazyProperty",
+        " val topLevelProperty: Int by lazy(\n     mode = LazyThreadSafetyMode.NONE,\n     initializer = {\n         return@lazy 1\n     }\n )\n val delegatedAnotherProperty: Int by ::topLevelProperty",
+        " val clazz = Class()\n val delegatedAnotherProperty3: Int by clazz::in"
+      ]
+    },
+    {
+      "id": 12,
+      "point": "We can create custom property delegate.",
+      "sub_points": null,
+      "snippet_codes": [
+        " class Delegate(private var int: Int) {\n     operator fun getValue(\n          thisRef: Any?,\n          property: KProperty<*>\n     ): Int {\n         return this.int\n     }\n\n     operator fun setValue(\n           thisRef: Any?,\n           property: KProperty<*>,\n            i: Int\n     ) {\n         this.int = i\n     }\n }",
+        "var delegatedProperty: Int by Delegate(2)"
+      ]
+    },
+    {
+      "id": 13,
+      "point": "For a read-only property (val), a delegate should provide an operator function getValue() with the following parameters.",
+      "sub_points": [
+        "thisRef must be the same type as, or a supertype of, the property owner (for extension properties, it should be the type being extended).",
+        "Property must be of type KProperty<*> or its supertype.",
+        "getValue() must return the same type as the property (or its subtype)."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 14,
+      "point": "For a mutable property (var), a delegate has to additionally provide an operator function setValue() with the following parameters",
+      "sub_points": [
+        "thisRef must be the same type as, or a supertype of, the property owner (for extension properties, it should be the type being extended).",
+        "Property must be of type KProperty<*> or its supertype.",
+        "Value must be of the same type as the property (or its supertype)."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 15,
+      "point": "The type of thisRef (T) can vary depending on where the property is declared or accessed",
+      "sub_points": [
+        "If the property is in a class, thisRef is an instance of that class.",
+        "For an extension property, thisRef is the instance on which the extension is applied.",
+        "In singleton objects, thisRef is the singleton object itself.",
+        "For top-level properties, thisRef might be null or refer to the context in which it's used."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 16,
+      "point": "You can create delegates as anonymous objects without creating new classes, by using the interfaces ReadOnlyProperty and ReadWriteProperty from the Kotlin standard library.",
+      "sub_points": null,
+      "snippet_codes": [
+        " class Delegate(private val boolean: Boolean) :\n   ReadOnlyProperty<Delegation, Boolean> {\n     override fun getValue(\n         thisRef: Delegation,\n         property: KProperty<*>\n     ): Boolean {\n         return boolean\n     }\n }",
+        " class Delegate(private var str: String) :\n   ReadWriteProperty<Delegation, String> {\n      override fun getValue(\n            thisRef: Delegation,\n            property: KProperty<*>\n      ): String {\n          return \"get value in Delegate2\"\n      }\n\n      override fun setValue(\n            thisRef: Delegation,\n            property: KProperty<*>,\n            value: String\n      ) {\n           this.str = value\n      }\n }"
+      ]
+    },
+    {
+      "id": 17,
+      "point": "T the type of object which owns the delegated property and V the type of the property value.",
+      "sub_points": null,
+      "snippet_codes": [
+        " public fun interface ReadOnlyProperty<in T, out V>\n public interface ReadWriteProperty<in T, V>"
+      ]
+    },
+    {
+      "id": 18,
+      "point": "We can declare local variables as delegated properties (In the function). The variable will be computed on first access only.",
+      "sub_points": null,
+      "snippet_codes": [
+        " fun localDelegation(condition: Boolean, initializer: () -> Int) {\n     val a: Int by lazy(\n         mode = LazyThreadSafetyMode.NONE,\n         initializer = initializer\n     )\n\n     if (condition) {\n         // Do something\n     }\n }"
+      ]
+    }
+  ]
+}

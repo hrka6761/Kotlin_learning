@@ -134,7 +134,7 @@ fun KotlinTopicsScreen(
             ) {
                 kotlinTopics.data?.let {
                     items(it.size) { index ->
-                        KotlinTopicItem(it[index], navHostController)
+                        KotlinTopicItem(it[index], index, navHostController)
                     }
                 }
             }
@@ -269,6 +269,7 @@ fun KotlinTopicsAppBar(navHostController: NavHostController) {
 @Composable
 fun KotlinTopicItem(
     topic: Topic,
+    index: Int,
     navHostController: NavHostController,
 ) {
     ElevatedCard(
@@ -327,7 +328,7 @@ fun KotlinTopicItem(
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
-                    text = topic.topicId.toString(),
+                    text = index.toString(),
                 )
             }
 
@@ -399,16 +400,17 @@ fun KotlinTopicItem(
 fun KotlinTopicsScreenPreview() {
     KotlinTopicItem(
         Topic(
-            topicDBId = 1,
+            id = 1,
             hasUpdate = true,
-            topicId = 12,
             course = "kotlin",
             topicTitle = "Common classes and functions",
+            fileName = "",
             topicImage = "",
             pointsNumber = 29,
             hasVisualizer = false,
             isActive = true
         ),
+        14,
         rememberNavController()
     )
 }
