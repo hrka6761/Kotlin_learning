@@ -1,15 +1,17 @@
 package ir.hrka.kotlin.data.repositories.git
 
+import android.util.Log
 import com.google.gson.Gson
 import ir.hrka.kotlin.core.Constants.READ_FILE_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.RETROFIT_ERROR_CODE
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.string_utilities.decodeBase64
 import ir.hrka.kotlin.data.datasource.git.GitAPI
 import ir.hrka.kotlin.domain.entities.GitFileData
-import ir.hrka.kotlin.domain.entities.TopicData
+import ir.hrka.kotlin.domain.entities.TopicsData
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.domain.repositories.read.ReadTopicsRepo
 import javax.inject.Inject
@@ -26,10 +28,10 @@ class ReadGitTopicsRepoImpl @Inject constructor(
             )
 
             if (response.isSuccessful) {
-                val kotlinTopicFileData = response.body()
-                val kotlinTopicFileContent = extractKotlinTopicContent(kotlinTopicFileData)
-                val kotlinTopic = provideKotlinTopic(
-                    kotlinTopicFileContent.ifEmpty {
+                val topicFileData = response.body()
+                val topicFileContent = extractTopicContent(topicFileData)
+                val topicsData = provideTopic(
+                    topicFileContent.ifEmpty {
                         return Resource.Error(
                             Error(
                                 READ_FILE_ERROR_CODE,
@@ -38,8 +40,8 @@ class ReadGitTopicsRepoImpl @Inject constructor(
                         )
                     }
                 )
-                kotlinTopic.topics.forEach { it.hasUpdate = true }
-                Resource.Success(kotlinTopic.topics)
+
+                Resource.Success(topicsData.topics)
             } else {
                 Resource.Error(
                     Error(
@@ -59,13 +61,13 @@ class ReadGitTopicsRepoImpl @Inject constructor(
     }
 
 
-    private fun extractKotlinTopicContent(kotlinTopicFileData: GitFileData?): String {
+    private fun extractTopicContent(kotlinTopicFileData: GitFileData?): String {
         val encodedContent = kotlinTopicFileData?.content ?: ""
         val decodedContent = encodedContent.decodeBase64()
 
         return decodedContent
     }
 
-    private fun provideKotlinTopic(kotlinTopicFileData: String): TopicData =
-        Gson().fromJson(kotlinTopicFileData, TopicData::class.java)
+    private fun provideTopic(topicFileData: String): TopicsData =
+        Gson().fromJson(topicFileData, TopicsData::class.java)
 }

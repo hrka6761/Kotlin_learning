@@ -3,10 +3,12 @@ package ir.hrka.kotlin.presentation.ui.screens.home
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource

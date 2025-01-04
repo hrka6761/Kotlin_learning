@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ir.hrka.kotlin.data.repositories.db.read.ReadDBCoursesRepoImpl
+import ir.hrka.kotlin.data.repositories.db.read.ReadDBTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitChangelogRepoImpl
 import ir.hrka.kotlin.data.repositories.db.write.WriteDBCoursesRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitCoursesRepoImpl
@@ -39,7 +41,7 @@ interface RepositoryModule {
 
     @Named("db")
     @Binds
-    fun bindDBCoursesRepoImpl(readGitCoursesRepoImpl: ReadGitCoursesRepoImpl): ReadCoursesRepo
+    fun bindDBCoursesRepoImpl(readDBCoursesRepoImpl: ReadDBCoursesRepoImpl): ReadCoursesRepo
 
     @Binds
     fun bindWriteDBCoursesRepoImpl(writeDBCoursesRepoImpl: WriteDBCoursesRepoImpl): WriteCoursesRepo
@@ -50,7 +52,7 @@ interface RepositoryModule {
 
     @Named("db")
     @Binds
-    fun bindDBReadTopicsRepoImpl(readGitTopicsRepoImpl: ReadGitTopicsRepoImpl): ReadTopicsRepo
+    fun bindDBReadTopicsRepoImpl(readDBTopicsRepoImpl: ReadDBTopicsRepoImpl): ReadTopicsRepo
 
     @Binds
     fun bindWriteTopicsRepoImpl(writeDBTopicsRepoImpl: WriteDBTopicsRepoImpl): WriteTopicsRepo

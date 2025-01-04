@@ -66,7 +66,7 @@ import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.db.Topic
 
 @Composable
-fun KotlinTopicsScreen(
+fun TopicsScreen(
     activity: MainActivity,
     navHostController: NavHostController,
     course: Course
@@ -74,12 +74,12 @@ fun KotlinTopicsScreen(
 
     val viewModel: TopicViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
-    val kotlinTopics by viewModel.topics.collectAsState()
+    val topics by viewModel.topics.collectAsState()
     val executionState by viewModel.executionState.collectAsState()
     val failedState by viewModel.failedState.collectAsState()
-    val saveKotlinTopicsResult by viewModel.saveKotlinTopicsResult.collectAsState()
-    val updateKotlinTopicsOnDBResult by viewModel.updateKotlinTopicsOnDBResult.collectAsState()
-    val updateKotlinVersionIdResult by viewModel.updateKotlinVersionIdResult.collectAsState()
+    val saveTopicsResult by viewModel.saveKotlinTopicsResult.collectAsState()
+    val updateTopicsOnDBResult by viewModel.updateKotlinTopicsOnDBResult.collectAsState()
+    val updateVersionIdResult by viewModel.updateVersionIdResult.collectAsState()
     val updatedId = navHostController.currentBackStackEntry
         ?.savedStateHandle
         ?.get<Int>(UPDATED_TOPIC_ID_KEY)
@@ -132,7 +132,7 @@ fun KotlinTopicsScreen(
                 columns = StaggeredGridCells.Fixed(1),
                 contentPadding = PaddingValues(8.dp)
             ) {
-                kotlinTopics.data?.let {
+                topics.data?.let {
                     items(it.size) { index ->
                         KotlinTopicItem(it[index], index, navHostController)
                     }
@@ -153,29 +153,29 @@ fun KotlinTopicsScreen(
         if (executionState == Start) {
             viewModel.setExecutionState(Loading)
 
-            if (viewModel.hasKotlinTopicsUpdate) {
-                viewModel.getKotlinTopicsFromGit()
+            if (viewModel.hasTopicsUpdate(course)) {
+                viewModel.getTopicsFromGit(course)
                 return@LaunchedEffect
             }
 
-            if (viewModel.hasKotlinTopicsPointsUpdate) {
-                viewModel.updateKotlinTopicsOnDB()
+            if (viewModel.hasTopicsPointsUpdate(course)) {
+                viewModel.updateTopicsOnDB(course)
                 return@LaunchedEffect
             }
 
-            viewModel.getKotlinTopicsFromDB(course)
+            viewModel.getTopicsFromDB(course)
         }
     }
 
-    LaunchedEffect(kotlinTopics) {
+    LaunchedEffect(topics) {
         if (executionState != Stop) {
-            when (kotlinTopics) {
+            when (topics) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
 
                 is Resource.Success -> {
-                    if (viewModel.hasKotlinTopicsUpdate)
-                        kotlinTopics.data?.let { viewModel.saveKotlinTopicsOnDB(course, it) }
+                    if (viewModel.hasTopicsUpdate(course))
+                        topics.data?.let { viewModel.saveTopicsOnDB(course, it) }
                     else
                         viewModel.setExecutionState(Stop)
                 }
@@ -188,13 +188,13 @@ fun KotlinTopicsScreen(
         }
     }
 
-    LaunchedEffect(saveKotlinTopicsResult) {
+    LaunchedEffect(saveTopicsResult) {
         if (executionState != Stop) {
-            when (saveKotlinTopicsResult) {
+            when (saveTopicsResult) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    viewModel.updateKotlinVersionId()
+                    viewModel.updateVersionId(course)
                 }
 
                 is Resource.Error -> {
@@ -204,24 +204,24 @@ fun KotlinTopicsScreen(
         }
     }
 
-    LaunchedEffect(updateKotlinVersionIdResult) {
+    LaunchedEffect(updateVersionIdResult) {
         if (executionState != Stop) {
-            when (updateKotlinVersionIdResult) {
+            when (updateVersionIdResult) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    if (viewModel.hasKotlinTopicsUpdate)
+                    if (viewModel.hasTopicsUpdate(course))
                         viewModel.setExecutionState(Stop)
 
-                    if (viewModel.hasKotlinTopicsPointsUpdate)
-                        viewModel.getKotlinTopicsFromDB(course)
+                    if (viewModel.hasTopicsPointsUpdate(course))
+                        viewModel.getTopicsFromDB(course)
 
-                    viewModel.updateKotlinVersionIdInGlobalData()
+                    viewModel.updateVersionIdInGlobalData(course)
                 }
 
                 is Resource.Error -> {
-                    if (viewModel.hasKotlinTopicsPointsUpdate)
-                        viewModel.getKotlinTopicsFromDB(course)
+                    if (viewModel.hasTopicsPointsUpdate(course))
+                        viewModel.getTopicsFromDB(course)
                     else
                         viewModel.setExecutionState(Stop)
                 }
@@ -229,17 +229,17 @@ fun KotlinTopicsScreen(
         }
     }
 
-    LaunchedEffect(updateKotlinTopicsOnDBResult) {
+    LaunchedEffect(updateTopicsOnDBResult) {
         if (executionState != Stop) {
-            when (updateKotlinTopicsOnDBResult) {
+            when (updateTopicsOnDBResult) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    viewModel.updateKotlinVersionId()
+                    viewModel.updateVersionId(course)
                 }
 
                 is Resource.Error -> {
-                    viewModel.getKotlinTopicsFromDB(course)
+                    viewModel.getTopicsFromDB(course)
                 }
             }
         }
@@ -302,7 +302,7 @@ fun KotlinTopicItem(
                 requestBuilderTransform = {
                     it.apply(
                         RequestOptions()
-                            .error(R.drawable.error)
+                            .error(R.drawable.no_image)
                     )
                 },
                 contentScale = ContentScale.Crop,
@@ -328,7 +328,7 @@ fun KotlinTopicItem(
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
-                    text = index.toString(),
+                    text = (index + 1).toString(),
                 )
             }
 
@@ -381,8 +381,8 @@ fun KotlinTopicItem(
             if (topic.hasUpdate)
                 Icon(
                     modifier = Modifier
-                        .width(20.dp)
-                        .height(20.dp)
+                        .width(15.dp)
+                        .height(15.dp)
                         .constrainAs(updateLabel) {
                             end.linkTo(parent.end, margin = 4.dp)
                             bottom.linkTo(parent.bottom)
@@ -402,7 +402,7 @@ fun KotlinTopicsScreenPreview() {
         Topic(
             id = 1,
             hasUpdate = true,
-            course = "kotlin",
+            courseName = "kotlin",
             topicTitle = "Common classes and functions",
             fileName = "",
             topicImage = "",

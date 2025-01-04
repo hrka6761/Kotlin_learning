@@ -22,9 +22,15 @@ object Constants {
     const val WRITE_TIMEOUT = 60L
     const val READ_TIMEOUT = 60L
 
+    const val COURSE_ARGUMENT_TOPICS_SCREEN = "course"
     const val ARGUMENT_KOTLIN_TOPIC = "kotlinTopicName"
     const val ARGUMENT_KOTLIN_TOPIC_UPDATE_STATE = "kotlinTopicUpdateState"
     const val ARGUMENT_KOTLIN_TOPIC_ID = "kotlinTopicId"
+
+    const val KOTLIN_COURSE_NAME = "kotlin"
+    const val COROUTINE_COURSE_NAME = "coroutine"
+    const val KOTLIN_TOPICS_FILE_NAME = "kotlin_topics_list.json"
+    const val COROUTINE_TOPICS_FILE_NAME = "coroutine_topics_list.json"
 
     const val TOKEN = "This is a secret."
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_learning/contents/"

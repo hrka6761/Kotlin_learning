@@ -3,6 +3,7 @@ package ir.hrka.kotlin.presentation.ui.screens.home
 import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -61,10 +62,12 @@ import com.bumptech.glide.request.RequestOptions
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.SOURCE_URL
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Course.entries
 import ir.hrka.kotlin.core.utilities.Course.Kotlin
+import ir.hrka.kotlin.core.utilities.Screen
 import ir.hrka.kotlin.core.utilities.Screen.About
 import ir.hrka.kotlin.domain.entities.db.Course
 
@@ -429,7 +432,9 @@ fun CourseItem(
                 },
                 onClick = {
                     if (course.isActive)
-                        navHostController.navigate(getCourseByCourseName(course.courseName))
+                        navHostController.navigate(
+                            Screen.Topic.appendArg(getCourseByCourseName(course.courseName))
+                        )
                 }
             ) {
                 Text(

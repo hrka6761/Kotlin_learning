@@ -3,17 +3,20 @@ package ir.hrka.kotlin.domain.entities.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import ir.hrka.kotlin.core.utilities.TopicDeserializer
 
+@JsonAdapter(TopicDeserializer::class)
 @Entity(tableName = "topic")
 data class Topic(
-    @PrimaryKey @SerializedName("topic_id") val id: Int,
-    @SerializedName("course") val course: String,
-    @SerializedName("topic_title") val topicTitle: String,
-    @SerializedName("topic_file_name") val fileName: String,
-    @SerializedName("topic_image") val topicImage: String,
-    @SerializedName("points_number") val pointsNumber: Int,
-    @SerializedName("has_visualizer") val hasVisualizer: Boolean,
-    @SerializedName("is_active") val isActive: Boolean,
-    @ColumnInfo(name = "has_update") var hasUpdate: Boolean = true,
+    @PrimaryKey @ColumnInfo("topic_id") @SerializedName(value = "topic_id") val id: Int,
+    @ColumnInfo(name = "has_update") var hasUpdate: Boolean,
+    @ColumnInfo(name = "course_name") @SerializedName(value = "course_name") val courseName: String,
+    @ColumnInfo(name = "topic_title") @SerializedName(value = "topic_title") val topicTitle: String,
+    @ColumnInfo(name = "topic_file_name") @SerializedName(value = "topic_file_name") val fileName: String,
+    @ColumnInfo(name = "topic_image") @SerializedName(value = "topic_image") val topicImage: String,
+    @ColumnInfo(name = "points_number") @SerializedName(value = "points_number") val pointsNumber: Int,
+    @ColumnInfo(name = "has_visualizer") @SerializedName(value = "has_visualizer") val hasVisualizer: Boolean,
+    @ColumnInfo(name = "is_active") @SerializedName(value = "is_active") val isActive: Boolean,
 )
