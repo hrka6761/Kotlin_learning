@@ -305,7 +305,7 @@ fun KotlinTopicItem(
                             .error(R.drawable.no_image)
                     )
                 },
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillBounds,
                 contentDescription = null,
             )
 

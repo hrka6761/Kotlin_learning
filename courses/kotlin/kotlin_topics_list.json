@@ -16,7 +16,7 @@
       "course_name": "kotlin",
       "topic_title": "Class",
       "topic_file_name": "class.json",
-      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
+      "topic_image": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin/topics_image/class.png",
       "points_number": 10,
       "has_visualizer": false,
       "is_active": true
@@ -26,7 +26,7 @@
       "course_name": "kotlin",
       "topic_title": "Abstract class",
       "topic_file_name": "abstract_class.json",
-      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
+      "topic_image": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin/topics_image/interface.png",
       "points_number": 9,
       "has_visualizer": false,
       "is_active": true
@@ -36,7 +36,7 @@
       "course_name": "kotlin",
       "topic_title": "Interface",
       "topic_file_name": "interface.json",
-      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
+      "topic_image": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin/topics_image/interface.png",
       "points_number": 10,
       "has_visualizer": false,
       "is_active": true
@@ -46,7 +46,7 @@
       "course_name": "kotlin",
       "topic_title": "Inheritance",
       "topic_file_name": "inheritance.json",
-      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
+      "topic_image": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin/topics_image/inheritance.png",
       "points_number": 17,
       "has_visualizer": false,
       "is_active": true
@@ -66,7 +66,7 @@
       "course_name": "kotlin",
       "topic_title": "Access modifiers",
       "topic_file_name": "access_modifiers.json",
-      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
+      "topic_image": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin/topics_image/access_modifier.png",
       "points_number": 9,
       "has_visualizer": false,
       "is_active": true
@@ -76,7 +76,7 @@
       "course_name": "kotlin",
       "topic_title": "Data class",
       "topic_file_name": "data_class.json",
-      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
+      "topic_image": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin/topics_image/data_class.png",
       "points_number": 10,
       "has_visualizer": false,
       "is_active": true
@@ -86,7 +86,7 @@
       "course_name": "kotlin",
       "topic_title": "Enum class",
       "topic_file_name": "enum_class.json",
-      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
+      "topic_image": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin/topics_image/enum_class.png",
       "points_number": 12,
       "has_visualizer": false,
       "is_active": true
@@ -96,7 +96,7 @@
       "course_name": "kotlin",
       "topic_title": "Sealed class/interface",
       "topic_file_name": "sealed.json",
-      "topic_image": "https://mathiasfrohlich.gallerycdn.vsassets.io/extensions/mathiasfrohlich/kotlin/1.7.1/1581441165235/Microsoft.VisualStudio.Services.Icons.Default",
+      "topic_image": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin/topics_image/sealed.png",
       "points_number": 9,
       "has_visualizer": false,
       "is_active": true
