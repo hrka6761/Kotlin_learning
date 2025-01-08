@@ -1,11 +1,11 @@
-package ir.hrka.kotlin.domain.usecases.db.topics
+package ir.hrka.kotlin.domain.usecases.git
 
 import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.domain.repositories.read.ReadTopicsRepo
 import javax.inject.Inject
 import javax.inject.Named
 
-class GetDBTopicsUseCase @Inject constructor(@Named("db") private val readTopicsRepo: ReadTopicsRepo) {
+class GetTopicsFromGitUseCase @Inject constructor(@Named("git") private val readTopicsRepo: ReadTopicsRepo) {
 
     suspend operator fun invoke(course: Course) = readTopicsRepo.getTopics(course)
 }

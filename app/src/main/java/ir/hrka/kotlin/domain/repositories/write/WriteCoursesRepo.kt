@@ -5,6 +5,6 @@ import ir.hrka.kotlin.domain.entities.db.Course
 
 interface WriteCoursesRepo {
 
-    suspend fun saveCoursesListOnDB(courses: List<Course>): Resource<Boolean>
-    suspend fun clearCoursesListTable(): Resource<Boolean>
+    suspend fun saveCourses(courses: List<Course>): Resource<Boolean?>
+    suspend fun removeCourses(): Resource<Boolean?>
 }

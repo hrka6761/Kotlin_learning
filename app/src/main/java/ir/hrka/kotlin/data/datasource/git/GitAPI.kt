@@ -17,9 +17,16 @@ interface GitAPI {
     suspend fun getCourses(): Response<GitFileData>
 
     @Headers("Accept: application/vnd.github.v3+json")
-    @GET("courses/{course_directory_name}/{topics_file_name}")
+    @GET("courses/{course_directory_name}/{topics_list_file_name}")
     suspend fun getCourseTopics(
         @Path("course_directory_name") courseName: String,
-        @Path("topics_file_name") topicsFileName: String
+        @Path("topics_list_file_name") topicsListFileName: String
+    ): Response<GitFileData>
+
+    @Headers("Accept: application/vnd.github.v3+json")
+    @GET("courses/{course_directory_name}/topics/{topic_file_name}")
+    suspend fun getTopicPoints(
+        @Path("course_directory_name") courseName: String,
+        @Path("topic_file_name") topicFileName: String
     ): Response<GitFileData>
 }

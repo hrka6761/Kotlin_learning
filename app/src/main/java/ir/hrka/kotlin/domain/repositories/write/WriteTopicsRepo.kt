@@ -6,7 +6,7 @@ import ir.hrka.kotlin.domain.entities.db.Topic
 
 interface WriteTopicsRepo {
 
-    suspend fun saveTopicsOnDB(topics: List<Topic>): Resource<Boolean?>
+    suspend fun saveTopics(topics: List<Topic>): Resource<Boolean?>
     suspend fun removeTopics(course: Course): Resource<Boolean?>
-    suspend fun updateTopicStateOnDB(id: Int, hasContentUpdate: Boolean): Resource<Boolean?>
+    suspend fun updateTopicState(id: Int, hasContentUpdate: Boolean): Resource<Boolean?>
 }

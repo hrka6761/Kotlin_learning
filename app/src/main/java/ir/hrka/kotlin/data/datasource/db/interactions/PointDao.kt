@@ -3,17 +3,18 @@ package ir.hrka.kotlin.data.datasource.db.interactions
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import ir.hrka.kotlin.domain.entities.db.Point
+import ir.hrka.kotlin.domain.entities.Point
+import ir.hrka.kotlin.domain.entities.db.DBPoint
 
 @Dao
 interface PointDao {
 
     @Insert
-    suspend fun insertPoints(points: Point): Long
+    suspend fun insertPoints(point: DBPoint): Long
 
     @Query("SELECT * FROM point where topic_name = :topicName")
-    suspend fun getPoints(topicName: String): List<Point>
+    suspend fun getPoints(topicName: String): List<DBPoint>
 
-    @Query("DELETE FROM point where topic_name = :topicName")
-    suspend fun deletePoints(topicName: String)
+    @Query("DELETE FROM point where id = :id")
+    suspend fun deletePoints(id: Long)
 }

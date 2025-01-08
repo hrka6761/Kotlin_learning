@@ -10,7 +10,7 @@ class UpdateTopicsStateOnDBUseCase @Inject constructor(private val writeTopicsRe
         val totalResult: MutableList<Resource<Boolean?>> = mutableListOf()
 
         topicsIds.forEach { topicId ->
-            val result = writeTopicsRepo.updateTopicStateOnDB(topicId, state)
+            val result = writeTopicsRepo.updateTopicState(topicId, state)
             totalResult.add(result)
         }
 

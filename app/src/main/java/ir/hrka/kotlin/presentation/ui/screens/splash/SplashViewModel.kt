@@ -18,7 +18,7 @@ import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.VersionsInfo
-import ir.hrka.kotlin.domain.usecases.git.GetChangelogUseCase
+import ir.hrka.kotlin.domain.usecases.git.GetChangelogFromGitUseCase
 import ir.hrka.kotlin.domain.usecases.preference.GetCoroutineVersionIdUseCase
 import ir.hrka.kotlin.domain.usecases.preference.GetCoursesVersionIdUseCase
 import ir.hrka.kotlin.domain.usecases.preference.GetKotlinVersionIdUseCase
@@ -34,7 +34,7 @@ import javax.inject.Named
 class SplashViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val globalData: GlobalData,
-    private val getChangelogUseCase: GetChangelogUseCase,
+    private val getChangelogFromGitUseCase: GetChangelogFromGitUseCase,
     private val getCoursesVersionIdUseCase: GetCoursesVersionIdUseCase,
     private val getKotlinVersionIdUseCase: GetKotlinVersionIdUseCase,
     private val getCoroutineVersionIdUseCase: GetCoroutineVersionIdUseCase
@@ -65,7 +65,7 @@ class SplashViewModel @Inject constructor(
     fun getAppChangelog() {
         viewModelScope.launch(io) {
             _versionsInfo.value = Resource.Loading()
-            _versionsInfo.value = getChangelogUseCase()
+            _versionsInfo.value = getChangelogFromGitUseCase()
         }
     }
 

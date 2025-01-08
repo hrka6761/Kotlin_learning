@@ -1,19 +1,9 @@
 package ir.hrka.kotlin.domain.entities
 
-data class PointData(
-    val num: Int,
-    val databaseId: Long?,
-    val rawPoint: String,
-    val headPoint: String,
-    val subPoints: List<String>?,
-    val snippetsCode: List<String>?
-) {
+import com.google.gson.annotations.SerializedName
 
-    override fun toString(): String {
-        return "num = $num\n" +
-                "id = $databaseId\n" +
-                "headPoint = $headPoint\n" +
-                "subPoints = $subPoints\n" +
-                "snippetsCode = $snippetsCode"
-    }
-}
+data class PointData(
+    @SerializedName(value = "topic_id") val topicId: Int,
+    @SerializedName(value = "topic_name") val topicName:String,
+    @SerializedName(value = "points") val points:List<Point>
+)

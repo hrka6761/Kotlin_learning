@@ -12,16 +12,14 @@ import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.db.Topic
-import ir.hrka.kotlin.domain.usecases.db.topics.GetDBTopicsUseCase
-import ir.hrka.kotlin.domain.usecases.db.topics.RemoveDBTopicsUseCase
-import ir.hrka.kotlin.domain.usecases.git.GetGitTopicsUseCase
-import ir.hrka.kotlin.domain.usecases.db.topics.SaveTopicsOnDBUseCase
+import ir.hrka.kotlin.domain.usecases.db.topics.GetTopicsFromDBUseCase
+import ir.hrka.kotlin.domain.usecases.git.GetTopicsFromGitUseCase
+import ir.hrka.kotlin.domain.usecases.db.topics.UpdateTopicsOnDBUseCase
 import ir.hrka.kotlin.domain.usecases.preference.SaveKotlinVersionIdUseCase
 import ir.hrka.kotlin.domain.usecases.db.topics.UpdateTopicsStateOnDBUseCase
 import ir.hrka.kotlin.domain.usecases.preference.SaveCoroutineVersionIdUseCase
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -32,10 +30,9 @@ import javax.inject.Named
 class TopicViewModel @Inject constructor(
     @Named("IO") private val io: CoroutineDispatcher,
     private val globalData: GlobalData,
-    private val getGitTopicsUseCase: GetGitTopicsUseCase,
-    private val getDBTopicsUseCase: GetDBTopicsUseCase,
-    private val saveTopicsOnDBUseCase: SaveTopicsOnDBUseCase,
-    private val removeDBTopicsUseCase: RemoveDBTopicsUseCase,
+    private val getTopicsFromGitUseCase: GetTopicsFromGitUseCase,
+    private val getTopicsFromDBUseCase: GetTopicsFromDBUseCase,
+    private val updateTopicsOnDBUseCase: UpdateTopicsOnDBUseCase,
     private val saveKotlinVersionIdUseCase: SaveKotlinVersionIdUseCase,
     private val saveCoroutineVersionIdUseCase: SaveCoroutineVersionIdUseCase,
     private val updateTopicsStateOnDBUseCase: UpdateTopicsStateOnDBUseCase
@@ -55,13 +52,13 @@ class TopicViewModel @Inject constructor(
     private val _topics: MutableStateFlow<Resource<List<Topic>?>> =
         MutableStateFlow(Resource.Initial())
     val topics: StateFlow<Resource<List<Topic>?>> = _topics
-    private val _saveKotlinTopicsResult: MutableStateFlow<Resource<Boolean?>> =
+    private val _updateTopicsOnDBResult: MutableStateFlow<Resource<Boolean?>> =
         MutableStateFlow(Resource.Initial())
-    val saveKotlinTopicsResult: StateFlow<Resource<Boolean?>> = _saveKotlinTopicsResult
-    private val _updateKotlinTopicsOnDBResult: MutableStateFlow<Resource<Boolean?>> =
+    val updateTopicsOnDBResult: StateFlow<Resource<Boolean?>> = _updateTopicsOnDBResult
+    private val _updateTopicsStateOnDBResult: MutableStateFlow<Resource<Boolean?>> =
         MutableStateFlow(Resource.Initial())
-    val updateKotlinTopicsOnDBResult: MutableStateFlow<Resource<Boolean?>> =
-        _updateKotlinTopicsOnDBResult
+    val updateTopicsStateOnDBResult: MutableStateFlow<Resource<Boolean?>> =
+        _updateTopicsStateOnDBResult
     private val _updateVersionIdResult: MutableStateFlow<Resource<Boolean?>> =
         MutableStateFlow(Resource.Initial())
     val updateVersionIdResult: StateFlow<Resource<Boolean?>> = _updateVersionIdResult
@@ -92,36 +89,27 @@ class TopicViewModel @Inject constructor(
     fun getTopicsFromGit(course: Course) {
         viewModelScope.launch(io) {
             _topics.value = Resource.Loading()
-            _topics.value = getGitTopicsUseCase(course)
+            _topics.value = getTopicsFromGitUseCase(course)
         }
     }
 
     fun getTopicsFromDB(course: Course) {
         viewModelScope.launch(io) {
             _topics.value = Resource.Loading()
-            _topics.value = getDBTopicsUseCase(course)
+            _topics.value = getTopicsFromDBUseCase(course)
         }
     }
 
-    fun saveTopicsOnDB(course: Course, topics: List<Topic>) {
+    fun updateTopicsOnDB(course: Course, topics: List<Topic>) {
         viewModelScope.launch(io) {
-            _saveKotlinTopicsResult.value = Resource.Loading()
-
-            val removeDiffered = async { removeDBTopicsUseCase(course) }
-            val removeResult = removeDiffered.await()
-
-            if (removeResult is Resource.Error) {
-                _saveKotlinTopicsResult.value = removeResult
-                return@launch
-            }
-
-            _saveKotlinTopicsResult.value = saveTopicsOnDBUseCase(topics)
+            _updateTopicsOnDBResult.value = Resource.Loading()
+            _updateTopicsOnDBResult.value = updateTopicsOnDBUseCase(topics, course)
         }
     }
 
-    fun updateTopicsOnDB(course: Course) {
+    fun updateTopicsStateOnDB(course: Course) {
         viewModelScope.launch(io) {
-            _updateKotlinTopicsOnDBResult.value = Resource.Loading()
+            _updateTopicsStateOnDBResult.value = Resource.Loading()
 
             var successResult: Resource<Boolean?>? = null
             var errorResult: Resource<Boolean?>? = null
@@ -142,7 +130,7 @@ class TopicViewModel @Inject constructor(
                     successResult = result
             }
 
-            _updateKotlinTopicsOnDBResult.value =
+            _updateTopicsStateOnDBResult.value =
                 if (errorResult != null) errorResult!! else successResult!!
         }
     }
@@ -166,6 +154,15 @@ class TopicViewModel @Inject constructor(
         } else {
             globalData.hasCoroutineTopicsUpdate = false
             globalData.hasCoroutineTopicsPointsUpdate = false
+        }
+    }
+
+    fun updateTopicStateInList(id: Int) {
+        _topics.value.data?.forEach { topic ->
+            if (topic.id == id) {
+                topic.hasUpdate = false
+                return
+            }
         }
     }
 }

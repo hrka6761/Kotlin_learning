@@ -2,6 +2,7 @@ package ir.hrka.kotlin.presentation.ui.screens.point
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -40,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,24 +51,22 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.string_utilities.extractFileName
-import ir.hrka.kotlin.core.utilities.string_utilities.splitByCapitalLetters
-import ir.hrka.kotlin.domain.entities.PointData
+import ir.hrka.kotlin.core.utilities.Screen
+import ir.hrka.kotlin.domain.entities.Point
+import ir.hrka.kotlin.domain.entities.db.Topic
 
 @Composable
-fun KotlinTopicPointsScreen(
+fun PointsScreen(
     activity: MainActivity,
     navHostController: NavHostController,
-    topicName: String,
-    topicId: Int,
-    hasContentUpdated: Boolean
+    topic: Topic?
 ) {
 
     val viewModel: PointViewModel = hiltViewModel()
@@ -73,20 +74,21 @@ fun KotlinTopicPointsScreen(
     val points by viewModel.points.collectAsState()
     val failedState by viewModel.failedState.collectAsState()
     val executionState by viewModel.executionState.collectAsState()
-    val saveTopicPointsResult by viewModel.saveTopicPointsResult.collectAsState()
-    val updateTopicsOnDBResult by viewModel.updateTopicsOnDBResult.collectAsState()
+    val updatePointsOnDBResult by viewModel.updatePointsOnDBResult.collectAsState()
+    val updateTopicOnDBResult by viewModel.updateTopicStateOnDBResult.collectAsState()
 
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { KotlinTopicPointsScreenAppBar(topicName, navHostController) },
+        topBar = { PointsScreenAppBar(topic?.topicTitle, navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
                     .fillMaxWidth(),
                 hostState = snackBarHostState
             )
-        }
+        },
+        bottomBar = { if (topic?.hasVisualizer == true) PointsScreenBottomBar(navHostController) }
     ) { innerPaddings ->
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -128,7 +130,8 @@ fun KotlinTopicPointsScreen(
 
                 list?.let {
                     items(it.size) { index ->
-                        KotlinTopicPointItem(list[index])
+
+                        PointItem(list[index], index)
                     }
                 }
             }
@@ -144,9 +147,15 @@ fun KotlinTopicPointsScreen(
     }
 
     LaunchedEffect(Unit) {
-        if (executionState == Start)
+        if (executionState == Start) {
             viewModel.setExecutionState(Loading)
-
+            topic?.let {
+                if (topic.hasUpdate)
+                    viewModel.getPointsFromGit(it)
+                else
+                    viewModel.getPointsFromDB(it)
+            }
+        }
     }
 
     LaunchedEffect(points) {
@@ -154,30 +163,56 @@ fun KotlinTopicPointsScreen(
             when (points) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
-                is Resource.Success -> {}
-                is Resource.Error -> {}
+                is Resource.Success -> {
+                    topic?.let {
+                        if (topic.hasUpdate)
+                            points.data?.let { viewModel.updatePointsOnDB(topic, it) }
+                        else
+                            viewModel.setExecutionState(Stop)
+                    }
+
+                }
+
+                is Resource.Error -> {
+                    viewModel.setExecutionState(Stop)
+                    viewModel.setFailedState(true)
+                }
             }
         }
     }
 
-    LaunchedEffect(saveTopicPointsResult) {
+    LaunchedEffect(updatePointsOnDBResult) {
         if (executionState != Stop) {
-            when (saveTopicPointsResult) {
+            when (updatePointsOnDBResult) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
-                is Resource.Success -> {}
-                is Resource.Error -> {}
+                is Resource.Success -> {
+                    topic?.let { viewModel.updateTopicStateOnDB(it) }
+                }
+
+                is Resource.Error -> {
+                    viewModel.setExecutionState(Stop)
+                }
             }
         }
     }
 
-    LaunchedEffect(updateTopicsOnDBResult) {
+    LaunchedEffect(updateTopicOnDBResult) {
         if (executionState != Stop) {
-            when (updateTopicsOnDBResult) {
+            when (updateTopicOnDBResult) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
-                is Resource.Success -> {}
-                is Resource.Error -> {}
+                is Resource.Success -> {
+                    navHostController
+                        .previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT, topic?.id)
+                    viewModel.setExecutionState(Stop)
+                }
+
+                is Resource.Error -> {
+                    viewModel.setExecutionState(Stop)
+                }
             }
         }
     }
@@ -189,13 +224,11 @@ fun KotlinTopicPointsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun KotlinTopicPointsScreenAppBar(topicName: String, navHostController: NavHostController) {
+fun PointsScreenAppBar(topicName: String?, navHostController: NavHostController) {
     TopAppBar(
         title = {
             Text(
-                text = topicName
-                    .extractFileName()
-                    .splitByCapitalLetters(),
+                text = topicName ?: "",
                 fontWeight = FontWeight.Bold
             )
         },
@@ -210,7 +243,31 @@ fun KotlinTopicPointsScreenAppBar(topicName: String, navHostController: NavHostC
 }
 
 @Composable
-fun KotlinTopicPointItem(point: PointData) {
+fun PointsScreenBottomBar(navHostController: NavHostController) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = MaterialTheme.colorScheme.primaryContainer)
+            .padding(24.dp)
+            .clickable { navHostController.navigate(Screen.SequentialProgramming()) },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            text = stringResource(R.string.visualization_page_title)
+        )
+        Icon(
+            modifier = Modifier.size(50.dp),
+            painter = painterResource(R.drawable.play_visualizer),
+            contentDescription = ""
+        )
+    }
+}
+
+@Composable
+fun PointItem(point: Point, index: Int) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -222,8 +279,8 @@ fun KotlinTopicPointItem(point: PointData) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp)
+                    .width(25.dp)
+                    .height(25.dp)
                     .background(
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(50)
@@ -234,21 +291,23 @@ fun KotlinTopicPointItem(point: PointData) {
                     }
             ) {
                 Text(
-                    fontSize = 16.sp,
+                    fontSize = 12.sp,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
-                    text = point.num.toString(),
+                    text = (index + 1).toString(),
                 )
             }
 
             Text(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .constrainAs(pointHead) {
                         top.linkTo(id.bottom, margin = 8.dp)
                         start.linkTo(parent.start, margin = 8.dp)
                         end.linkTo(parent.end, margin = 8.dp)
                     },
+                textAlign = TextAlign.Start,
                 text = point.headPoint,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -260,19 +319,19 @@ fun KotlinTopicPointItem(point: PointData) {
                         .fillMaxWidth()
                         .heightIn(max = 400.dp)
                         .constrainAs(subPoints) {
-                            top.linkTo(pointHead.bottom, margin = 16.dp)
+                            top.linkTo(pointHead.bottom, margin = 8.dp)
                             end.linkTo(parent.end, margin = 8.dp)
                             start.linkTo(parent.start, margin = 8.dp)
-                            if (point.snippetsCode.isNullOrEmpty())
+                            if (point.snippetsCodes.isNullOrEmpty())
                                 bottom.linkTo(parent.bottom, margin = 8.dp)
                         }
                 ) {
                     items(point.subPoints.size) { index ->
-                        KotlinTopicSubPintItem(point.subPoints[index])
+                        SubPintItem(point.subPoints[index])
                     }
                 }
 
-            if (!point.snippetsCode.isNullOrEmpty())
+            if (!point.snippetsCodes.isNullOrEmpty())
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -287,8 +346,8 @@ fun KotlinTopicPointItem(point: PointData) {
                             bottom.linkTo(parent.bottom, margin = 8.dp)
                         }
                 ) {
-                    items(point.snippetsCode.size) { index ->
-                        KotlinTopicSnippetCodeItem(point.snippetsCode[index])
+                    items(point.snippetsCodes.size) { index ->
+                        SnippetCodeItem(point.snippetsCodes[index])
                     }
                 }
         }
@@ -296,11 +355,11 @@ fun KotlinTopicPointItem(point: PointData) {
 }
 
 @Composable
-fun KotlinTopicSubPintItem(subPoints: String) {
+fun SubPintItem(subPoints: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 8.dp, vertical = 2.dp),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -313,17 +372,17 @@ fun KotlinTopicSubPintItem(subPoints: String) {
 }
 
 @Composable
-fun KotlinTopicSnippetCodeItem(snippetCode: String) {
+fun SnippetCodeItem(snippetCode: String) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 8.dp, vertical = 8.dp)
     ) {
         Text(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primaryContainer)
-                .padding(vertical = 8.dp),
+                .padding(vertical = 12.dp, horizontal = 8.dp),
             text = snippetCode,
             textAlign = TextAlign.Start,
             fontSize = 10.sp,
@@ -335,6 +394,36 @@ fun KotlinTopicSnippetCodeItem(snippetCode: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun KotlinTopicPointsScreenPreview() {
-    KotlinTopicPointsScreen(MainActivity(), rememberNavController(), "", -1, false)
+fun PointsScreenPreview() {
+//    PointsScreen(
+//        MainActivity(),
+//        rememberNavController(),
+//        Topic(
+//        id = 1,
+//            hasUpdate = true,
+//            courseName = "Kotlin",
+//            fileName = "basic.json",
+//            topicTitle = "Basic",
+//            pointsNumber = 29,
+//            topicImage = "",
+//            hasVisualizer = true,
+//            isActive = true
+//        )
+//    )
+
+    PointItem(
+        point = Point(
+            id = 1,
+            headPoint = "This is head Point.",
+            subPoints = listOf(
+                "This is sub Point 1.",
+                "This is sub Point 2."
+            ),
+            snippetsCodes = listOf(
+                " This is sub snippetCode 1.",
+                " This is sub snippetCode 2."
+            ),
+        ),
+        index = 1
+    )
 }

@@ -15,7 +15,7 @@ class WriteDBTopicsRepoImpl @Inject constructor(
     private val topicDao: TopicDao
 ) : WriteTopicsRepo {
 
-    override suspend fun saveTopicsOnDB(topics: List<Topic>): Resource<Boolean?> {
+    override suspend fun saveTopics(topics: List<Topic>): Resource<Boolean?> {
         return try {
             topicDao.insertTopics(*topics.toTypedArray())
             Resource.Success(true)
@@ -43,7 +43,7 @@ class WriteDBTopicsRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateTopicStateOnDB(
+    override suspend fun updateTopicState(
         id: Int,
         hasContentUpdate: Boolean
     ): Resource<Boolean?> {

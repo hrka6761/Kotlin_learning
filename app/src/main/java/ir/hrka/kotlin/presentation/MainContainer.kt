@@ -2,6 +2,7 @@ package ir.hrka.kotlin.presentation
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,10 +13,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import ir.hrka.kotlin.core.Constants.ARGUMENT_KOTLIN_TOPIC_ID
-import ir.hrka.kotlin.core.Constants.ARGUMENT_KOTLIN_TOPIC
-import ir.hrka.kotlin.core.Constants.ARGUMENT_KOTLIN_TOPIC_UPDATE_STATE
-import ir.hrka.kotlin.core.Constants.COURSE_ARGUMENT_TOPICS_SCREEN
+import ir.hrka.kotlin.core.Constants.POINTS_SCREEN_TOPIC_ARGUMENT
+import ir.hrka.kotlin.core.Constants.TAG
+import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_COURSE_ARGUMENT
 import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.Course.Kotlin
 import ir.hrka.kotlin.core.utilities.Screen.Splash
@@ -25,7 +25,7 @@ import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.core.utilities.Screen.About
 import ir.hrka.kotlin.core.utilities.Screen.SequentialProgramming
 import ir.hrka.kotlin.presentation.ui.screens.about.AboutScreen
-import ir.hrka.kotlin.presentation.ui.screens.point.KotlinTopicPointsScreen
+import ir.hrka.kotlin.presentation.ui.screens.point.PointsScreen
 import ir.hrka.kotlin.presentation.ui.screens.topic.TopicsScreen
 import ir.hrka.kotlin.presentation.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.presentation.ui.screens.splash.SplashScreen
@@ -56,47 +56,38 @@ fun AppContent() {
                 HomeScreen(activity, navHostController)
             }
             composable(
-                route = "${Topic()}/{$COURSE_ARGUMENT_TOPICS_SCREEN}",
+                route = "${Topic()}/{$TOPICS_SCREEN_COURSE_ARGUMENT}",
                 arguments = listOf(
-                    navArgument(COURSE_ARGUMENT_TOPICS_SCREEN) {
+                    navArgument(TOPICS_SCREEN_COURSE_ARGUMENT) {
                         type = NavType.EnumType(Course::class.java)
                     }
                 )
-            ) { entry ->
+            ) { backStackEntry ->
                 val course = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                    entry.arguments
-                        ?.getParcelable(COURSE_ARGUMENT_TOPICS_SCREEN, Course::class.java)
-                        ?: Kotlin
+                    backStackEntry.arguments
+                        ?.getParcelable(
+                            TOPICS_SCREEN_COURSE_ARGUMENT,
+                            Course::class.java
+                        ) ?: Kotlin
                 else
-                    entry.arguments
-                        ?.getParcelable(COURSE_ARGUMENT_TOPICS_SCREEN)
+                    backStackEntry.arguments
+                        ?.getParcelable<Course>(TOPICS_SCREEN_COURSE_ARGUMENT)
                         ?: Kotlin
 
                 TopicsScreen(activity, navHostController, course)
             }
             composable(
                 route = Point()
-            ) { backStackEntry ->
+            ) {
+                val topic = navHostController
+                    .previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<ir.hrka.kotlin.domain.entities.db.Topic>(POINTS_SCREEN_TOPIC_ARGUMENT)
 
-                val kotlinTopicName =
-                    backStackEntry.arguments?.getString(
-                        ARGUMENT_KOTLIN_TOPIC
-                    ) ?: ""
-                val hasContentUpdated =
-                    backStackEntry.arguments?.getBoolean(
-                        ARGUMENT_KOTLIN_TOPIC_UPDATE_STATE
-                    ) ?: false
-                val kotlinTopicId =
-                    backStackEntry.arguments?.getInt(
-                        ARGUMENT_KOTLIN_TOPIC_ID
-                    ) ?: -1
-
-                KotlinTopicPointsScreen(
+                PointsScreen(
                     activity,
                     navHostController,
-                    kotlinTopicName,
-                    kotlinTopicId,
-                    hasContentUpdated
+                    topic
                 )
             }
             composable(

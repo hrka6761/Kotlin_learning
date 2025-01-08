@@ -7,7 +7,7 @@ object Constants {
     const val SPLASH_SCREEN = "splash"
     const val HOME_SCREEN = "home"
     const val KOTLIN_SCREEN = "topic"
-    const val POINT_SCREEN = "Point"
+    const val POINT_SCREEN = "point"
     const val SEQUENTIAL_PROGRAMMING_SCREEN = "sequentialProgramming"
     const val ABOUT_SCREEN = "about"
 
@@ -22,10 +22,9 @@ object Constants {
     const val WRITE_TIMEOUT = 60L
     const val READ_TIMEOUT = 60L
 
-    const val COURSE_ARGUMENT_TOPICS_SCREEN = "course"
-    const val ARGUMENT_KOTLIN_TOPIC = "kotlinTopicName"
-    const val ARGUMENT_KOTLIN_TOPIC_UPDATE_STATE = "kotlinTopicUpdateState"
-    const val ARGUMENT_KOTLIN_TOPIC_ID = "kotlinTopicId"
+    const val TOPICS_SCREEN_COURSE_ARGUMENT = "courseArg"
+    const val TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT = "updatedTopicId"
+    const val POINTS_SCREEN_TOPIC_ARGUMENT = "topicArg"
 
     const val KOTLIN_COURSE_NAME = "kotlin"
     const val COROUTINE_COURSE_NAME = "coroutine"
@@ -45,7 +44,14 @@ object Constants {
     const val DB_UPDATE_TOPICS_ERROR_CODE = 3003
     const val DB_READ_COURSES_ERROR_CODE = 3004
     const val DB_WRITE_COURSES_ERROR_CODE = 3005
-    const val DB_CLEAR_COURSES_ERROR_CODE = 3006
+    const val DB_REMOVE_COURSES_ERROR_CODE = 3006
+    const val DB_READ_POINTS_ERROR_CODE = 3007
+    const val DB_WRITE_POINTS_ERROR_CODE = 3008
+    const val DB_WRITE_SUB_POINTS_ERROR_CODE = 3009
+    const val DB_WRITE_SNIPPET_CODES_ERROR_CODE = 3010
+    const val DB_REMOVE_POINTS_ERROR_CODE = 3011
+    const val DB_REMOVE_SUB_POINTS_ERROR_CODE = 3012
+    const val DB_REMOVE_SNIPPET_CODES_ERROR_CODE = 3013
 
     const val DATABASE_NAME = "kotlin-database"
     const val COURSES_VERSION_ID_PREFERENCE_KEY = "coursesVersionId"

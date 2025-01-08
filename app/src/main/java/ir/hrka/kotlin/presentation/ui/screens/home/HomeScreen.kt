@@ -433,7 +433,9 @@ fun CourseItem(
                 onClick = {
                     if (course.isActive)
                         navHostController.navigate(
-                            Screen.Topic.appendArg(getCourseByCourseName(course.courseName))
+                            Screen.Topic.appendArg(
+                                getCourseByCourseName(course.courseName)
+                            )
                         )
                 }
             ) {

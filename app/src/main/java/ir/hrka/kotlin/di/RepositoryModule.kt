@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ir.hrka.kotlin.data.repositories.db.read.ReadDBCoursesRepoImpl
+import ir.hrka.kotlin.data.repositories.db.read.ReadDBPointsRepoImpl
 import ir.hrka.kotlin.data.repositories.db.read.ReadDBTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitChangelogRepoImpl
 import ir.hrka.kotlin.data.repositories.db.write.WriteDBCoursesRepoImpl
@@ -13,12 +14,20 @@ import ir.hrka.kotlin.data.repositories.git.ReadGitTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.preference.ReadPreferencesRepoImpl
 import ir.hrka.kotlin.data.repositories.preference.WritePreferencesRepoImpl
 import ir.hrka.kotlin.data.repositories.db.write.WriteDBTopicsRepoImpl
+import ir.hrka.kotlin.data.repositories.db.write.WriteDBPointsRepoImpl
+import ir.hrka.kotlin.data.repositories.db.write.WriteDBSnippetCodesRepoImpl
+import ir.hrka.kotlin.data.repositories.db.write.WriteDBSubPointsRepoImpl
+import ir.hrka.kotlin.data.repositories.git.ReadGitPointsRepoImpl
 import ir.hrka.kotlin.domain.repositories.read.ReadChangelogRepo
 import ir.hrka.kotlin.domain.repositories.write.WriteCoursesRepo
 import ir.hrka.kotlin.domain.repositories.read.ReadCoursesRepo
+import ir.hrka.kotlin.domain.repositories.read.ReadPointsRepo
 import ir.hrka.kotlin.domain.repositories.read.ReadTopicsRepo
 import ir.hrka.kotlin.domain.repositories.read.ReadPreferencesRepo
+import ir.hrka.kotlin.domain.repositories.write.WritePointsRepo
 import ir.hrka.kotlin.domain.repositories.write.WritePreferencesRepo
+import ir.hrka.kotlin.domain.repositories.write.WriteSnippetCodesRepo
+import ir.hrka.kotlin.domain.repositories.write.WriteSubPointsRepo
 import ir.hrka.kotlin.domain.repositories.write.WriteTopicsRepo
 import javax.inject.Named
 
@@ -56,4 +65,21 @@ interface RepositoryModule {
 
     @Binds
     fun bindWriteTopicsRepoImpl(writeDBTopicsRepoImpl: WriteDBTopicsRepoImpl): WriteTopicsRepo
+
+    @Named("git")
+    @Binds
+    fun bindReadGitPointsRepoImpl(readGitPointsRepoImpl: ReadGitPointsRepoImpl): ReadPointsRepo
+
+    @Named("db")
+    @Binds
+    fun bindReadDBPointsRepoImpl(readDBPointsRepoImpl: ReadDBPointsRepoImpl): ReadPointsRepo
+
+    @Binds
+    fun bindWritePointsRepoImpl(writeDBPointsRepoImpl: WriteDBPointsRepoImpl): WritePointsRepo
+
+    @Binds
+    fun bindWriteSubPointsRepoImpl(writeDBSubPointsRepoImpl: WriteDBSubPointsRepoImpl): WriteSubPointsRepo
+
+    @Binds
+    fun bindWriteSnippetCodesRepoImpl(writeDBSnippetCodesRepoImpl: WriteDBSnippetCodesRepoImpl): WriteSnippetCodesRepo
 }

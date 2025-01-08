@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.presentation.ui.screens.topic
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -57,12 +58,15 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.request.RequestOptions
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.POINTS_SCREEN_TOPIC_ARGUMENT
+import ir.hrka.kotlin.core.Constants.TAG
+import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
-import ir.hrka.kotlin.core.Constants.UPDATED_TOPIC_ID_KEY
 import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
 
 @Composable
@@ -77,12 +81,15 @@ fun TopicsScreen(
     val topics by viewModel.topics.collectAsState()
     val executionState by viewModel.executionState.collectAsState()
     val failedState by viewModel.failedState.collectAsState()
-    val saveTopicsResult by viewModel.saveKotlinTopicsResult.collectAsState()
-    val updateTopicsOnDBResult by viewModel.updateKotlinTopicsOnDBResult.collectAsState()
+    val updateTopicsOnDBResult by viewModel.updateTopicsOnDBResult.collectAsState()
+    val updateTopicsStateOnDBResult by viewModel.updateTopicsStateOnDBResult.collectAsState()
     val updateVersionIdResult by viewModel.updateVersionIdResult.collectAsState()
-    val updatedId = navHostController.currentBackStackEntry
+    val updatedId = navHostController
+        .currentBackStackEntry
         ?.savedStateHandle
-        ?.get<Int>(UPDATED_TOPIC_ID_KEY)
+        ?.get<Int>(TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT)
+
+    updatedId?.let { viewModel.updateTopicStateInList(it) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -159,7 +166,7 @@ fun TopicsScreen(
             }
 
             if (viewModel.hasTopicsPointsUpdate(course)) {
-                viewModel.updateTopicsOnDB(course)
+                viewModel.updateTopicsStateOnDB(course)
                 return@LaunchedEffect
             }
 
@@ -175,7 +182,7 @@ fun TopicsScreen(
 
                 is Resource.Success -> {
                     if (viewModel.hasTopicsUpdate(course))
-                        topics.data?.let { viewModel.saveTopicsOnDB(course, it) }
+                        topics.data?.let { viewModel.updateTopicsOnDB(course, it) }
                     else
                         viewModel.setExecutionState(Stop)
                 }
@@ -188,9 +195,9 @@ fun TopicsScreen(
         }
     }
 
-    LaunchedEffect(saveTopicsResult) {
+    LaunchedEffect(updateTopicsOnDBResult) {
         if (executionState != Stop) {
-            when (saveTopicsResult) {
+            when (updateTopicsOnDBResult) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
@@ -210,13 +217,16 @@ fun TopicsScreen(
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    if (viewModel.hasTopicsUpdate(course))
+                    if (viewModel.hasTopicsUpdate(course)) {
                         viewModel.setExecutionState(Stop)
+                        viewModel.updateVersionIdInGlobalData(course)
+                        return@LaunchedEffect
+                    }
 
-                    if (viewModel.hasTopicsPointsUpdate(course))
+                    if (viewModel.hasTopicsPointsUpdate(course)) {
                         viewModel.getTopicsFromDB(course)
-
-                    viewModel.updateVersionIdInGlobalData(course)
+                        viewModel.updateVersionIdInGlobalData(course)
+                    }
                 }
 
                 is Resource.Error -> {
@@ -229,9 +239,9 @@ fun TopicsScreen(
         }
     }
 
-    LaunchedEffect(updateTopicsOnDBResult) {
+    LaunchedEffect(updateTopicsStateOnDBResult) {
         if (executionState != Stop) {
-            when (updateTopicsOnDBResult) {
+            when (updateTopicsStateOnDBResult) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
@@ -283,7 +293,14 @@ fun KotlinTopicItem(
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .alpha(if (topic.isActive) 1f else 0.3f)
                 .clickable {
+                    if (topic.isActive) {
+                        navHostController
+                            .currentBackStackEntry
+                            ?.savedStateHandle
+                            ?.set(POINTS_SCREEN_TOPIC_ARGUMENT, topic)
 
+                        navHostController.navigate(Point())
+                    }
                 }
                 .padding(8.dp)
         ) {

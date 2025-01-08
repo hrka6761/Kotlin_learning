@@ -8,7 +8,7 @@ import ir.hrka.kotlin.core.Constants.KOTLIN_TOPICS_FILE_NAME
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-enum class Course(val courseName: String, val topicsFileName: String): Parcelable {
+enum class Course(val courseName: String, val topicsFileName: String) : Parcelable{
 
     Kotlin(KOTLIN_COURSE_NAME, KOTLIN_TOPICS_FILE_NAME),
     Coroutine(COROUTINE_COURSE_NAME, COROUTINE_TOPICS_FILE_NAME);

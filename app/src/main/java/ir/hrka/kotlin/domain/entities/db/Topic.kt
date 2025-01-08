@@ -1,5 +1,7 @@
 package ir.hrka.kotlin.domain.entities.db
 
+import kotlinx.parcelize.Parcelize
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -7,6 +9,7 @@ import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import ir.hrka.kotlin.core.utilities.TopicDeserializer
 
+@Parcelize
 @JsonAdapter(TopicDeserializer::class)
 @Entity(tableName = "topic")
 data class Topic(
@@ -19,4 +22,4 @@ data class Topic(
     @ColumnInfo(name = "points_number") @SerializedName(value = "points_number") val pointsNumber: Int,
     @ColumnInfo(name = "has_visualizer") @SerializedName(value = "has_visualizer") val hasVisualizer: Boolean,
     @ColumnInfo(name = "is_active") @SerializedName(value = "is_active") val isActive: Boolean,
-)
+) : Parcelable

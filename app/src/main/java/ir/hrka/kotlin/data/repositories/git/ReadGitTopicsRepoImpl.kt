@@ -1,14 +1,12 @@
 package ir.hrka.kotlin.data.repositories.git
 
-import android.util.Log
 import com.google.gson.Gson
 import ir.hrka.kotlin.core.Constants.READ_FILE_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.RETROFIT_ERROR_CODE
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.string_utilities.decodeBase64
+import ir.hrka.kotlin.core.utilities.decodeBase64
 import ir.hrka.kotlin.data.datasource.git.GitAPI
 import ir.hrka.kotlin.domain.entities.GitFileData
 import ir.hrka.kotlin.domain.entities.TopicsData
@@ -24,13 +22,13 @@ class ReadGitTopicsRepoImpl @Inject constructor(
         return try {
             val response = gitAPI.getCourseTopics(
                 courseName = course.courseName,
-                topicsFileName = course.topicsFileName
+                topicsListFileName = course.topicsFileName
             )
 
             if (response.isSuccessful) {
                 val topicFileData = response.body()
-                val topicFileContent = extractTopicContent(topicFileData)
-                val topicsData = provideTopic(
+                val topicFileContent = extractTopicsListContent(topicFileData)
+                val topicsData = provideTopicData(
                     topicFileContent.ifEmpty {
                         return Resource.Error(
                             Error(
@@ -61,13 +59,13 @@ class ReadGitTopicsRepoImpl @Inject constructor(
     }
 
 
-    private fun extractTopicContent(kotlinTopicFileData: GitFileData?): String {
+    private fun extractTopicsListContent(kotlinTopicFileData: GitFileData?): String {
         val encodedContent = kotlinTopicFileData?.content ?: ""
         val decodedContent = encodedContent.decodeBase64()
 
         return decodedContent
     }
 
-    private fun provideTopic(topicFileData: String): TopicsData =
+    private fun provideTopicData(topicFileData: String): TopicsData =
         Gson().fromJson(topicFileData, TopicsData::class.java)
 }

@@ -5,7 +5,7 @@ import ir.hrka.kotlin.core.Constants.READ_FILE_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.RETROFIT_ERROR_CODE
 import ir.hrka.kotlin.core.errors.Error
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.string_utilities.decodeBase64
+import ir.hrka.kotlin.core.utilities.decodeBase64
 import ir.hrka.kotlin.data.datasource.git.GitAPI
 import ir.hrka.kotlin.domain.entities.CoursesData
 import ir.hrka.kotlin.domain.entities.GitFileData
