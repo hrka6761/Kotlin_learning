@@ -19,15 +19,10 @@ class TopicDeserializer : JsonDeserializer<Topic> {
             courseName = jsonObject["course_name"]?.asString ?: "Unknown",
             topicTitle = jsonObject["topic_title"]?.asString ?: "Corrupted topic",
             fileName = jsonObject["topic_file_name"]?.asString ?: "",
-            topicImage = jsonObject["topic_image"]?.asString ?: getNoImage(),
             pointsNumber = jsonObject["points_number"]?.asInt ?: 0,
             hasVisualizer = jsonObject["has_visualizer"]?.asBoolean ?: false,
             isActive = jsonObject["is_active"]?.asBoolean ?: false,
             hasUpdate = jsonObject["has_update"]?.asBoolean ?: true
         )
     }
-
-
-    private fun getNoImage(): String =
-        "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/no_image.png"
 }

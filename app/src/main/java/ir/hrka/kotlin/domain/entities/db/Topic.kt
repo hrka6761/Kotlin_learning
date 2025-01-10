@@ -18,7 +18,6 @@ data class Topic(
     @ColumnInfo(name = "course_name") @SerializedName(value = "course_name") val courseName: String,
     @ColumnInfo(name = "topic_title") @SerializedName(value = "topic_title") val topicTitle: String,
     @ColumnInfo(name = "topic_file_name") @SerializedName(value = "topic_file_name") val fileName: String,
-    @ColumnInfo(name = "topic_image") @SerializedName(value = "topic_image") val topicImage: String,
     @ColumnInfo(name = "points_number") @SerializedName(value = "points_number") val pointsNumber: Int,
     @ColumnInfo(name = "has_visualizer") @SerializedName(value = "has_visualizer") val hasVisualizer: Boolean,
     @ColumnInfo(name = "is_active") @SerializedName(value = "is_active") val isActive: Boolean,

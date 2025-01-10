@@ -39,8 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,9 +51,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.request.RequestOptions
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.POINTS_SCREEN_TOPIC_ARGUMENT
@@ -275,7 +270,6 @@ fun KotlinTopicsAppBar(navHostController: NavHostController) {
     )
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun KotlinTopicItem(
     topic: Topic,
@@ -304,27 +298,7 @@ fun KotlinTopicItem(
                 }
                 .padding(8.dp)
         ) {
-            val (id, image, data, updateLabel) = createRefs()
-
-            GlideImage(
-                model = topic.topicImage,
-                modifier = Modifier
-                    .size(50.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .constrainAs(image) {
-                        top.linkTo(parent.top)
-                        start.linkTo(id.end, margin = 8.dp)
-                        bottom.linkTo(parent.bottom)
-                    },
-                requestBuilderTransform = {
-                    it.apply(
-                        RequestOptions()
-                            .error(R.drawable.no_image)
-                    )
-                },
-                contentScale = ContentScale.FillBounds,
-                contentDescription = null,
-            )
+            val (id, data, updateLabel) = createRefs()
 
             Box(
                 contentAlignment = Alignment.Center,
@@ -338,7 +312,6 @@ fun KotlinTopicItem(
                     .constrainAs(id) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
-                        bottom.linkTo(parent.bottom)
                     }
             ) {
                 Text(
@@ -353,7 +326,7 @@ fun KotlinTopicItem(
                 modifier = Modifier.constrainAs(data) {
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
-                    start.linkTo(image.end, margin = 8.dp)
+                    start.linkTo(id.end, margin = 16.dp)
                 },
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
@@ -364,6 +337,7 @@ fun KotlinTopicItem(
                         .padding(end = 8.dp),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
+                    fontSize = 20.sp,
                     textAlign = TextAlign.Start,
                     text = topic.topicTitle,
                     fontWeight = FontWeight.Bold
@@ -380,19 +354,26 @@ fun KotlinTopicItem(
                     )
 
                     Text(
-                        fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
                         text = topic.pointsNumber.toString()
                     )
                 }
 
                 if (topic.hasVisualizer)
-                    Icon(
-                        modifier = Modifier
-                            .size(20.dp),
-                        painter = painterResource(R.drawable.visualization),
-                        contentDescription = ""
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(20.dp),
+                            painter = painterResource(R.drawable.visualization),
+                            contentDescription = ""
+                        )
+                        Text(
+                            fontSize = 12.sp,
+                            text = "Visual"
+                        )
+                    }
             }
 
             if (topic.hasUpdate)
@@ -422,9 +403,8 @@ fun KotlinTopicsScreenPreview() {
             courseName = "kotlin",
             topicTitle = "Common classes and functions",
             fileName = "",
-            topicImage = "",
             pointsNumber = 29,
-            hasVisualizer = false,
+            hasVisualizer = true,
             isActive = true
         ),
         14,
