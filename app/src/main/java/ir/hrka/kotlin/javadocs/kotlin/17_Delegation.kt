@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.courses.kotlin
+package ir.hrka.kotlin.javadocs.kotlin
 
 import ir.hrka.kotlin.core.utilities.Log.printBlue
 import ir.hrka.kotlin.core.utilities.Log.printRed

@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.courses.kotlin
+package ir.hrka.kotlin.javadocs.kotlin
 
 import ir.hrka.kotlin.core.utilities.Log.printYellow
 import java.io.Serializable

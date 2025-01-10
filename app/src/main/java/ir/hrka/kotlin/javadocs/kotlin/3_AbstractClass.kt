@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.courses.kotlin
+package ir.hrka.kotlin.javadocs.kotlin
 
 /**
  * * Abstract class is open and public by default.
