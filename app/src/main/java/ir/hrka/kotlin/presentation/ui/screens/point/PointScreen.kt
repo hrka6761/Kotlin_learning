@@ -58,7 +58,7 @@ import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Screen
+import ir.hrka.kotlin.core.utilities.Screen.SequentialProgramming
 import ir.hrka.kotlin.domain.entities.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
 
@@ -80,7 +80,7 @@ fun PointsScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { PointsScreenAppBar(topic?.topicTitle, navHostController) },
+        topBar = { PointsScreenAppBar(topic, navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -88,7 +88,6 @@ fun PointsScreen(
                 hostState = snackBarHostState
             )
         },
-        bottomBar = { if (topic?.hasVisualizer == true) PointsScreenBottomBar(navHostController) }
     ) { innerPaddings ->
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -224,11 +223,12 @@ fun PointsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PointsScreenAppBar(topicName: String?, navHostController: NavHostController) {
+fun PointsScreenAppBar(topic: Topic?, navHostController: NavHostController) {
     TopAppBar(
         title = {
             Text(
-                text = topicName ?: "",
+                modifier = Modifier.padding(end = 16.dp),
+                text = topic?.topicTitle ?: "",
                 fontWeight = FontWeight.Bold
             )
         },
@@ -238,32 +238,22 @@ fun PointsScreenAppBar(topicName: String?, navHostController: NavHostController)
             ) {
                 Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
             }
+        },
+        actions = {
+            if (topic?.hasVisualizer == true)
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                        .size(30.dp)
+                        .clickable {
+                            navHostController.navigate(SequentialProgramming())
+                        },
+                    tint = MaterialTheme.colorScheme.tertiary,
+                    painter = painterResource(R.drawable.play_visualizer),
+                    contentDescription = ""
+                )
         }
     )
-}
-
-@Composable
-fun PointsScreenBottomBar(navHostController: NavHostController) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primaryContainer)
-            .padding(24.dp)
-            .clickable { navHostController.navigate(Screen.SequentialProgramming()) },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            text = stringResource(R.string.visualization_page_title)
-        )
-        Icon(
-            modifier = Modifier.size(50.dp),
-            painter = painterResource(R.drawable.play_visualizer),
-            contentDescription = ""
-        )
-    }
 }
 
 @Composable
