@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.presentation.ui.screens.point
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -53,6 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
@@ -246,7 +248,8 @@ fun PointsScreenAppBar(topic: Topic?, navHostController: NavHostController) {
                         .padding(end = 10.dp)
                         .size(30.dp)
                         .clickable {
-                            navHostController.navigate(SequentialProgramming())
+                            if (!topic.visualizerDestination.isNullOrEmpty())
+                                navHostController.navigate(topic.visualizerDestination)
                         },
                     tint = MaterialTheme.colorScheme.tertiary,
                     painter = painterResource(R.drawable.play_visualizer),

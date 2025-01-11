@@ -405,6 +405,7 @@ fun KotlinTopicsScreenPreview() {
             fileName = "",
             pointsNumber = 29,
             hasVisualizer = true,
+            visualizerDestination = "",
             isActive = true
         ),
         14,

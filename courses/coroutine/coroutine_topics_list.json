@@ -8,6 +8,7 @@
       "topic_file_name": "sequential_programming.json",
       "points_number": 4,
       "has_visualizer": true,
+      "visualizer_destination": "sequential_programming_destination",
       "is_active": true
     },
     {
@@ -17,6 +18,7 @@
       "topic_file_name": "multi_thread_programming.json",
       "points_number": 5,
       "has_visualizer": true,
+      "visualizer_destination": "multiThread_programming_destination",
       "is_active": true
     }
   ]

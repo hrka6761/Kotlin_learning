@@ -22,6 +22,7 @@ class TopicDeserializer : JsonDeserializer<Topic> {
             pointsNumber = jsonObject["points_number"]?.asInt ?: 0,
             hasVisualizer = jsonObject["has_visualizer"]?.asBoolean ?: false,
             isActive = jsonObject["is_active"]?.asBoolean ?: false,
+            visualizerDestination = jsonObject["visualizer_destination"]?.asString ?: "",
             hasUpdate = jsonObject["has_update"]?.asBoolean ?: true
         )
     }
