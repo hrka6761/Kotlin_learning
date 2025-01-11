@@ -9,6 +9,15 @@
       "points_number": 4,
       "has_visualizer": true,
       "is_active": true
+    },
+    {
+      "topic_id": 23,
+      "course_name": "coroutine",
+      "topic_title": "Multi thread programming",
+      "topic_file_name": "multi_thread_programming.json",
+      "points_number": 5,
+      "has_visualizer": true,
+      "is_active": true
     }
   ]
 }

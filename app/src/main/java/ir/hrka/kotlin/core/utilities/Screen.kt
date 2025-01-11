@@ -5,6 +5,7 @@ import ir.hrka.kotlin.core.Constants.SPLASH_SCREEN
 import ir.hrka.kotlin.core.Constants.KOTLIN_SCREEN
 import ir.hrka.kotlin.core.Constants.HOME_SCREEN
 import ir.hrka.kotlin.core.Constants.ABOUT_SCREEN
+import ir.hrka.kotlin.core.Constants.MULTI_THREAD_PROGRAMMING_SCREEN
 import ir.hrka.kotlin.core.Constants.SEQUENTIAL_PROGRAMMING_SCREEN
 
 
@@ -15,7 +16,8 @@ enum class Screen(private val destination: String) {
     Topic(KOTLIN_SCREEN),
     Point(POINT_SCREEN),
     About(ABOUT_SCREEN),
-    SequentialProgramming(SEQUENTIAL_PROGRAMMING_SCREEN);
+    SequentialProgramming(SEQUENTIAL_PROGRAMMING_SCREEN),
+    MultiThreadProgramming(MULTI_THREAD_PROGRAMMING_SCREEN);
 
 
     operator fun invoke() = destination

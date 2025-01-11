@@ -9,6 +9,7 @@ object Constants {
     const val KOTLIN_SCREEN = "topic"
     const val POINT_SCREEN = "point"
     const val SEQUENTIAL_PROGRAMMING_SCREEN = "sequentialProgramming"
+    const val MULTI_THREAD_PROGRAMMING_SCREEN = "multiThreadProgramming"
     const val ABOUT_SCREEN = "about"
 
     const val DEFAULT_VERSION_ID = -1

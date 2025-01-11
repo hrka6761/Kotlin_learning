@@ -1,0 +1,39 @@
+{
+  "topic_id": 1,
+  "topic_name": "Multi thread programming",
+  "points": [
+    {
+      "id": 1,
+      "point": "In the Concurrent programming, we can serve the threads To execute multi task simultaneously and independently of each other.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "Threads are a low-level construct managed by the operating system.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "Threads can run on multiple CPU cores, leveraging hardware parallelism (Parallel programming).",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "Threads are available in virtually all programming languages and operating systems.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "In the use of threads, the following should be considered:",
+      "sub_points": [
+        "Creating and managing threads is resource-intensive.",
+        "Threads require careful synchronization to avoid race conditions, deadlocks, and other concurrency issues."
+      ],
+      "snippet_codes": null
+    }
+  ]
+}
