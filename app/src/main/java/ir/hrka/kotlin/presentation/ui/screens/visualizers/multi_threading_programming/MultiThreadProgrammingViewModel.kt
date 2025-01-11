@@ -50,7 +50,7 @@ class MultiThreadProgrammingViewModel @Inject constructor(
     private val _task6State: MutableLiveData<ComponentState<TaskData>> =
         MutableLiveData(Stop())
     val task6State: LiveData<ComponentState<TaskData>> = _task6State
-
+    private val mainThreadData = ThreadData("2", "main")
 
     fun setExecutionState(state: ExecutionState) {
         _executionState.value = state
@@ -59,11 +59,7 @@ class MultiThreadProgrammingViewModel @Inject constructor(
     fun runAllTasks() {
 //        I had to use another thread to visualize and manually named the thread name and ID here.
         Thread {
-            val threadData = ThreadData(
-                "2",
-                "main"
-            )
-            _mainThreadState.postValue(Processing(threadData))
+            _mainThreadState.postValue(Processing(mainThreadData))
             task1()
             execution1()
             execution2()
@@ -95,7 +91,7 @@ class MultiThreadProgrammingViewModel @Inject constructor(
             task2()
             task3()
             _thread1State.postValue(Done(threadData))
-            _mainThreadState.postValue(Done(threadData))
+            _mainThreadState.postValue(Done(mainThreadData))
         }.start()
     }
 
