@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.core.utilities.ExecutionState
-import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState
-import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Stop
-import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Processing
-import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Done
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Stop
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Processing
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Done
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.TaskData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ThreadData
 import ir.hrka.kotlin.presentation.GlobalData
@@ -23,18 +23,18 @@ class SequentialProgrammingViewModel @Inject constructor(
     private val _executionState: MutableStateFlow<ExecutionState> =
         MutableStateFlow(ExecutionState.Start)
     val executionState: MutableStateFlow<ExecutionState> = _executionState
-    private val _mainThreadState: MutableLiveData<CoroutineComponentState<ThreadData>> =
+    private val _mainThreadState: MutableLiveData<ComponentState<ThreadData>> =
         MutableLiveData(Stop())
-    val mainThreadState: LiveData<CoroutineComponentState<ThreadData>> = _mainThreadState
-    private val _task1State: MutableLiveData<CoroutineComponentState<TaskData>> =
+    val mainThreadState: LiveData<ComponentState<ThreadData>> = _mainThreadState
+    private val _task1State: MutableLiveData<ComponentState<TaskData>> =
         MutableLiveData(Stop())
-    val task1State: LiveData<CoroutineComponentState<TaskData>> = _task1State
-    private val _task2State: MutableLiveData<CoroutineComponentState<TaskData>> =
+    val task1State: LiveData<ComponentState<TaskData>> = _task1State
+    private val _task2State: MutableLiveData<ComponentState<TaskData>> =
         MutableLiveData(Stop())
-    val task2State: LiveData<CoroutineComponentState<TaskData>> = _task2State
-    private val _task3State: MutableLiveData<CoroutineComponentState<TaskData>> =
+    val task2State: LiveData<ComponentState<TaskData>> = _task2State
+    private val _task3State: MutableLiveData<ComponentState<TaskData>> =
         MutableLiveData(Stop())
-    val task3State: LiveData<CoroutineComponentState<TaskData>> = _task3State
+    val task3State: LiveData<ComponentState<TaskData>> = _task3State
 
 
     fun setExecutionState(state: ExecutionState) {

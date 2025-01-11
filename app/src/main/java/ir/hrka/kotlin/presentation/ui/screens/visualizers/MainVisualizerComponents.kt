@@ -27,12 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentData
-import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState
-import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Stop
-import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Processing
-import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Done
-import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Cancel
-import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineComponentState.Failed
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Stop
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Processing
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Done
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Cancel
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Failed
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.TaskData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ThreadData
@@ -40,7 +40,7 @@ import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ThreadData
 @Composable
 fun Thread(
     modifier: Modifier = Modifier,
-    state: CoroutineComponentState<ThreadData>,
+    state: ComponentState<ThreadData>,
     content: @Composable () -> Unit
 ) {
     val threadData = state.componentData
@@ -81,7 +81,7 @@ fun Thread(
 @Composable
 fun Coroutine(
     modifier: Modifier = Modifier,
-    state: CoroutineComponentState<CoroutineData>,
+    state: ComponentState<CoroutineData>,
     content: @Composable () -> Unit
 ) {
     val coroutineData = state.componentData
@@ -122,7 +122,7 @@ fun Coroutine(
 @Composable
 fun Task(
     modifier: Modifier = Modifier,
-    state: CoroutineComponentState<TaskData>
+    state: ComponentState<TaskData>
 ) {
     val taskData = state.componentData
 
@@ -160,7 +160,7 @@ fun Task(
 
 @Composable
 fun StateIcon(
-    data: CoroutineComponentState<ComponentData>,
+    data: ComponentState<ComponentData>,
 ) {
     when (data) {
         is Stop -> {
