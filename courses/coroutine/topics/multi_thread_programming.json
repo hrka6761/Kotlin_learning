@@ -33,7 +33,9 @@
         "Creating and managing threads is resource-intensive.",
         "Threads require careful synchronization to avoid race conditions, deadlocks, and other concurrency issues."
       ],
-      "snippet_codes": null
+      "snippet_codes": [
+        "     fun main() {\n         task1()\n\n         Thread {\n             task2()\n             task3()\n         }.start()\n\n         Thread {\n             task4()\n             task5()\n         }.start()\n\n         task6()\n     }\n \n     private fun task1() { ... }\n     private fun task2() { ... }\n     private fun task3() { ... }\n     private fun task4() { ... }\n     private fun task5() { ... }\n     private fun task6() { ... }"
+      ]
     }
   ]
 }
