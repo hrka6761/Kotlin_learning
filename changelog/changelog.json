@@ -1,5 +1,5 @@
 {
-  "last_version_id": 3,
+  "last_version_id": 4,
   "last_version_code": 9,
   "min_supported_version_code": 7,
   "versions": [
@@ -38,6 +38,20 @@
       "updated_kotlin_topics": null,
       "change_log": [
         "Resolve bug to check update"
+      ]
+    },
+    {
+      "version_id": 4,
+      "version_name": "6.1.0",
+      "version_code": 9,
+      "version_type": "UpdateCoroutineTopics",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Refactor Sequential programming topic",
+        "Refactor Multi thread programming topic",
+        "Create Coroutines topic",
+        "Create RunBlocking topic"
       ]
     }
   ]
