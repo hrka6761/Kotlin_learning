@@ -1,6 +1,6 @@
 {
-  "last_version_id": 1,
-  "last_version_code": 7,
+  "last_version_id": 2,
+  "last_version_code": 8,
   "min_supported_version_code": 7,
   "versions": [
     {
@@ -16,6 +16,17 @@
         "Dynamicize courses info in the home screen.",
         "Add coroutine course.",
         "Rename project name to kotlin learning."
+      ]
+    },
+    {
+      "version_id": 2,
+      "version_name": "6.0.1",
+      "version_code": 8,
+      "version_type": "BugFix",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Resolve bug to restart multi thread programming visualizer"
       ]
     }
   ]
