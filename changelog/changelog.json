@@ -1,6 +1,6 @@
 {
-  "last_version_id": 2,
-  "last_version_code": 8,
+  "last_version_id": 3,
+  "last_version_code": 9,
   "min_supported_version_code": 7,
   "versions": [
     {
@@ -27,6 +27,17 @@
       "updated_kotlin_topics": null,
       "change_log": [
         "Resolve bug to restart multi thread programming visualizer"
+      ]
+    },
+    {
+      "version_id": 3,
+      "version_name": "6.0.2",
+      "version_code": 9,
+      "version_type": "BugFix",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Resolve bug to check update"
       ]
     }
   ]
