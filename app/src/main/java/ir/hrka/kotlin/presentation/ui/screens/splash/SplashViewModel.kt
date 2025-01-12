@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import ir.hrka.kotlin.core.Constants.BAZAAR_URL
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.UPDATE_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.ExecutionState
@@ -106,7 +108,7 @@ class SplashViewModel @Inject constructor(
             _versionsInfo.value.data?.minSupportedVersionCode ?: appVersionCode
 
         _updateState.value =
-            if (appVersionCode != lastVersionCode)
+            if (appVersionCode < lastVersionCode)
                 if (appVersionCode < minSupportedVersionCode)
                     FORCE_UPDATE_STATE
                 else
