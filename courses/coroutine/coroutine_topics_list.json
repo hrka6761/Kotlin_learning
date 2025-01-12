@@ -1,5 +1,5 @@
 {
-  "topics_number": 1,
+  "topics_number": 4,
   "topics": [
     {
       "topic_id": 22,
@@ -26,7 +26,17 @@
       "course_name": "coroutine",
       "topic_title": "Coroutines",
       "topic_file_name": "coroutines.json",
-      "points_number": 8,
+      "points_number": 10,
+      "has_visualizer": false,
+      "visualizer_destination": "",
+      "is_active": true
+    },
+    {
+      "topic_id": 25,
+      "course_name": "coroutine",
+      "topic_title": "RunBlocking",
+      "topic_file_name": "runBlocking.json",
+      "points_number": 5,
       "has_visualizer": false,
       "visualizer_destination": "",
       "is_active": true

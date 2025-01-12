@@ -1,0 +1,45 @@
+{
+  "topic_id": 25,
+  "topic_name": "RunBlocking",
+  "points": [
+    {
+      "id": 1,
+      "point": "runBlocking create a coroutine scope.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "runBlocking is also a coroutine builder that bridges the non-coroutine world of a regular fun and the code with coroutines inside of runBlocking curly braces.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "The name of runBlocking means that the thread that runs it gets blocked for the duration of the call, until all the coroutines inside runBlocking complete their execution.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "You will often see runBlocking used like that at the very top-level of the application and quite rarely inside the real code.",
+      "sub_points": [
+        "Threads are expensive resources and blocking them is inefficient and is often not desired.",
+        "Frequently used in test environments to ensure synchronous execution of coroutine-based code."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "In the following codes, i run some task by runBlocking in the main thread.",
+      "sub_points": [
+        "When it comes to runBlocking, the main thread remains blocked until its children complete execution.",
+        "The tasks in the runBlocking execute in a coroutine.",
+        "The tasks in the runBlocking can execute in two separate coroutine concurrently."
+      ],
+      "snippet_codes": [
+        "     fun main() {\n         task1()\n\n         runBlocking {\n             task2()\n             task3()\n         }\n\n         task4()\n     }\n\n     private fun task1() { ... }\n     private suspend fun task2() { ... }\n     private suspend fun task3() { ... }\n     private fun task4() { ... }"
+      ]
+    }
+  ]
+}
