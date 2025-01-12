@@ -87,7 +87,7 @@ class SequentialProgrammingViewModel @Inject constructor(
 
     private fun task3() {
         val taskData = TaskData(
-            "Three Task",
+            "Third Task",
             "2000"
         )
         _task3State.postValue(Processing(taskData))

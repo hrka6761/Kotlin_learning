@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.presentation.ui.screens.visualizers.multi_threading_programming
+package ir.hrka.kotlin.presentation.ui.screens.visualizers.coroutines
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
@@ -39,20 +39,21 @@ import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Stop
+import ir.hrka.kotlin.presentation.ui.screens.visualizers.Coroutine
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.Guidance
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.Task
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.Thread
 
 @SuppressLint("SourceLockedOrientationActivity")
 @Composable
-fun MultiThreadProgrammingScreen(activity: MainActivity, navHostController: NavHostController) {
+fun CoroutinesScreen(activity: MainActivity, navHostController: NavHostController) {
 
-    val viewModel: MultiThreadProgrammingViewModel = hiltViewModel()
+    val viewModel: CoroutinesViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
     val executionState by viewModel.executionState.collectAsState()
     val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
-    val thread1State by viewModel.thread1State.observeAsState(initial = Stop())
-    val thread2State by viewModel.thread2State.observeAsState(initial = Stop())
+    val coroutine1State by viewModel.coroutine1State.observeAsState(initial = Stop())
+    val coroutine2State by viewModel.coroutine2State.observeAsState(initial = Stop())
     val task1State by viewModel.task1State.observeAsState(initial = Stop())
     val task2State by viewModel.task2State.observeAsState(initial = Stop())
     val task3State by viewModel.task3State.observeAsState(initial = Stop())
@@ -63,7 +64,7 @@ fun MultiThreadProgrammingScreen(activity: MainActivity, navHostController: NavH
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { MultiThreadingProgrammingAppBar(navHostController, viewModel, executionState) },
+        topBar = { CoroutinesScreenAppBar(navHostController, viewModel, executionState) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -87,15 +88,15 @@ fun MultiThreadProgrammingScreen(activity: MainActivity, navHostController: NavH
             ) {
                 Task(state = task1State)
 
-                Thread(
-                    state = thread1State
+                Coroutine(
+                    state = coroutine1State
                 ) {
                     Task(state = task2State)
                     Task(state = task3State)
                 }
 
-                Thread(
-                    state = thread2State
+                Coroutine(
+                    state = coroutine2State
                 ) {
                     Task(state = task4State)
                     Task(state = task5State)
@@ -126,16 +127,16 @@ fun MultiThreadProgrammingScreen(activity: MainActivity, navHostController: NavH
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MultiThreadingProgrammingAppBar(
+fun CoroutinesScreenAppBar(
     navHostController: NavHostController,
-    viewModel: MultiThreadProgrammingViewModel,
+    viewModel: CoroutinesViewModel,
     executionState: ExecutionState
 ) {
     TopAppBar(
         title = {
             Text(
                 modifier = Modifier.padding(end = 16.dp),
-                text = stringResource(R.string.multi_thread_programming_app_bar_title),
+                text = stringResource(R.string.coroutines_app_bar_title),
                 fontWeight = FontWeight.Bold
             )
         },
@@ -163,6 +164,6 @@ fun MultiThreadingProgrammingAppBar(
 
 @Preview(showBackground = true)
 @Composable
-fun MultiThreadProgrammingScreenPreview() {
-    MultiThreadProgrammingScreen(MainActivity(), rememberNavController())
+fun CoroutinesScreenPreview() {
+    CoroutinesScreen(MainActivity(), rememberNavController())
 }

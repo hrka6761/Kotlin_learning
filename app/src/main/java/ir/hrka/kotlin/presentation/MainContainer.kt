@@ -25,11 +25,13 @@ import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.core.utilities.Screen.About
 import ir.hrka.kotlin.core.utilities.Screen.SequentialProgramming
 import ir.hrka.kotlin.core.utilities.Screen.MultiThreadProgramming
+import ir.hrka.kotlin.core.utilities.Screen.Coroutines
 import ir.hrka.kotlin.presentation.ui.screens.about.AboutScreen
 import ir.hrka.kotlin.presentation.ui.screens.point.PointsScreen
 import ir.hrka.kotlin.presentation.ui.screens.topic.TopicsScreen
 import ir.hrka.kotlin.presentation.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.presentation.ui.screens.splash.SplashScreen
+import ir.hrka.kotlin.presentation.ui.screens.visualizers.coroutines.CoroutinesScreen
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.multi_threading_programming.MultiThreadProgrammingScreen
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.sequential_programming.SequentialProgrammingScreen
 import ir.hrka.kotlin.presentation.ui.theme.KotlinTheme
@@ -106,6 +108,11 @@ fun AppContent() {
                 route = MultiThreadProgramming()
             ) {
                 MultiThreadProgrammingScreen(activity, navHostController)
+            }
+            composable(
+                route = (Coroutines())
+            ) {
+                CoroutinesScreen(activity, navHostController)
             }
         }
     }
