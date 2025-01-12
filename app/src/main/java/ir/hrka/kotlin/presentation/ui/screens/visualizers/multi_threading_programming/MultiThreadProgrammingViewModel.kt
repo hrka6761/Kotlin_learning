@@ -64,7 +64,6 @@ class MultiThreadProgrammingViewModel @Inject constructor(
             execution1()
             execution2()
             task6()
-            setExecutionState(ExecutionState.Stop)
         }.start()
     }
 
@@ -92,6 +91,7 @@ class MultiThreadProgrammingViewModel @Inject constructor(
             task3()
             _thread1State.postValue(Done(threadData))
             _mainThreadState.postValue(Done(mainThreadData))
+            setExecutionState(ExecutionState.Stop)
         }.start()
     }
 
