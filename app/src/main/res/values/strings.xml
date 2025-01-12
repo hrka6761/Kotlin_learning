@@ -29,6 +29,7 @@
     <string name="sequential_programming_app_bar_title">Sequential Programming</string>
     <string name="multi_thread_programming_app_bar_title">Multi Thread Programming</string>
     <string name="coroutines_app_bar_title">Coroutines</string>
+    <string name="run_blocking_app_bar_title">runBlocking</string>
     <string name="coroutine_topics_app_bar_title">Coroutine &amp; Flow</string>
     <string name="saving_points_on_the_database_msg">Saving points on the database.</string>
     <string name="failed_to_save_points_on_the_database_msg">Failed to Save points on the database.</string>

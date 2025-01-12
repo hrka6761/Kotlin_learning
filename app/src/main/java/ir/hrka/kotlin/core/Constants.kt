@@ -11,6 +11,7 @@ object Constants {
     const val SEQUENTIAL_PROGRAMMING_SCREEN = "sequential_programming_destination"
     const val MULTI_THREAD_PROGRAMMING_SCREEN = "multiThread_programming_destination"
     const val COROUTINES_SCREEN = "coroutines_destination"
+    const val RUN_BLOCKING_SCREEN = "run_blocking_destination"
     const val ABOUT_SCREEN = "about"
 
     const val DEFAULT_VERSION_ID = -1

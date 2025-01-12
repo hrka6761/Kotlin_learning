@@ -27,8 +27,8 @@
       "topic_title": "Coroutines",
       "topic_file_name": "coroutines.json",
       "points_number": 10,
-      "has_visualizer": false,
-      "visualizer_destination": "",
+      "has_visualizer": true,
+      "visualizer_destination": "coroutines_destination",
       "is_active": true
     },
     {
@@ -37,8 +37,8 @@
       "topic_title": "RunBlocking",
       "topic_file_name": "runBlocking.json",
       "points_number": 5,
-      "has_visualizer": false,
-      "visualizer_destination": "",
+      "has_visualizer": true,
+      "visualizer_destination": "run_blocking_destination",
       "is_active": true
     }
   ]
