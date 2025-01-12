@@ -1,6 +1,6 @@
 {
-  "last_version_id": 4,
-  "last_version_code": 9,
+  "last_version_id": 5,
+  "last_version_code": 10,
   "min_supported_version_code": 7,
   "versions": [
     {
@@ -52,6 +52,18 @@
         "Refactor Multi thread programming topic",
         "Create Coroutines topic",
         "Create RunBlocking topic"
+      ]
+    },
+    {
+      "version_id": 5,
+      "version_name": "6.2.0",
+      "version_code": 10,
+      "version_type": "NewFeature",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Add CoroutinesScreen visualizer",
+        "Add RunBlockingScreen visualizer"
       ]
     }
   ]
