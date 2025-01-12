@@ -6,7 +6,7 @@
       "course_name": "coroutine",
       "topic_title": "Sequential programming",
       "topic_file_name": "sequential_programming.json",
-      "points_number": 4,
+      "points_number": 5,
       "has_visualizer": true,
       "visualizer_destination": "sequential_programming_destination",
       "is_active": true
@@ -16,9 +16,19 @@
       "course_name": "coroutine",
       "topic_title": "Multi thread programming",
       "topic_file_name": "multi_thread_programming.json",
-      "points_number": 5,
+      "points_number": 6,
       "has_visualizer": true,
       "visualizer_destination": "multiThread_programming_destination",
+      "is_active": true
+    },
+    {
+      "topic_id": 24,
+      "course_name": "coroutine",
+      "topic_title": "Coroutines",
+      "topic_file_name": "coroutines.json",
+      "points_number": 8,
+      "has_visualizer": false,
+      "visualizer_destination": "",
       "is_active": true
     }
   ]

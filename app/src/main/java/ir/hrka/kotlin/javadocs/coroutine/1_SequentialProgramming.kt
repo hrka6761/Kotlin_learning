@@ -8,7 +8,7 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  *    * Concurrent programming.
  *    * Parallel programming.
  * * Sequential programming is a programming paradigm where instructions are executed one after another in a specific:
- *    * In this paradigm, instructions are executed in the single thread.
+ *    * In this paradigm, instructions are executed in the single thread (Main thread).
  * * Concurrent programming is a programming paradigm in which instructions are executed simultaneously, independently of each other:
  *    * In this paradigm, instructions are executed in the multi thread or coroutine.
  *    * In this paradigm, tasks are not executed parallel.
@@ -16,6 +16,7 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
  * * Parallel programming is a programming paradigm in which instructions are executed at a time and in parallel:
  *    * In this paradigm, instructions are executed by multi cores or processors.
  *    * Unlike Concurrent programming in this paradigm, tasks are executed together and their execution processes at a time.
+ * * In the following codes, i run some task in the main thread.
  * ```
  *    fun main() {
  *        task1()

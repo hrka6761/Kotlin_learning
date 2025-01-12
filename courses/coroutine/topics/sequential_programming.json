@@ -1,5 +1,5 @@
 {
-  "topic_id": 1,
+  "topic_id": 22,
   "topic_name": "Sequential programming",
   "points": [
     {
@@ -14,15 +14,15 @@
     },
     {
       "id": 2,
-      "point": "Sequential programming is a programming paradigm where instructions are executed one after another in a specific.",
+      "point": "Sequential programming is a programming paradigm where instructions are executed one after another in a specific:",
       "sub_points": [
-        "In this paradigm, instructions are executed in the single thread."
+        "In this paradigm, instructions are executed in the single thread (Main thread)."
       ],
       "snippet_codes": null
     },
     {
       "id": 3,
-      "point": "Concurrent programming is a programming paradigm in which instructions are executed simultaneously, independently of each other.",
+      "point": "Concurrent programming is a programming paradigm in which instructions are executed simultaneously, independently of each other:",
       "sub_points": [
         "In this paradigm, instructions are executed in the multi thread or coroutine.",
         "In this paradigm, tasks are not executed parallel.",
@@ -32,11 +32,17 @@
     },
     {
       "id": 4,
-      "point": "Parallel programming is a programming paradigm in which instructions are executed at a time and in parallel.",
+      "point": "Parallel programming is a programming paradigm in which instructions are executed at a time and in parallel:",
       "sub_points": [
         "In this paradigm, instructions are executed by multi cores or processors.",
         "Unlike Concurrent programming in this paradigm, tasks are executed together and their execution processes at a time."
       ],
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "In the following codes, i run some task in the main thread:",
+      "sub_points": null,
       "snippet_codes": [
         "    fun main() {\n        task1()\n        task2()\n        task3()\n    }\n\n    private fun task1() { ... }\n    private fun task2() { ... }\n    private fun task3() { ... }"
       ]

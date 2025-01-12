@@ -8,6 +8,9 @@ package ir.hrka.kotlin.javadocs.coroutine
  * * In the use of threads, the following should be considered:
  *    * Creating and managing threads is resource-intensive.
  *    * Threads require careful synchronization to avoid race conditions, deadlocks, and other concurrency issues.
+ * * In the following codes, i run some task in another threads.
+ *    * Tasks in separate threads (task2, task3, task4, and task5) execute concurrently with tasks (task1, task6) in the main thread.
+ *    * Thread execution order is non-deterministic, meaning the exact sequence of task2, task3, task4, task5, and task6 depends on the thread scheduler.
  * ```
  *     fun main() {
  *         task1()

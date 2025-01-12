@@ -1,0 +1,80 @@
+{
+  "topic_id": 24,
+  "topic_name": "Coroutines",
+  "points": [
+    {
+      "id": 1,
+      "point": "In the Concurrent programming, we can serve the Coroutines To execute multi task simultaneously and independently of each other.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "Coroutines = cooperative routines (cooperative functions).",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "Coroutines are lightweight, user-level constructs managed by the programming language runtime.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "Coroutines can be thought of as light-weight threads (Coroutines are less resource-intensive than JVM threads).",
+      "sub_points": [
+        "They are much more memory-efficient, often requiring only a small memory overhead for their stack.",
+        "You can have thousands (or even millions) of coroutines running concurrently."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "Coroutines are non-blocking and suspend execution voluntarily without kernel intervention.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "Coroutines run within threads and don’t achieve parallelism (parallel programming) unless explicitly distributed across threads.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 7,
+      "point": "Coroutines may not be available in all languages (e.g., native support in Kotlin, Python, etc.).",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 8,
+      "point": "Coroutines follow a principle of structured concurrency which means that new coroutines can only be launched in a specific CoroutineScope which delimits the lifetime of the coroutine.",
+      "sub_points": [
+        "Structured concurrency ensures that coroutines are not lost and do not leak.",
+        "Outer scope cannot complete until all its children coroutines complete.",
+        "Structured concurrency also ensures that any errors in the code are properly reported and are never lost."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 9,
+      "point": "suspending function",
+      "sub_points": [
+        "They can only be used inside coroutines.",
+        "We can use other suspending functions in this functions (like delay in this example) to suspend execution of a coroutine."
+      ],
+      "snippet_codes": [
+        " suspend fun suspendingFunction() { ... }"
+      ]
+    },
+    {
+      "id": 10,
+      "point": "In the following codes, i run some task in another Coroutine but in the main thread.",
+      "sub_points": null,
+      "snippet_codes": [
+        "     fun main() {\n         task1()\n\n         CoroutineScope(Dispatchers.Main).launch {\n             task2()\n             task3()\n         }\n         CoroutineScope(Dispatchers.Main).launch {\n             task4()\n             task5()\n         }\n\n         task6()\n     }\n\n     private fun task1() { ... }\n     private suspend fun task2() { ... }\n     private suspend fun task3() { ... }\n     private suspend fun task4() { ... }\n     private suspend fun task5() { ... }\n     private fun task6() { ... }"
+      ]
+    }
+  ]
+}
