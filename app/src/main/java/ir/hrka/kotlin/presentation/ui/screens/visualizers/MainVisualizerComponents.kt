@@ -1,6 +1,7 @@
 package ir.hrka.kotlin.presentation.ui.screens.visualizers
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -37,6 +39,7 @@ import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentSt
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Cancel
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Failed
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineData
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ScopeData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.TaskData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ThreadData
 
@@ -120,13 +123,28 @@ fun Coroutine(
                 }
                 append("${coroutineData?.coroutineName ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Thread context: ")
+                    append("Context thread: ")
                 }
-                append("${coroutineData?.threadContext ?: "..."}\n")
+                append("${coroutineData?.thread ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Job context: ")
+                    append("Context job: \n")
                 }
-                append(coroutineData?.jobContext ?: "...")
+                append("${coroutineData?.job ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Parent job: \n")
+                }
+                append("${coroutineData?.parentJob ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Children: \n")
+                }
+
+                if (coroutineData?.children.isNullOrEmpty())
+                    append("No child")
+
+                coroutineData?.children?.forEachIndexed { index, job ->
+                    val id = index + 1
+                    append("$id) ${job}\n")
+                }
             }
 
             Text(
@@ -191,6 +209,87 @@ fun Task(
 
             StateIcon(data = state)
         }
+    }
+}
+
+@Composable
+fun Scope(
+    modifier: Modifier = Modifier,
+    state: ComponentState<ScopeData>,
+    content: @Composable () -> Unit
+) {
+    val coroutineData = state.componentData
+
+    ElevatedCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                shape = RoundedCornerShape(4)
+            ),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val styledText = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Scope name: ")
+                }
+                append("${coroutineData?.scopeName ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Coroutine name: ")
+                }
+                append("${coroutineData?.coroutineName ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Context thread: ")
+                }
+                append("${coroutineData?.thread ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Context job: \n")
+                }
+                append("${coroutineData?.job ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Parent job: \n")
+                }
+                append("${coroutineData?.parentJob ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Children: \n")
+                }
+
+                if (coroutineData?.children.isNullOrEmpty())
+                    append("No child")
+
+                coroutineData?.children?.forEachIndexed { index, job ->
+                    val id = index + 1
+                    append("$id) ${job}\n")
+                }
+            }
+
+            Text(
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .padding(start = 8.dp, end = 16.dp),
+                text = styledText,
+                style = TextStyle(
+                    fontSize = 10.sp,
+                    lineHeight = 12.sp
+                )
+            )
+
+            StateIcon(data = state)
+        }
+
+        content()
     }
 }
 
@@ -364,4 +463,17 @@ fun Guidance(
 
 @Preview(showBackground = true)
 @Composable
-fun ComponentPreview() {}
+fun ComponentPreview() {
+    Scope(
+        state = Done(
+            ScopeData(
+                scopeName = "",
+                coroutineName = "",
+                thread = "",
+                job = "",
+                parentJob = "",
+                children = listOf()
+            )
+        )
+    ) { }
+}

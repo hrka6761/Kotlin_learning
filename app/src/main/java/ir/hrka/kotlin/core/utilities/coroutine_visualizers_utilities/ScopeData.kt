@@ -2,7 +2,8 @@ package ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities
 
 import kotlinx.coroutines.Job
 
-data class CoroutineData(
+data class ScopeData(
+    val scopeName: String,
     val coroutineName: String,
     val thread: String,
     val job: String,

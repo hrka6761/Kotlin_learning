@@ -47,8 +47,8 @@
       "topic_title": "coroutineScope function",
       "topic_file_name": "coroutine_scope_function.json",
       "points_number": 4,
-      "has_visualizer": false,
-      "visualizer_destination": "",
+      "has_visualizer": true,
+      "visualizer_destination": "coroutine_scope_function_destination",
       "is_active": true
     }
   ]
