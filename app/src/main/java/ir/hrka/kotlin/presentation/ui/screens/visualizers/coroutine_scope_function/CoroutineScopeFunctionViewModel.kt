@@ -1,21 +1,26 @@
-package ir.hrka.kotlin.presentation.ui.screens.visualizers.coroutines
+package ir.hrka.kotlin.presentation.ui.screens.visualizers.coroutine_scope_function
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Stop
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Processing
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Done
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineData
+import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ScopeData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.TaskData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ThreadData
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.job
@@ -24,7 +29,7 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class CoroutinesViewModel @Inject constructor(
+class CoroutineScopeFunctionViewModel @Inject constructor(
     private val globalData: GlobalData
 ) : ViewModel() {
 
@@ -36,10 +41,16 @@ class CoroutinesViewModel @Inject constructor(
     val mainThreadState: LiveData<ComponentState<ThreadData>> = _mainThreadState
     private val _coroutine1State: MutableLiveData<ComponentState<CoroutineData>> =
         MutableLiveData(Stop())
+    private val _scopeState: MutableLiveData<ComponentState<ScopeData>> =
+        MutableLiveData(Stop())
+    val scopeState: LiveData<ComponentState<ScopeData>> = _scopeState
     val coroutine1State: LiveData<ComponentState<CoroutineData>> = _coroutine1State
     private val _coroutine2State: MutableLiveData<ComponentState<CoroutineData>> =
         MutableLiveData(Stop())
     val coroutine2State: LiveData<ComponentState<CoroutineData>> = _coroutine2State
+    private val _coroutine3State: MutableLiveData<ComponentState<CoroutineData>> =
+        MutableLiveData(Stop())
+    val coroutine3State: LiveData<ComponentState<CoroutineData>> = _coroutine3State
     private val _task1State: MutableLiveData<ComponentState<TaskData>> =
         MutableLiveData(Stop())
     val task1State: LiveData<ComponentState<TaskData>> = _task1State
@@ -69,8 +80,68 @@ class CoroutinesViewModel @Inject constructor(
         Thread {
             _mainThreadState.postValue(Processing(mainThreadData))
             task1()
-            execution1()
-            execution2()
+
+            CoroutineScope(Dispatchers.Main).launch {
+                val coroutine1Data = CoroutineData(
+                    coroutineName = Thread.currentThread().name.split(" ").last(),
+                    thread = Thread.currentThread().name.split(" ").first(),
+                    job = this.coroutineContext.job.toString(),
+                    parentJob = this.coroutineContext.job.parent.toString(),
+                    children = mutableListOf()
+                )
+                _coroutine1State.postValue(Processing(coroutine1Data))
+                task2()
+
+                coroutineScope {
+                    val scopeData = ScopeData(
+                        scopeName = "coroutineScope function",
+                        coroutineName = Thread.currentThread().name.split(" ").last(),
+                        thread = Thread.currentThread().name.split(" ").first(),
+                        job = this.coroutineContext.job.toString(),
+                        parentJob = this.coroutineContext.job.parent.toString(),
+                        children = mutableListOf()
+                    )
+                    _scopeState.postValue(Processing(scopeData))
+
+                    launch {
+                        val coroutine3Data = CoroutineData(
+                            coroutineName = Thread.currentThread().name.split(" ").last(),
+                            thread = Thread.currentThread().name.split(" ").first(),
+                            job = this.coroutineContext.job.toString(),
+                            parentJob = this.coroutineContext.job.parent.toString(),
+                            children = this.coroutineContext.job.children.toList()
+                        )
+                        _coroutine2State.postValue(Processing(coroutine3Data))
+                        task3()
+                        _coroutine2State.postValue(Done(coroutine3Data))
+                    }
+                    launch {
+                        val coroutine4Data = CoroutineData(
+                            coroutineName = Thread.currentThread().name.split(" ").last(),
+                            thread = Thread.currentThread().name.split(" ").first(),
+                            job = this.coroutineContext.job.toString(),
+                            parentJob = this.coroutineContext.job.parent.toString(),
+                            children = this.coroutineContext.job.children.toList()
+                        )
+                        _coroutine3State.postValue(Processing(coroutine4Data))
+                        task4()
+                        _coroutine3State.postValue(Done(coroutine4Data))
+                        _scopeState.postValue(Done(scopeData))
+                    }
+
+                    (coroutine1Data.children as MutableList<Job>).addAll(this@launch.coroutineContext.job.children.toList())
+                    _coroutine1State.postValue(Processing(coroutine1Data))
+
+                    (scopeData.children as MutableList<Job>).addAll(this.coroutineContext.job.children.toList())
+                    _scopeState.postValue(Processing(scopeData))
+                }
+
+                task5()
+                _coroutine1State.postValue(Done(coroutine1Data))
+                _mainThreadState.postValue(Done(mainThreadData))
+                setExecutionState(ExecutionState.Stop)
+            }
+
             task6()
         }.start()
     }
@@ -78,7 +149,9 @@ class CoroutinesViewModel @Inject constructor(
     fun restartVisualizer() {
         setExecutionState(ExecutionState.Start)
         _coroutine1State.value = Stop()
+        _scopeState.value = Stop()
         _coroutine2State.value = Stop()
+        _coroutine3State.value = Stop()
         _task1State.value = Stop()
         _task2State.value = Stop()
         _task3State.value = Stop()
@@ -86,40 +159,6 @@ class CoroutinesViewModel @Inject constructor(
         _task5State.value = Stop()
         _task6State.value = Stop()
         runAllTasks()
-    }
-
-    private fun execution1() {
-        CoroutineScope(Dispatchers.Main).launch {
-            val coroutineData = CoroutineData(
-                coroutineName = Thread.currentThread().name.split(" ").last(),
-                thread = Thread.currentThread().name.split(" ").first(),
-                job = this.coroutineContext.job.toString(),
-                parentJob = this.coroutineContext.job.parent.toString(),
-                children = this.coroutineContext.job.children.toList()
-            )
-            _coroutine1State.postValue(Processing(coroutineData))
-            task2()
-            task3()
-            _coroutine1State.postValue(Done(coroutineData))
-            _mainThreadState.postValue(Done(mainThreadData))
-            setExecutionState(ExecutionState.Stop)
-        }
-    }
-
-    private fun execution2() {
-        CoroutineScope(Dispatchers.Main).launch {
-            val coroutineData = CoroutineData(
-                coroutineName = Thread.currentThread().name.split(" ").last(),
-                thread = Thread.currentThread().name.split(" ").first(),
-                job = this.coroutineContext.job.toString(),
-                parentJob = this.coroutineContext.job.parent.toString(),
-                children = this.coroutineContext.job.children.toList()
-            )
-            _coroutine2State.postValue(Processing(coroutineData))
-            task4()
-            task5()
-            _coroutine2State.postValue(Done(coroutineData))
-        }
     }
 
     private fun task1() {

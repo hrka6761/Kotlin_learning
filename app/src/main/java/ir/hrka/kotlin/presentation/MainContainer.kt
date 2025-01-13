@@ -26,12 +26,14 @@ import ir.hrka.kotlin.core.utilities.Screen.About
 import ir.hrka.kotlin.core.utilities.Screen.SequentialProgramming
 import ir.hrka.kotlin.core.utilities.Screen.MultiThreadProgramming
 import ir.hrka.kotlin.core.utilities.Screen.Coroutines
-import ir.hrka.kotlin.core.utilities.Screen.RnBlocking
+import ir.hrka.kotlin.core.utilities.Screen.RunBlocking
+import ir.hrka.kotlin.core.utilities.Screen.CoroutineScopeFunction
 import ir.hrka.kotlin.presentation.ui.screens.about.AboutScreen
 import ir.hrka.kotlin.presentation.ui.screens.point.PointsScreen
 import ir.hrka.kotlin.presentation.ui.screens.topic.TopicsScreen
 import ir.hrka.kotlin.presentation.ui.screens.home.HomeScreen
 import ir.hrka.kotlin.presentation.ui.screens.splash.SplashScreen
+import ir.hrka.kotlin.presentation.ui.screens.visualizers.coroutine_scope_function.CoroutineScopeFunctionScreen
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.coroutines.CoroutinesScreen
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.multi_threading_programming.MultiThreadProgrammingScreen
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.run_blocking.RunBlockingScreen
@@ -117,9 +119,14 @@ fun AppContent() {
                 CoroutinesScreen(activity, navHostController)
             }
             composable(
-                route = (RnBlocking())
+                route = (RunBlocking())
             ) {
                 RunBlockingScreen(activity, navHostController)
+            }
+            composable(
+                route = (CoroutineScopeFunction())
+            ) {
+                CoroutineScopeFunctionScreen(activity, navHostController)
             }
         }
     }
