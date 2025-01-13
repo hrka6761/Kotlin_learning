@@ -43,7 +43,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,7 +59,6 @@ import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Screen.SequentialProgramming
 import ir.hrka.kotlin.domain.entities.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
 
@@ -248,7 +246,7 @@ fun PointsScreenAppBar(topic: Topic?, navHostController: NavHostController) {
                         .padding(end = 10.dp)
                         .size(30.dp)
                         .clickable {
-                            if (!topic.visualizerDestination.isNullOrEmpty())
+                            if (topic.visualizerDestination.isNotEmpty())
                                 navHostController.navigate(topic.visualizerDestination)
                         },
                     tint = MaterialTheme.colorScheme.tertiary,
@@ -332,11 +330,11 @@ fun PointItem(point: Point, index: Int) {
                         .constrainAs(snippetCodes) {
                             top.linkTo(
                                 if (point.subPoints.isNullOrEmpty()) pointHead.bottom else subPoints.bottom,
-                                margin = 16.dp
+                                margin = 8.dp
                             )
                             end.linkTo(parent.end, margin = 8.dp)
                             start.linkTo(parent.start, margin = 8.dp)
-                            bottom.linkTo(parent.bottom, margin = 8.dp)
+                            bottom.linkTo(parent.bottom, margin = 4.dp)
                         }
                 ) {
                     items(point.snippetsCodes.size) { index ->
@@ -369,7 +367,7 @@ fun SnippetCodeItem(snippetCode: String) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Text(
             modifier = Modifier
