@@ -1,5 +1,5 @@
 {
-  "topics_number": 4,
+  "topics_number": 5,
   "topics": [
     {
       "topic_id": 22,
@@ -39,6 +39,16 @@
       "points_number": 5,
       "has_visualizer": true,
       "visualizer_destination": "run_blocking_destination",
+      "is_active": true
+    },
+    {
+      "topic_id": 26,
+      "course_name": "coroutine",
+      "topic_title": "coroutineScope function",
+      "topic_file_name": "coroutine_scope_function.json",
+      "points_number": 4,
+      "has_visualizer": false,
+      "visualizer_destination": "",
       "is_active": true
     }
   ]
