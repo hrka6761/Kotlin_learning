@@ -8,20 +8,23 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,7 +53,7 @@ fun Thread(
             .fillMaxWidth()
             .padding(8.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = colorResource(R.color.thread_color)
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -61,18 +64,27 @@ fun Thread(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val styledText = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Thread name: ")
+                }
+                append("${threadData?.threadName ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Thread id: ")
+                }
+                append(threadData?.threadId ?: "...")
+            }
+
             Text(
                 modifier = Modifier.padding(start = 8.dp, end = 16.dp),
-                text = "Thread name: ${threadData?.threadName ?: "..."}\nThread id: ${threadData?.threadId ?: "..."}",
-                color = Color.Black,
+                text = styledText,
                 style = TextStyle(
                     fontSize = 10.sp,
                     lineHeight = 12.sp
                 ),
-                fontWeight = FontWeight.Bold
             )
 
-            StateIcon(state)
+            StateIcon(data = state)
         }
         content()
     }
@@ -91,7 +103,7 @@ fun Coroutine(
             .fillMaxWidth()
             .padding(8.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = colorResource(R.color.coroutine_color)
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -102,18 +114,33 @@ fun Coroutine(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val styledText = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Coroutine name: ")
+                }
+                append("${coroutineData?.coroutineName ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Thread context: ")
+                }
+                append("${coroutineData?.threadContext ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Job context: ")
+                }
+                append(coroutineData?.jobContext ?: "...")
+            }
+
             Text(
-                modifier = Modifier.padding(start = 8.dp, end = 16.dp),
-                text = "Coroutine name: ${coroutineData?.coroutineName ?: "..."}\nThread context: ${coroutineData?.threadContext ?: "..."}\nJob context: ${coroutineData?.jobContext ?: "..."}",
-                color = Color.Black,
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .padding(start = 8.dp, end = 16.dp),
+                text = styledText,
                 style = TextStyle(
                     fontSize = 10.sp,
                     lineHeight = 12.sp
-                ),
-                fontWeight = FontWeight.Bold
+                )
             )
 
-            StateIcon(state)
+            StateIcon(data = state)
         }
         content()
     }
@@ -131,7 +158,7 @@ fun Task(
             .fillMaxWidth()
             .padding(8.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = colorResource(R.color.task_color)
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -142,65 +169,72 @@ fun Task(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val styledText = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Task name: ")
+                }
+                append("${taskData?.taskName ?: "..."}\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Duration time: ")
+                }
+                append("${taskData?.durationTime ?: "..."} MS")
+            }
+
             Text(
                 modifier = Modifier.padding(start = 8.dp, end = 16.dp),
-                text = "Task name: ${taskData?.taskName ?: "..."}\nDuration time: ${taskData?.durationTime ?: "..."} MS",
-                color = Color.Black,
+                text = styledText,
                 style = TextStyle(
                     fontSize = 10.sp,
                     lineHeight = 12.sp
-                ),
-                fontWeight = FontWeight.Bold
+                )
             )
 
-            StateIcon(state)
+            StateIcon(data = state)
         }
     }
 }
 
 @Composable
 fun StateIcon(
+    modifier: Modifier = Modifier.size(25.dp),
     data: ComponentState<ComponentData>,
 ) {
     when (data) {
         is Stop -> {
             Icon(
+                modifier = modifier,
                 painter = painterResource(R.drawable.state_stop),
-                tint = Color.Black,
                 contentDescription = null
             )
         }
 
         is Processing -> {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .width(25.dp)
-                    .height(25.dp),
-                color = Color.Black,
+                modifier = modifier,
                 strokeWidth = 1.dp
             )
         }
 
         is Done -> {
             Icon(
+                modifier = modifier,
                 painter = painterResource(R.drawable.state_done),
-                tint = Color.Black,
                 contentDescription = null
             )
         }
 
         is Cancel -> {
             Icon(
+                modifier = modifier,
                 painter = painterResource(R.drawable.state_cancel),
-                tint = Color.Black,
                 contentDescription = null
             )
         }
 
         is Failed -> {
             Icon(
+                modifier = modifier,
                 painter = painterResource(R.drawable.state_failed),
-                tint = Color.Black,
                 contentDescription = null
             )
         }
@@ -224,7 +258,7 @@ fun Guidance(
                 modifier = Modifier
                     .width(10.dp)
                     .height(10.dp)
-                    .background(colorResource(R.color.thread_color))
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
 
             Text(
@@ -237,7 +271,7 @@ fun Guidance(
                 modifier = Modifier
                     .width(10.dp)
                     .height(10.dp)
-                    .background(colorResource(R.color.coroutine_color))
+                    .background(MaterialTheme.colorScheme.primaryContainer)
             )
 
             Text(
@@ -250,7 +284,7 @@ fun Guidance(
                 modifier = Modifier
                     .width(10.dp)
                     .height(10.dp)
-                    .background(colorResource(R.color.task_color))
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
             )
 
             Text(
@@ -330,6 +364,4 @@ fun Guidance(
 
 @Preview(showBackground = true)
 @Composable
-fun ComponentPreview() {
-
-}
+fun ComponentPreview() {}
