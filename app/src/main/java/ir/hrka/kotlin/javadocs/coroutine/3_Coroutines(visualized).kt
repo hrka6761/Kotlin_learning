@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
  * ```
  */
 
-class Coroutines {
+class CoroutinesProgramming {
 
     fun main() {
         task1()
