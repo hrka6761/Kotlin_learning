@@ -93,8 +93,8 @@ class CoroutinesViewModel @Inject constructor(
             val coroutineData = CoroutineData(
                 coroutineName = Thread.currentThread().name.split(" ").last(),
                 thread = Thread.currentThread().name.split(" ").first(),
-                job = this.coroutineContext.job.toString(),
-                parentJob = this.coroutineContext.job.parent.toString(),
+                job = this.coroutineContext.job,
+                parentJob = this.coroutineContext.job.parent,
                 children = this.coroutineContext.job.children.toList()
             )
             _coroutine1State.postValue(Processing(coroutineData))
@@ -111,8 +111,8 @@ class CoroutinesViewModel @Inject constructor(
             val coroutineData = CoroutineData(
                 coroutineName = Thread.currentThread().name.split(" ").last(),
                 thread = Thread.currentThread().name.split(" ").first(),
-                job = this.coroutineContext.job.toString(),
-                parentJob = this.coroutineContext.job.parent.toString(),
+                job = this.coroutineContext.job,
+                parentJob = this.coroutineContext.job.parent,
                 children = this.coroutineContext.job.children.toList()
             )
             _coroutine2State.postValue(Processing(coroutineData))

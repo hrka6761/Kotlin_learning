@@ -6,7 +6,7 @@ data class ScopeData(
     val scopeName: String,
     val coroutineName: String,
     val thread: String,
-    val job: String,
-    val parentJob: String,
+    val job: Job,
+    val parentJob: Job?,
     val children: List<Job>
 ) : ComponentData

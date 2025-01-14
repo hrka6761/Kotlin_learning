@@ -13,12 +13,16 @@ import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineDa
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.TaskData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ThreadData
 import ir.hrka.kotlin.presentation.GlobalData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class RunBlockingViewModel @Inject constructor(
     private val globalData: GlobalData
@@ -30,9 +34,15 @@ class RunBlockingViewModel @Inject constructor(
     private val _mainThreadState: MutableLiveData<ComponentState<ThreadData>> =
         MutableLiveData(Stop())
     val mainThreadState: LiveData<ComponentState<ThreadData>> = _mainThreadState
-    private val _coroutineState: MutableLiveData<ComponentState<CoroutineData>> =
+    private val _coroutine1State: MutableLiveData<ComponentState<CoroutineData>> =
         MutableLiveData(Stop())
-    val coroutineState: LiveData<ComponentState<CoroutineData>> = _coroutineState
+    val coroutine1State: LiveData<ComponentState<CoroutineData>> = _coroutine1State
+    private val _coroutine2State: MutableLiveData<ComponentState<CoroutineData>> =
+        MutableLiveData(Stop())
+    val coroutine2State: LiveData<ComponentState<CoroutineData>> = _coroutine2State
+    private val _coroutine3State: MutableLiveData<ComponentState<CoroutineData>> =
+        MutableLiveData(Stop())
+    val coroutine3State: LiveData<ComponentState<CoroutineData>> = _coroutine3State
     private val _task1State: MutableLiveData<ComponentState<TaskData>> =
         MutableLiveData(Stop())
     val task1State: LiveData<ComponentState<TaskData>> = _task1State
@@ -63,7 +73,9 @@ class RunBlockingViewModel @Inject constructor(
 
     fun restartVisualizer() {
         setExecutionState(ExecutionState.Start)
-        _coroutineState.value = Stop()
+        _coroutine1State.value = Stop()
+        _coroutine2State.value = Stop()
+        _coroutine3State.value = Stop()
         _task1State.value = Stop()
         _task2State.value = Stop()
         _task3State.value = Stop()
@@ -73,17 +85,50 @@ class RunBlockingViewModel @Inject constructor(
 
     private fun runBlockingExecution() {
         runBlocking {
-            val coroutineData = CoroutineData(
+            val coroutine1Data = CoroutineData(
                 coroutineName = Thread.currentThread().name.split(" ").last(),
-                threadContext = Thread.currentThread().name.split(" ").first(),
-                jobContext = this.coroutineContext.job.toString()
+                thread = "main",
+                job = this.coroutineContext.job,
+                parentJob = this.coroutineContext.job.parent,
+                children = mutableListOf()
             )
-            _coroutineState.postValue(Processing(coroutineData))
-            task2()
-            task3()
-            _coroutineState.postValue(Done(coroutineData))
-            _mainThreadState.postValue(Done(mainThreadData))
-            setExecutionState(ExecutionState.Stop)
+            _coroutine1State.postValue(Processing(coroutine1Data))
+
+            launch {
+                val coroutine2Data = CoroutineData(
+                    coroutineName = Thread.currentThread().name.split(" ").last(),
+                    thread = "main",
+                    job = this.coroutineContext.job,
+                    parentJob = this.coroutineContext.job.parent,
+                    children = mutableListOf()
+                )
+                _coroutine2State.postValue(Processing(coroutine2Data))
+
+                task2()
+
+                _coroutine2State.postValue(Done(coroutine2Data))
+                _coroutine1State.postValue(Done(coroutine1Data))
+                _mainThreadState.postValue(Done(mainThreadData))
+                setExecutionState(ExecutionState.Stop)
+            }
+
+            launch {
+                val coroutine3Data = CoroutineData(
+                    coroutineName = Thread.currentThread().name.split(" ").last(),
+                    thread = "main",
+                    job = this.coroutineContext.job,
+                    parentJob = this.coroutineContext.job.parent,
+                    children = mutableListOf()
+                )
+                _coroutine3State.postValue(Processing(coroutine3Data))
+
+                task3()
+
+                _coroutine3State.postValue(Done(coroutine3Data))
+            }
+
+            (coroutine1Data.children as MutableList<Job>).addAll(this.coroutineContext.job.children)
+            _coroutine1State.postValue(Processing(coroutine1Data))
         }
     }
 
