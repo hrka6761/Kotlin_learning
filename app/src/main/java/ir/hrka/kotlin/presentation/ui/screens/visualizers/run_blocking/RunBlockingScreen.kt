@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,7 +54,9 @@ fun RunBlockingScreen(activity: MainActivity, navHostController: NavHostControll
     val snackBarHostState = remember { SnackbarHostState() }
     val executionState by viewModel.executionState.collectAsState()
     val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
-    val coroutineState by viewModel.coroutineState.observeAsState(initial = Stop())
+    val coroutine1State by viewModel.coroutine1State.observeAsState(initial = Stop())
+    val coroutine2State by viewModel.coroutine2State.observeAsState(initial = Stop())
+    val coroutine3State by viewModel.coroutine3State.observeAsState(initial = Stop())
     val task1State by viewModel.task1State.observeAsState(initial = Stop())
     val task2State by viewModel.task2State.observeAsState(initial = Stop())
     val task3State by viewModel.task3State.observeAsState(initial = Stop())
@@ -80,16 +84,25 @@ fun RunBlockingScreen(activity: MainActivity, navHostController: NavHostControll
         ) {
             Guidance()
             Thread(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
                 state = mainThreadState
             ) {
                 Task(state = task1State)
 
                 Coroutine(
-                    state = coroutineState
+                    state = coroutine1State
                 ) {
-                    Task(state = task2State)
-                    Task(state = task3State)
+                    Coroutine(
+                        state = coroutine2State
+                    ) {
+                        Task(state = task2State)
+                    }
+
+                    Coroutine(
+                        state = coroutine3State
+                    ) {
+                        Task(state = task3State)
+                    }
                 }
 
                 Task(state = task4State)

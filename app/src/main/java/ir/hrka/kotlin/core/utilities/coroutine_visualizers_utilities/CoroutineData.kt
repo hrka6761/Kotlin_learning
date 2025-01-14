@@ -5,7 +5,7 @@ import kotlinx.coroutines.Job
 data class CoroutineData(
     val coroutineName: String,
     val thread: String,
-    val job: String,
-    val parentJob: String,
+    val job: Job,
+    val parentJob: Job?,
     val children: List<Job>
 ) : ComponentData

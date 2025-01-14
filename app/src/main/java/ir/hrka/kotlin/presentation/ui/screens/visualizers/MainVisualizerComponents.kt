@@ -42,6 +42,7 @@ import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.CoroutineDa
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ScopeData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.TaskData
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ThreadData
+import kotlinx.coroutines.Job
 
 @Composable
 fun Thread(
@@ -65,7 +66,7 @@ fun Thread(
                 .fillMaxWidth()
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
             val styledText = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -115,7 +116,7 @@ fun Coroutine(
                 .fillMaxWidth()
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
             val styledText = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -185,7 +186,7 @@ fun Task(
                 .fillMaxWidth()
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
             val styledText = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -239,7 +240,7 @@ fun Scope(
                 .fillMaxWidth()
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
             val styledText = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -470,8 +471,8 @@ fun ComponentPreview() {
                 scopeName = "",
                 coroutineName = "",
                 thread = "",
-                job = "",
-                parentJob = "",
+                job = Job(),
+                parentJob = Job(),
                 children = listOf()
             )
         )

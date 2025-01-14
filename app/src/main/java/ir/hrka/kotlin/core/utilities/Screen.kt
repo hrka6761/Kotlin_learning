@@ -22,7 +22,7 @@ enum class Screen(private val destination: String) {
     SequentialProgramming(SEQUENTIAL_PROGRAMMING_SCREEN),
     MultiThreadProgramming(MULTI_THREAD_PROGRAMMING_SCREEN),
     Coroutines(COROUTINES_SCREEN),
-    RnBlocking(RUN_BLOCKING_SCREEN),
+    RunBlocking(RUN_BLOCKING_SCREEN),
     CoroutineScopeFunction(COROUTINE_SCOPE_FUNCTION_SCREEN);
 
 

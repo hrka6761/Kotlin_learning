@@ -1,6 +1,7 @@
 package ir.hrka.kotlin.javadocs.coroutine
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -12,15 +13,18 @@ import kotlinx.coroutines.runBlocking
  *    * Frequently used in test environments to ensure synchronous execution of coroutine-based code.
  * * In the following codes, i run some task by runBlocking in the main thread.
  *    * When it comes to runBlocking, the main thread remains blocked until its children complete execution.
- *    * The tasks in the runBlocking execute in a coroutine.
- *    * The tasks in the runBlocking can execute in two separate coroutine concurrently.
+ *    * The tasks in the runBlocking execute in two separate coroutine concurrently.
  * ```
- *     fun main() {
+ *    fun main() {
  *         task1()
  *
  *         runBlocking {
- *             task2()
- *             task3()
+ *             launch {
+ *                 task2()
+ *             }
+ *             launch {
+ *                 task3()
+ *             }
  *         }
  *
  *         task4()
@@ -39,8 +43,12 @@ class RunBlocking {
         task1()
 
         runBlocking {
-            task2()
-            task3()
+            launch {
+                task2()
+            }
+            launch {
+                task3()
+            }
         }
 
         task4()

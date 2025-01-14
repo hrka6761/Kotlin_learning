@@ -85,8 +85,8 @@ class CoroutineScopeFunctionViewModel @Inject constructor(
                 val coroutine1Data = CoroutineData(
                     coroutineName = Thread.currentThread().name.split(" ").last(),
                     thread = Thread.currentThread().name.split(" ").first(),
-                    job = this.coroutineContext.job.toString(),
-                    parentJob = this.coroutineContext.job.parent.toString(),
+                    job = this.coroutineContext.job,
+                    parentJob = this.coroutineContext.job.parent,
                     children = mutableListOf()
                 )
                 _coroutine1State.postValue(Processing(coroutine1Data))
@@ -97,8 +97,8 @@ class CoroutineScopeFunctionViewModel @Inject constructor(
                         scopeName = "coroutineScope function",
                         coroutineName = Thread.currentThread().name.split(" ").last(),
                         thread = Thread.currentThread().name.split(" ").first(),
-                        job = this.coroutineContext.job.toString(),
-                        parentJob = this.coroutineContext.job.parent.toString(),
+                        job = this.coroutineContext.job,
+                        parentJob = this.coroutineContext.job.parent,
                         children = mutableListOf()
                     )
                     _scopeState.postValue(Processing(scopeData))
@@ -107,8 +107,8 @@ class CoroutineScopeFunctionViewModel @Inject constructor(
                         val coroutine3Data = CoroutineData(
                             coroutineName = Thread.currentThread().name.split(" ").last(),
                             thread = Thread.currentThread().name.split(" ").first(),
-                            job = this.coroutineContext.job.toString(),
-                            parentJob = this.coroutineContext.job.parent.toString(),
+                            job = this.coroutineContext.job,
+                            parentJob = this.coroutineContext.job.parent,
                             children = this.coroutineContext.job.children.toList()
                         )
                         _coroutine2State.postValue(Processing(coroutine3Data))
@@ -119,8 +119,8 @@ class CoroutineScopeFunctionViewModel @Inject constructor(
                         val coroutine4Data = CoroutineData(
                             coroutineName = Thread.currentThread().name.split(" ").last(),
                             thread = Thread.currentThread().name.split(" ").first(),
-                            job = this.coroutineContext.job.toString(),
-                            parentJob = this.coroutineContext.job.parent.toString(),
+                            job = this.coroutineContext.job,
+                            parentJob = this.coroutineContext.job.parent,
                             children = this.coroutineContext.job.children.toList()
                         )
                         _coroutine3State.postValue(Processing(coroutine4Data))
@@ -129,10 +129,10 @@ class CoroutineScopeFunctionViewModel @Inject constructor(
                         _scopeState.postValue(Done(scopeData))
                     }
 
-                    (coroutine1Data.children as MutableList<Job>).addAll(this@launch.coroutineContext.job.children.toList())
+                    (coroutine1Data.children as MutableList<Job>).addAll(this@launch.coroutineContext.job.children)
                     _coroutine1State.postValue(Processing(coroutine1Data))
 
-                    (scopeData.children as MutableList<Job>).addAll(this.coroutineContext.job.children.toList())
+                    (scopeData.children as MutableList<Job>).addAll(this.coroutineContext.job.children)
                     _scopeState.postValue(Processing(scopeData))
                 }
 
