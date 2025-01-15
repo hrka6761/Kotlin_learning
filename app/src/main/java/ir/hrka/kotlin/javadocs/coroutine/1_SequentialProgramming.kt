@@ -40,20 +40,14 @@ class SequentialProgramming {
 
 
     private fun task1() {
-        printYellow("Start task1")
         Thread.sleep(1_000)
-        printYellow("End task1")
     }
 
     private fun task2() {
-        printYellow("Start task2")
         Thread.sleep(4_000)
-        printYellow("End task2")
     }
 
     private fun task3() {
-        printYellow("Start task3")
         Thread.sleep(2_000)
-        printYellow("End task3")
     }
 }

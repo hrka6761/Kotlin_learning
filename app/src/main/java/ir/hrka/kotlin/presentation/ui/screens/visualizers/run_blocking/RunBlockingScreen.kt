@@ -2,6 +2,7 @@ package ir.hrka.kotlin.presentation.ui.screens.visualizers.run_blocking
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,23 +10,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,11 +69,19 @@ fun RunBlockingScreen(activity: MainActivity, navHostController: NavHostControll
     val task2State by viewModel.task2State.observeAsState(initial = Stop())
     val task3State by viewModel.task3State.observeAsState(initial = Stop())
     val task4State by viewModel.task4State.observeAsState(initial = Stop())
+    val snippetCodeState = remember { mutableStateOf(false) }
 
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { RunBlockingScreenAppBar(navHostController, viewModel, executionState) },
+        topBar = {
+            RunBlockingScreenAppBar(
+                navHostController,
+                viewModel,
+                executionState,
+                snippetCodeState
+            )
+        },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -82,9 +98,89 @@ fun RunBlockingScreen(activity: MainActivity, navHostController: NavHostControll
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (snippetCodeState.value)
+                AlertDialog(
+                    modifier = Modifier.fillMaxWidth(),
+                    onDismissRequest = { snippetCodeState.value = false },
+                    confirmButton = {
+                        TextButton(
+                            onClick = { snippetCodeState.value = false }
+                        ) {
+                            Text(
+                                text = "Close",
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    },
+                    dismissButton = {},
+                    title = {
+                        Text(
+                            text = "Visualizer Code",
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    text = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .verticalScroll(rememberScrollState()),
+                            horizontalAlignment = Alignment.Start,
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 16.dp),
+                                text = "Running some tasks by runBlocking in the main thread.\n" +
+                                        "When it comes to runBlocking, the main thread remains blocked until its children complete execution.\n" +
+                                        "The tasks in the runBlocking execute in two separate coroutine concurrently."
+                            )
+                            ElevatedCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .background(MaterialTheme.colorScheme.primaryContainer)
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    text = "fun main() {\n" +
+                                            "   task1()\n" +
+                                            "\n" +
+                                            "   runBlocking {\n" +
+                                            "       launch {\n" +
+                                            "           task2()\n" +
+                                            "       }\n" +
+                                            "       launch {\n" +
+                                            "           task3()\n" +
+                                            "       }\n" +
+                                            "   }\n" +
+                                            "\n" +
+                                            "   task4()\n" +
+                                            "}\n\n\n"+
+                                            "private fun task1() {\n" +
+                                            "   Thread.sleep(1_000)\n" +
+                                            "}\n\n" +
+                                            "private suspend fun task2() {\n" +
+                                            "   delay(4_000)\n" +
+                                            "}\n\n" +
+                                            "private suspend fun task3() {\n" +
+                                            "   delay(2_000)\n" +
+                                            "}\n\n" +
+                                            "private fun task4() {\n" +
+                                            "   Thread.sleep(3_000)\n" +
+                                            "}"
+                                )
+                            }
+                        }
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                )
             Guidance()
             Thread(
-                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
                 state = mainThreadState
             ) {
                 Task(state = task1State)
@@ -133,7 +229,8 @@ fun RunBlockingScreen(activity: MainActivity, navHostController: NavHostControll
 fun RunBlockingScreenAppBar(
     navHostController: NavHostController,
     viewModel: RunBlockingViewModel,
-    executionState: ExecutionState
+    executionState: ExecutionState,
+    snippetCodeState: MutableState<Boolean>
 ) {
     TopAppBar(
         title = {
@@ -151,6 +248,14 @@ fun RunBlockingScreenAppBar(
             }
         },
         actions = {
+            Icon(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .clickable { snippetCodeState.value = true },
+                painter = painterResource(R.drawable.snippet_codes),
+                contentDescription = null
+            )
+
             Icon(
                 modifier = Modifier
                     .padding(end = 8.dp)
