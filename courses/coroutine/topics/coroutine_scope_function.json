@@ -26,14 +26,6 @@
         "the runBlocking method blocks the current thread for waiting, while coroutineScope just suspends, releasing the underlying thread for other usages (suspend coroutine)."
       ],
       "snippet_codes": null
-    },
-    {
-      "id": 4,
-      "point": "In the following codes, i run some task by coroutineScope function in the main thread.",
-      "sub_points": null,
-      "snippet_codes": [
-        "     fun main() {\n         task1()\n\n         CoroutineScope(Dispatchers.Main).launch {\n             task2()\n\n             coroutineScope {\n                 launch {\n                     task3()\n                 }\n                 launch {\n                     task4()\n                 }\n             }\n\n             task5()\n         }\n\n         task6()\n     }\n\n\n     private fun task1() { ... }\n     private suspend fun task2() { ... }\n     private suspend fun task3() { ... }\n     private suspend fun task4() { ... }\n     private suspend fun task5() { ... }"
-      ]
     }
   ]
 }

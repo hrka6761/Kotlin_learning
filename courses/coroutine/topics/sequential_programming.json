@@ -38,14 +38,6 @@
         "Unlike Concurrent programming in this paradigm, tasks are executed together and their execution processes at a time."
       ],
       "snippet_codes": null
-    },
-    {
-      "id": 5,
-      "point": "In the following codes, i run some task in the main thread:",
-      "sub_points": null,
-      "snippet_codes": [
-        "    fun main() {\n        task1()\n        task2()\n        task3()\n    }\n\n    private fun task1() { ... }\n    private fun task2() { ... }\n    private fun task3() { ... }"
-      ]
     }
   ]
 }

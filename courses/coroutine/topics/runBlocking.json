@@ -28,17 +28,6 @@
         "Frequently used in test environments to ensure synchronous execution of coroutine-based code."
       ],
       "snippet_codes": null
-    },
-    {
-      "id": 5,
-      "point": "In the following codes, i run some task by runBlocking in the main thread.",
-      "sub_points": [
-        "When it comes to runBlocking, the main thread remains blocked until its children complete execution.",
-        "The tasks in the runBlocking execute in two separate coroutine concurrently."
-      ],
-      "snippet_codes": [
-        "   fun main() {\n         task1()\n\n         runBlocking {\n             launch {\n                 task2()\n             }\n             launch {\n                 task3()\n             }\n         }\n\n         task4()\n     }\n     \n     private fun task1() { ... }\n     private suspend fun task2() { ... }\n     private suspend fun task3() { ... }\n     private fun task4() { ... }"
-      ]
     }
   ]
 }

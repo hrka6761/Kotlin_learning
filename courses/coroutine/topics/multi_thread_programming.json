@@ -34,17 +34,6 @@
         "Threads require careful synchronization to avoid race conditions, deadlocks, and other concurrency issues."
       ],
       "snippet_codes": null
-    },
-    {
-      "id": 6,
-      "point": "In the following codes, i run some task in another threads:",
-      "sub_points": [
-        "Tasks in separate threads (task2, task3, task4, and task5) execute concurrently with tasks (task1, task6) in the main thread.",
-        "Thread execution order is non-deterministic, meaning the exact sequence of task2, task3, task4, task5, and task6 depends on the thread scheduler."
-      ],
-      "snippet_codes": [
-        "     fun main() {\n         task1()\n\n         Thread {\n             task2()\n             task3()\n         }.start()\n\n         Thread {\n             task4()\n             task5()\n         }.start()\n\n         task6()\n     }\n \n     private fun task1() { ... }\n     private fun task2() { ... }\n     private fun task3() { ... }\n     private fun task4() { ... }\n     private fun task5() { ... }\n     private fun task6() { ... }"
-      ]
     }
   ]
 }
