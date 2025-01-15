@@ -16,6 +16,7 @@ object Constants {
     const val ABOUT_SCREEN = "about"
 
     const val DEFAULT_VERSION_ID = -1
+    const val DEFAULT_VERSION_CODE = 6
 
     const val UPDATE_UNKNOWN_STATE = 0
     const val NO_UPDATE_STATE = 1

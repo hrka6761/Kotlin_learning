@@ -243,13 +243,13 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    viewModel.initGlobalData()
-                    viewModel.checkNewVersion(activity)
+                    viewModel.initGlobalData(activity)
+                    viewModel.checkNewVersion()
                 }
 
                 is Resource.Error -> {
-                    viewModel.initGlobalData()
-                    viewModel.checkNewVersion(activity)
+                    viewModel.initGlobalData(activity)
+                    viewModel.checkNewVersion()
                 }
             }
     }

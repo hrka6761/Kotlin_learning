@@ -8,6 +8,7 @@
       "topic_file_name": "sequential_programming.json",
       "points_number": 5,
       "has_visualizer": true,
+      "visualizer_version_code": 7,
       "visualizer_destination": "sequential_programming_destination",
       "is_active": true
     },
@@ -18,6 +19,7 @@
       "topic_file_name": "multi_thread_programming.json",
       "points_number": 6,
       "has_visualizer": true,
+      "visualizer_version_code": 7,
       "visualizer_destination": "multiThread_programming_destination",
       "is_active": true
     },
@@ -28,6 +30,7 @@
       "topic_file_name": "coroutines.json",
       "points_number": 10,
       "has_visualizer": true,
+      "visualizer_version_code": 10,
       "visualizer_destination": "coroutines_destination",
       "is_active": true
     },
@@ -38,6 +41,7 @@
       "topic_file_name": "runBlocking.json",
       "points_number": 5,
       "has_visualizer": true,
+      "visualizer_version_code": 10,
       "visualizer_destination": "run_blocking_destination",
       "is_active": true
     },
@@ -48,6 +52,7 @@
       "topic_file_name": "coroutine_scope_function.json",
       "points_number": 4,
       "has_visualizer": true,
+      "visualizer_version_code": 11,
       "visualizer_destination": "coroutine_scope_function_destination",
       "is_active": true
     }

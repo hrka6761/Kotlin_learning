@@ -165,4 +165,6 @@ class TopicViewModel @Inject constructor(
             }
         }
     }
+
+    fun getAppVersionCode(): Int? = globalData.appVersionCode
 }

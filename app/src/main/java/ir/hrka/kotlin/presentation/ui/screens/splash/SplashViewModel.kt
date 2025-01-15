@@ -4,16 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.core.Constants.BAZAAR_URL
+import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_CODE
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.UPDATE_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.ExecutionState
@@ -92,17 +91,18 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    fun initGlobalData() {
+    fun initGlobalData(context: Context) {
         globalData.initGlobalData(
             versionsInfo = _versionsInfo.value.data,
             coursesVersionId = _coursesVersionId.value.data ?: DEFAULT_VERSION_ID,
             kotlinVersionId = _kotlinVersionId.value.data ?: DEFAULT_VERSION_ID,
-            coroutineVersionId = _coroutineVersionId.value.data ?: DEFAULT_VERSION_ID
+            coroutineVersionId = _coroutineVersionId.value.data ?: DEFAULT_VERSION_ID,
+            appVersionCode = getAppVersionCode(context)
         )
     }
 
-    fun checkNewVersion(context: Context) {
-        val appVersionCode = getAppVersionCode(context)
+    fun checkNewVersion() {
+        val appVersionCode = globalData.appVersionCode ?: DEFAULT_VERSION_CODE
         val lastVersionCode = _versionsInfo.value.data?.lastVersionCode ?: appVersionCode
         val minSupportedVersionCode =
             _versionsInfo.value.data?.minSupportedVersionCode ?: appVersionCode

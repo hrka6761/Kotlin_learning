@@ -20,6 +20,7 @@ data class Topic(
     @ColumnInfo(name = "topic_file_name") @SerializedName(value = "topic_file_name") val fileName: String,
     @ColumnInfo(name = "points_number") @SerializedName(value = "points_number") val pointsNumber: Int,
     @ColumnInfo(name = "has_visualizer") @SerializedName(value = "has_visualizer") val hasVisualizer: Boolean,
+    @ColumnInfo(name = "visualizer_version_code") @SerializedName(value = "visualizer_version_code") val visualizerVersionCode: Int,
     @ColumnInfo(name = "visualizer_destination") @SerializedName(value = "visualizer_destination") val visualizerDestination: String,
     @ColumnInfo(name = "is_active") @SerializedName(value = "is_active") val isActive: Boolean,
 ) : Parcelable

@@ -14,6 +14,8 @@ class GlobalData @Inject constructor() {
     private var _coursesVersionId = -1
     private var _kotlinVersionId = -1
     private var _coroutineVersionId = -1
+    var appVersionCode: Int? = null
+        private set
     var lastVersionId: Int? = null
     var hasCoursesUpdate = false
     var hasKotlinTopicsUpdate = false
@@ -28,9 +30,11 @@ class GlobalData @Inject constructor() {
         versionsInfo: VersionsInfo?,
         coursesVersionId: Int,
         kotlinVersionId: Int,
-        coroutineVersionId: Int
+        coroutineVersionId: Int,
+        appVersionCode: Int
     ) {
         _versionsInfo = versionsInfo
+        this.appVersionCode = appVersionCode
         lastVersionId = _versionsInfo?.lastVersionId
         _versionsList = _versionsInfo?.versions
         _coursesVersionId = coursesVersionId

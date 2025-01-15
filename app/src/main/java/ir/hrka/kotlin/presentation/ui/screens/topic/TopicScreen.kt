@@ -53,6 +53,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_CODE
 import ir.hrka.kotlin.core.Constants.POINTS_SCREEN_TOPIC_ARGUMENT
 import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT
@@ -88,7 +89,7 @@ fun TopicsScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { KotlinTopicsAppBar(navHostController) },
+        topBar = { TopicsAppBar(navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -136,7 +137,7 @@ fun TopicsScreen(
             ) {
                 topics.data?.let {
                     items(it.size) { index ->
-                        KotlinTopicItem(it[index], index, navHostController)
+                        TopicItem(it[index], index, navHostController, viewModel.getAppVersionCode())
                     }
                 }
             }
@@ -257,7 +258,7 @@ fun TopicsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun KotlinTopicsAppBar(navHostController: NavHostController) {
+fun TopicsAppBar(navHostController: NavHostController) {
     CenterAlignedTopAppBar(
         title = { Text(stringResource(R.string.kotlin_topics_app_bar_title)) },
         navigationIcon = {
@@ -271,10 +272,11 @@ fun KotlinTopicsAppBar(navHostController: NavHostController) {
 }
 
 @Composable
-fun KotlinTopicItem(
+fun TopicItem(
     topic: Topic,
     index: Int,
     navHostController: NavHostController,
+    appVersionCode: Int?
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -360,20 +362,21 @@ fun KotlinTopicItem(
                 }
 
                 if (topic.hasVisualizer)
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .size(20.dp),
-                            painter = painterResource(R.drawable.visualization),
-                            contentDescription = ""
-                        )
-                        Text(
-                            fontSize = 12.sp,
-                            text = "Visual"
-                        )
-                    }
+                    if ((appVersionCode ?: DEFAULT_VERSION_CODE) >= topic.visualizerVersionCode)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(20.dp),
+                                painter = painterResource(R.drawable.visualization),
+                                contentDescription = ""
+                            )
+                            Text(
+                                fontSize = 12.sp,
+                                text = "Visual"
+                            )
+                        }
             }
 
             if (topic.hasUpdate)
@@ -395,8 +398,8 @@ fun KotlinTopicItem(
 
 @Preview(showBackground = true)
 @Composable
-fun KotlinTopicsScreenPreview() {
-    KotlinTopicItem(
+fun TopicsScreenPreview() {
+    TopicItem(
         Topic(
             id = 1,
             hasUpdate = true,
@@ -406,9 +409,11 @@ fun KotlinTopicsScreenPreview() {
             pointsNumber = 29,
             hasVisualizer = true,
             visualizerDestination = "",
+            visualizerVersionCode = 0,
             isActive = true
         ),
         14,
-        rememberNavController()
+        rememberNavController(),
+        11
     )
 }
