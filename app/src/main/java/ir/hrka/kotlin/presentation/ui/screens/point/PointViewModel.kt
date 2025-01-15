@@ -84,4 +84,6 @@ class PointViewModel @Inject constructor(
                 updateTopicsStateOnDBUseCase(topicsIds = intArrayOf(topic.id), state = false)[0]
         }
     }
+
+    fun getAppVersionCode(): Int? = globalData.appVersionCode
 }

@@ -53,6 +53,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_CODE
 import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
@@ -80,7 +81,7 @@ fun PointsScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { PointsScreenAppBar(topic, navHostController) },
+        topBar = { PointsScreenAppBar(topic, navHostController, viewModel.getAppVersionCode()) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -223,7 +224,7 @@ fun PointsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PointsScreenAppBar(topic: Topic?, navHostController: NavHostController) {
+fun PointsScreenAppBar(topic: Topic?, navHostController: NavHostController, appVersionCode: Int?) {
     TopAppBar(
         title = {
             Text(
@@ -241,18 +242,19 @@ fun PointsScreenAppBar(topic: Topic?, navHostController: NavHostController) {
         },
         actions = {
             if (topic?.hasVisualizer == true)
-                Icon(
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .size(30.dp)
-                        .clickable {
-                            if (topic.visualizerDestination.isNotEmpty())
-                                navHostController.navigate(topic.visualizerDestination)
-                        },
-                    tint = MaterialTheme.colorScheme.tertiary,
-                    painter = painterResource(R.drawable.play_visualizer),
-                    contentDescription = ""
-                )
+                if ((appVersionCode ?: DEFAULT_VERSION_CODE) >= topic.visualizerVersionCode)
+                    Icon(
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .size(30.dp)
+                            .clickable {
+                                if (topic.visualizerDestination.isNotEmpty())
+                                    navHostController.navigate(topic.visualizerDestination)
+                            },
+                        tint = MaterialTheme.colorScheme.tertiary,
+                        painter = painterResource(R.drawable.play_visualizer),
+                        contentDescription = ""
+                    )
         }
     )
 }
