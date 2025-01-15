@@ -1,5 +1,5 @@
 {
-  "last_version_id": 6,
+  "last_version_id": 7,
   "last_version_code": 10,
   "min_supported_version_code": 7,
   "versions": [
@@ -75,6 +75,17 @@
       "updated_kotlin_topics": null,
       "change_log": [
         "Create coroutineScope function topic"
+      ]
+    },
+    {
+      "version_id": 7,
+      "version_name": "6.2.2",
+      "version_code": 10,
+      "version_type": "UpdateCoroutineTopics",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Remove last point of coroutine topics"
       ]
     }
   ]
