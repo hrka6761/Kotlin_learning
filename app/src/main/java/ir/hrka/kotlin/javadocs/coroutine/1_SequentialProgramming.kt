@@ -32,7 +32,7 @@ import ir.hrka.kotlin.core.utilities.Log.printYellow
 
 class SequentialProgramming {
 
-    fun fun1() {
+    fun main() {
         task1()
         task2()
         task3()

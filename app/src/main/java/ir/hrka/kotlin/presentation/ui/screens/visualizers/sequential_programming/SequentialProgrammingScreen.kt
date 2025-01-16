@@ -139,7 +139,7 @@ fun SequentialProgrammingScreen(activity: MainActivity, navHostController: NavHo
                                         .background(MaterialTheme.colorScheme.primaryContainer)
                                         .fillMaxWidth()
                                         .padding(16.dp),
-                                    text = "fun fun1() {\n" +
+                                    text = "fun main() {\n" +
                                             "    task1()\n" +
                                             "    task2()\n" +
                                             "    task3()\n" +

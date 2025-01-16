@@ -152,20 +152,21 @@ fun CoroutineScopeFunctionScreen(activity: MainActivity, navHostController: NavH
                                     text = "fun main() {\n" +
                                             "    task1()\n" +
                                             "\n" +
-                                            "    CoroutineScope(Dispatchers.Main).launch {\n" +
-                                            "        task2()\n" +
+                                            "    CoroutineScope(Dispatchers.Main)\n" +
+                                            "        .launch {\n" +
+                                            "            task2()\n" +
                                             "\n" +
-                                            "        coroutineScope {\n" +
-                                            "            launch {\n" +
-                                            "                task3()\n" +
+                                            "            coroutineScope {\n" +
+                                            "                launch {\n" +
+                                            "                    task3()\n" +
+                                            "                }\n" +
+                                            "                launch {\n" +
+                                            "                    task4()\n" +
+                                            "                }\n" +
                                             "            }\n" +
-                                            "            launch {\n" +
-                                            "                task4()\n" +
-                                            "            }\n" +
+                                            "\n" +
+                                            "            task5()\n" +
                                             "        }\n" +
-                                            "\n" +
-                                            "        task5()\n" +
-                                            "    }\n" +
                                             "\n" +
                                             "    task6()\n" +
                                             "}\n\n\n" +

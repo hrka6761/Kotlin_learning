@@ -17,23 +17,24 @@ import kotlinx.coroutines.launch
  *    * the runBlocking method blocks the current thread for waiting, while coroutineScope just suspends, releasing the underlying thread for other usages (suspend coroutine).
  * * In the following codes, i run some task by coroutineScope function in the main thread.
  * ```
- *     fun main() {
+ *    fun main() {
  *         task1()
  *
- *         CoroutineScope(Dispatchers.Main).launch {
- *             task2()
+ *         CoroutineScope(Dispatchers.Main)
+ *             .launch {
+ *                 task2()
  *
- *             coroutineScope {
- *                 launch {
- *                     task3()
+ *                 coroutineScope {
+ *                     launch {
+ *                         task3()
+ *                     }
+ *                     launch {
+ *                         task4()
+ *                     }
  *                 }
- *                 launch {
- *                     task4()
- *                 }
+ *
+ *                 task5()
  *             }
- *
- *             task5()
- *         }
  *
  *         task6()
  *     }
@@ -53,20 +54,21 @@ class CoroutineScopeFunction {
     fun main() {
         task1()
 
-        CoroutineScope(Dispatchers.Main).launch {
-            task2()
+        CoroutineScope(Dispatchers.Main)
+            .launch {
+                task2()
 
-            coroutineScope {
-                launch {
-                    task3()
+                coroutineScope {
+                    launch {
+                        task3()
+                    }
+                    launch {
+                        task4()
+                    }
                 }
-                launch {
-                    task4()
-                }
+
+                task5()
             }
-
-            task5()
-        }
 
         task6()
     }
