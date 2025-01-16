@@ -265,7 +265,7 @@ fun TopicsAppBar(
     course: Course?
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(course?.courseName ?: "Kotlin Learning") },
+        title = { Text(course?.courseTitle ?: "Kotlin Learning") },
         navigationIcon = {
             IconButton(
                 onClick = { navHostController.popBackStack() }
