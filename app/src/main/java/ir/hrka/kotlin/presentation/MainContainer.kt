@@ -70,7 +70,7 @@ fun AppContent() {
                     ?.savedStateHandle
                     ?.get<Course>(TOPICS_SCREEN_COURSE_ARGUMENT)
 
-                TopicsScreen(activity, navHostController, course!!)
+                TopicsScreen(activity, navHostController, course)
             }
             composable(
                 route = Point()

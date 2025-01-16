@@ -69,7 +69,7 @@ import ir.hrka.kotlin.domain.entities.db.Topic
 fun TopicsScreen(
     activity: MainActivity,
     navHostController: NavHostController,
-    course: Course
+    course: Course?
 ) {
 
     val viewModel: TopicViewModel = hiltViewModel()
@@ -153,20 +153,22 @@ fun TopicsScreen(
     }
 
     LaunchedEffect(Unit) {
-        if (executionState == Start) {
-            viewModel.setExecutionState(Loading)
+        course?.let {
+            if (executionState == Start) {
+                viewModel.setExecutionState(Loading)
 
-            if (viewModel.hasTopicsUpdate(course)) {
-                viewModel.getTopicsFromGit(course)
-                return@LaunchedEffect
+                if (viewModel.hasTopicsUpdate(it)) {
+                    viewModel.getTopicsFromGit(it)
+                    return@LaunchedEffect
+                }
+
+                if (viewModel.hasTopicsPointsUpdate(it)) {
+                    viewModel.updateTopicsStateOnDB(it)
+                    return@LaunchedEffect
+                }
+
+                viewModel.getTopicsFromDB(it)
             }
-
-            if (viewModel.hasTopicsPointsUpdate(course)) {
-                viewModel.updateTopicsStateOnDB(course)
-                return@LaunchedEffect
-            }
-
-            viewModel.getTopicsFromDB(course)
         }
     }
 
@@ -177,7 +179,7 @@ fun TopicsScreen(
                 is Resource.Loading -> {}
 
                 is Resource.Success -> {
-                    if (viewModel.hasTopicsUpdate(course))
+                    if (viewModel.hasTopicsUpdate(course!!))
                         topics.data?.let { viewModel.updateTopicsOnDB(course, it) }
                     else
                         viewModel.setExecutionState(Stop)
@@ -197,7 +199,7 @@ fun TopicsScreen(
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    viewModel.updateVersionId(course)
+                    viewModel.updateVersionId(course!!)
                 }
 
                 is Resource.Error -> {
@@ -213,7 +215,7 @@ fun TopicsScreen(
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    if (viewModel.hasTopicsUpdate(course)) {
+                    if (viewModel.hasTopicsUpdate(course!!)) {
                         viewModel.setExecutionState(Stop)
                         viewModel.updateVersionIdInGlobalData(course)
                         return@LaunchedEffect
@@ -226,7 +228,7 @@ fun TopicsScreen(
                 }
 
                 is Resource.Error -> {
-                    if (viewModel.hasTopicsPointsUpdate(course))
+                    if (viewModel.hasTopicsPointsUpdate(course!!))
                         viewModel.getTopicsFromDB(course)
                     else
                         viewModel.setExecutionState(Stop)
@@ -241,11 +243,11 @@ fun TopicsScreen(
                 is Resource.Initial -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    viewModel.updateVersionId(course)
+                    viewModel.updateVersionId(course!!)
                 }
 
                 is Resource.Error -> {
-                    viewModel.getTopicsFromDB(course)
+                    viewModel.getTopicsFromDB(course!!)
                 }
             }
         }
@@ -293,6 +295,7 @@ fun TopicItem(
                 .alpha(if (topic.isActive) 1f else 0.3f)
                 .clickable {
                     if (topic.isActive) {
+                        Log.i(TAG, "TopicItem: $topic")
                         navHostController
                             .currentBackStackEntry
                             ?.savedStateHandle
