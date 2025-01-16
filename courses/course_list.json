@@ -6,7 +6,7 @@
       "course_name": "kotlin",
       "course_title": "Kotlin language",
       "topics_file_name": "kotlin_topics_list.json",
-      "course_description": "Using the tips in this section, you will achieve complete mastery of Kotlin syntax. When you start using this section, all the tips are taken from GitHub repository and stored in your phone's database, and in your next uses, the tips are taken from the database. If new tips are created or existing tips are modified, the app will retrieve the new tips from GitHub repository and replace the previous ones.",
+      "course_description": "Using the tips in this section, you will achieve complete mastery of Kotlin syntax. when you start using this section, all the tips are taken from GitHub repository and stored in your phone's database, and in your next uses, the tips are taken from the database. If new tips are created or existing tips are modified, the app will retrieve the new tips from GitHub repository and replace the previous ones.",
       "course_banner": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/kotlin_course_banner.png",
       "is_active": true
     },
@@ -15,7 +15,7 @@
       "course_name": "coroutine",
       "course_title": "Coroutine & Flow",
       "topics_file_name": "coroutine_topics_list.json",
-      "course_description": "Using the tips in this section, you will master Kotlin coroutines. To clearly understand the concepts in this section, all the use cases of Kotlin coroutines and flows are visualized.",
+      "course_description": "Using the tips in this section, you will master Kotlin coroutines. To clearly understand the concepts in this section, all the use cases of Kotlin coroutines and flows are visualized. fetch and update the tips are like kotlin language course but to have new visualizers you must to update app with new versions. ",
       "course_banner": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/coroutine_course_banner.png",
       "is_active": true
     }
