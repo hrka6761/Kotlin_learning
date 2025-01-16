@@ -63,11 +63,10 @@ import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.SOURCE_URL
 import ir.hrka.kotlin.core.Constants.TAG
+import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_COURSE_ARGUMENT
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.Resource
-import ir.hrka.kotlin.core.utilities.Course.entries
-import ir.hrka.kotlin.core.utilities.Course.Kotlin
-import ir.hrka.kotlin.core.utilities.Screen
+import ir.hrka.kotlin.core.utilities.Screen.Topic
 import ir.hrka.kotlin.core.utilities.Screen.About
 import ir.hrka.kotlin.domain.entities.db.Course
 
@@ -431,12 +430,14 @@ fun CourseItem(
                     bottom.linkTo(img.bottom)
                 },
                 onClick = {
-                    if (course.isActive)
-                        navHostController.navigate(
-                            Screen.Topic.appendArg(
-                                getCourseByCourseName(course.courseName)
-                            )
-                        )
+                    if (course.isActive) {
+                        navHostController
+                            .currentBackStackEntry
+                            ?.savedStateHandle
+                            ?.set(TOPICS_SCREEN_COURSE_ARGUMENT, course)
+
+                        navHostController.navigate(Topic())
+                    }
                 }
             ) {
                 Text(
@@ -449,9 +450,6 @@ fun CourseItem(
         }
     }
 }
-
-private fun getCourseByCourseName(courseName: String): ir.hrka.kotlin.core.utilities.Course =
-    entries.find { it.courseName.equals(courseName, true) } ?: Kotlin
 
 @Preview(
     showBackground = true,

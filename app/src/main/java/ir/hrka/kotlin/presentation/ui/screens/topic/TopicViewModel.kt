@@ -7,10 +7,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.Constants.KOTLIN_COURSE_NAME
 import ir.hrka.kotlin.core.Constants.TAG
-import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.domain.usecases.db.topics.GetTopicsFromDBUseCase
 import ir.hrka.kotlin.domain.usecases.git.GetTopicsFromGitUseCase

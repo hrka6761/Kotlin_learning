@@ -4,12 +4,12 @@ import com.google.gson.Gson
 import ir.hrka.kotlin.core.Constants.READ_FILE_ERROR_CODE
 import ir.hrka.kotlin.core.Constants.RETROFIT_ERROR_CODE
 import ir.hrka.kotlin.core.errors.Error
-import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.decodeBase64
 import ir.hrka.kotlin.data.datasource.git.GitAPI
 import ir.hrka.kotlin.domain.entities.GitFileData
 import ir.hrka.kotlin.domain.entities.TopicsData
+import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.domain.repositories.read.ReadTopicsRepo
 import javax.inject.Inject

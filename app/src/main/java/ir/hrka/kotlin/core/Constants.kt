@@ -33,9 +33,6 @@ object Constants {
 
     const val KOTLIN_COURSE_NAME = "kotlin"
     const val COROUTINE_COURSE_NAME = "coroutine"
-    const val KOTLIN_TOPICS_FILE_NAME = "kotlin_topics_list.json"
-    const val COROUTINE_TOPICS_FILE_NAME = "coroutine_topics_list.json"
-
     const val TOKEN = "This is a secret."
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_learning/contents/"
 

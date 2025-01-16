@@ -6,7 +6,7 @@ import ir.hrka.kotlin.core.Constants.DB_WRITE_TOPICS_ERROR_CODE
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.data.datasource.db.interactions.TopicDao
 import ir.hrka.kotlin.core.errors.Error
-import ir.hrka.kotlin.core.utilities.Course
+import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.domain.repositories.write.WriteTopicsRepo
 import javax.inject.Inject

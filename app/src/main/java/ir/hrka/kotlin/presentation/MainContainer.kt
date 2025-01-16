@@ -16,8 +16,6 @@ import androidx.navigation.navArgument
 import ir.hrka.kotlin.core.Constants.POINTS_SCREEN_TOPIC_ARGUMENT
 import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_COURSE_ARGUMENT
-import ir.hrka.kotlin.core.utilities.Course
-import ir.hrka.kotlin.core.utilities.Course.Kotlin
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import ir.hrka.kotlin.core.utilities.Screen.Topic
@@ -28,6 +26,7 @@ import ir.hrka.kotlin.core.utilities.Screen.MultiThreadProgramming
 import ir.hrka.kotlin.core.utilities.Screen.Coroutines
 import ir.hrka.kotlin.core.utilities.Screen.RunBlocking
 import ir.hrka.kotlin.core.utilities.Screen.CoroutineScopeFunction
+import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.presentation.ui.screens.about.AboutScreen
 import ir.hrka.kotlin.presentation.ui.screens.point.PointsScreen
 import ir.hrka.kotlin.presentation.ui.screens.topic.TopicsScreen
@@ -64,25 +63,14 @@ fun AppContent() {
                 HomeScreen(activity, navHostController)
             }
             composable(
-                route = "${Topic()}/{$TOPICS_SCREEN_COURSE_ARGUMENT}",
-                arguments = listOf(
-                    navArgument(TOPICS_SCREEN_COURSE_ARGUMENT) {
-                        type = NavType.EnumType(Course::class.java)
-                    }
-                )
-            ) { backStackEntry ->
-                val course = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                    backStackEntry.arguments
-                        ?.getParcelable(
-                            TOPICS_SCREEN_COURSE_ARGUMENT,
-                            Course::class.java
-                        ) ?: Kotlin
-                else
-                    backStackEntry.arguments
-                        ?.getParcelable<Course>(TOPICS_SCREEN_COURSE_ARGUMENT)
-                        ?: Kotlin
+                route = Topic()
+            ) {
+                val course = navHostController
+                    .previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<Course>(TOPICS_SCREEN_COURSE_ARGUMENT)
 
-                TopicsScreen(activity, navHostController, course)
+                TopicsScreen(activity, navHostController, course!!)
             }
             composable(
                 route = Point()

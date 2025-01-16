@@ -60,9 +60,9 @@ import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUME
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
-import ir.hrka.kotlin.core.utilities.Course
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.Point
+import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
 
 @Composable
@@ -89,7 +89,7 @@ fun TopicsScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { TopicsAppBar(navHostController) },
+        topBar = { TopicsAppBar(navHostController, course) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -258,9 +258,12 @@ fun TopicsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopicsAppBar(navHostController: NavHostController) {
+fun TopicsAppBar(
+    navHostController: NavHostController,
+    course: Course?
+) {
     CenterAlignedTopAppBar(
-        title = { Text(stringResource(R.string.kotlin_topics_app_bar_title)) },
+        title = { Text(course?.courseName ?: "Kotlin Learning") },
         navigationIcon = {
             IconButton(
                 onClick = { navHostController.popBackStack() }
