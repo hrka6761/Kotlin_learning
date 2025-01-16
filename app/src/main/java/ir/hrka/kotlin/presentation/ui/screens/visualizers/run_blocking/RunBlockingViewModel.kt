@@ -108,8 +108,6 @@ class RunBlockingViewModel @Inject constructor(
 
                 _coroutine2State.postValue(Done(coroutine2Data))
                 _coroutine1State.postValue(Done(coroutine1Data))
-                _mainThreadState.postValue(Done(mainThreadData))
-                setExecutionState(ExecutionState.Stop)
             }
 
             launch {
@@ -170,5 +168,7 @@ class RunBlockingViewModel @Inject constructor(
         _task4State.postValue(Processing(taskData))
         Thread.sleep(3_000)
         _task4State.postValue(Done(taskData))
+        _mainThreadState.postValue(Done(mainThreadData))
+        setExecutionState(ExecutionState.Stop)
     }
 }
