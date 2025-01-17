@@ -125,7 +125,7 @@ fun CoroutinesScreen(activity: MainActivity, navHostController: NavHostControlle
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(bottom = 16.dp),
-                                text = "Running some tasks in another Coroutine but in the main thread.\n" +
+                                text = "Running some tasks in another coroutine but in the main thread.\n" +
                                         "Tasks in separate coroutines (task2, task3, task4, and task5) execute concurrently with tasks (task1, task6) in the main thread."
                             )
                             ElevatedCard(

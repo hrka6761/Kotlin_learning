@@ -177,7 +177,7 @@ fun Task(
             .fillMaxWidth()
             .padding(8.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -356,8 +356,7 @@ fun Guidance(
         ) {
             Box(
                 modifier = Modifier
-                    .width(10.dp)
-                    .height(10.dp)
+                    .size(15.dp)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
 
@@ -369,8 +368,7 @@ fun Guidance(
 
             Box(
                 modifier = Modifier
-                    .width(10.dp)
-                    .height(10.dp)
+                    .size(15.dp)
                     .background(MaterialTheme.colorScheme.primaryContainer)
             )
 
@@ -382,15 +380,31 @@ fun Guidance(
 
             Box(
                 modifier = Modifier
-                    .width(10.dp)
-                    .height(10.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .size(15.dp)
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
             )
 
             Text(
                 modifier = Modifier.padding(start = 2.dp, end = 10.dp),
                 fontSize = 10.sp,
                 text = "Task"
+            )
+
+            ElevatedCard(
+                modifier = modifier
+                    .size(15.dp)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        shape = RoundedCornerShape(20)
+                    ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            ){}
+
+            Text(
+                modifier = Modifier.padding(start = 2.dp, end = 10.dp),
+                fontSize = 10.sp,
+                text = "Scope"
             )
         }
 
