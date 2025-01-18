@@ -1,7 +1,7 @@
 {
-  "last_version_id": 7,
-  "last_version_code": 10,
-  "min_supported_version_code": 7,
+  "last_version_id": 8,
+  "last_version_code": 11,
+  "min_supported_version_code": 11,
   "versions": [
     {
       "version_id": 1,
@@ -86,6 +86,20 @@
       "updated_kotlin_topics": null,
       "change_log": [
         "Remove last point of coroutine topics"
+      ]
+    },
+    {
+      "version_id": 8,
+      "version_name": "6.3.0",
+      "version_code": 11,
+      "version_type": "NewFeature",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Improve the visualizers",
+        "Change course details",
+        "Add snippet code in the visualizers",
+        "Add coroutineScope function Visualizer"
       ]
     }
   ]
