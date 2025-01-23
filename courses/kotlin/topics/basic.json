@@ -4,24 +4,25 @@
   "points": [
     {
       "id": 1,
-      "point": "We declare a `package` at the top of your Kotlin file using the `package` keyword.",
+      "point": "In kotlin, you can group related classes, functions, and other code elements by `package` keyword.",
       "sub_points": [
         "Use all lowercase letters.",
         "Use reverse domain name notation to ensure uniqueness.",
         "Avoid using reserved words or special characters."
       ],
       "snippet_codes": [
-        "package ir.hrka.kotlin.cheatSheet"
+        "package ir.hrka.kotlin.core"
       ]
     },
     {
       "id": 2,
-      "point": "When you want to use a class, function, or extension, you can Import it into your file to use the class or function without specifying its full name every time.",
+      "point": "When you want to use an element of a package, you can Import it into your file to use it without specifying its full name every time.",
       "sub_points": [
-        "To use a function or extension in the same package, you don't need to use the full name or import its package."
+        "To use an element in the same package, you don't need to use the full name or import it."
       ],
       "snippet_codes": [
-        "import ir.hrka.kotlin.cheatSheet.Class"
+        " Log.i(ir.hrka.kotlin.core.Constants.TAG, \"Test\")",
+        " import ir.hrka.kotlin.core.Constants.TAG\n\n Log.i(TAG, \"Test\")"
       ]
     },
     {
@@ -29,7 +30,7 @@
       "point": "We can declare value by `val` that is immutable.",
       "sub_points": [
         "It equals final variable in java.",
-        "It only contains getter.",
+        "It only contains getter accessor.",
         "It is thread safety.",
         "It is more memory-efficient."
       ],
@@ -43,11 +44,11 @@
       "point": "We can declare variable by `var` that is mutable.",
       "sub_points": [
         "It equals regular variable in java.",
-        "It contains getter and setter."
+        "It contains getter and setter accessors."
       ],
       "snippet_codes": [
         " var a: Float = 2.0f\n a = 3.2f",
-        " var b = \"text\"\n     get() {\n         return field\n     }\n     set(value) {\n         field = value\n     }"
+        " var b = \"Test\"\n     get() {\n         return \"Text is $field\"\n     }\n     set(value) {\n         field = \"New value is $value\"\n     }"
       ]
     },
     {
@@ -58,8 +59,10 @@
     },
     {
       "id": 6,
-      "point": "A `field` is only used as a part of a property to hold its value in memory.\n(Fields cannot be declared directly and Kotlin provides it.)",
-      "sub_points": null,
+      "point": "A `field` is only used as a part of a property to hold its value in memory.",
+      "sub_points": [
+        "`field` cannot be declared directly and Kotlin provides it the accessors."
+      ],
       "snippet_codes": null
     },
     {
@@ -111,7 +114,7 @@
         "It cannot be a custom getter."
       ],
       "snippet_codes": [
-        " const val A = \"constant\""
+        " const val TAG = \"KotlinLearningProject\""
       ]
     },
     {
@@ -122,17 +125,19 @@
     },
     {
       "id": 14,
-      "point": "In Kotlin, everything is an object.",
-      "sub_points": null,
+      "point": "In Kotlin, everything is an object, even primitive types.",
+      "sub_points": [
+        "The primitive types include the following:"
+      ],
       "snippet_codes": [
-        " val number: Number = 1\n\n val byte: Byte = 1\n val short: Short = 1\n val int: Int = 1_000_000\n val long: Long = 1L\n\n val float: Float = 1f\n val double: Double = 1.0\n\n val uByte: UByte = 1u\n val uShort: UShort = 1u\n val uInt: UInt = 1u\n val uLong: ULong = 1uL\n\n val boolean: Boolean = true\n val character: Char = 'a'"
+        " val byte: Byte = 1\n val short: Short = 1\n val int: Int = 1_000_000\n val long: Long = 1L\n\n val float: Float = 1f\n val double: Double = 1.0\n\n val uByte: UByte = 1u\n val uShort: UShort = 1u\n val uInt: UInt = 1u\n val uLong: ULong = 1uL\n\n val boolean: Boolean = true\n val character: Char = 'a'"
       ]
     },
     {
       "id": 15,
-      "point": "Numbers are stored as primitive types at compile time except.",
+      "point": "Numbers are stored as primitive types at compile time except:",
       "sub_points": [
-        "When you create a nullable number reference such as Int?.",
+        "When you create a primitive types as nullable reference such as Int?.",
         "When you use generics."
       ],
       "snippet_codes": [
@@ -150,8 +155,10 @@
     },
     {
       "id": 17,
-      "point": "Unsigned integer is declared to as int in the java.",
-      "sub_points": null,
+      "point": "UInt is represented as an Int at runtime.",
+      "sub_points": [
+        "Although UInt is represented as an Int at runtime, its behavior ensures that operations (e.g., addition, subtraction) and properties (e.g., UInt.MAX_VALUE) adhere to the unsigned semantics."
+      ],
       "snippet_codes": null
     },
     {
@@ -172,11 +179,13 @@
       "id": 20,
       "point": "Smart casts occurred after using `is` and `!is` operators in a control flow like `if` and `when`.",
       "sub_points": null,
-      "snippet_codes": null
+      "snippet_codes": [
+        " if (animal is Dog)\n      animal.bark()"
+      ]
     },
     {
       "id": 21,
-      "point": "To cast, you must use `as` operator.",
+      "point": "To cast, use `as` keyword.",
       "sub_points": null,
       "snippet_codes": [
         " val casted = fl as Float"
@@ -192,30 +201,42 @@
     },
     {
       "id": 23,
-      "point": "`return`: by default returns from the nearest enclosing function or anonymous function.",
-      "sub_points": null,
-      "snippet_codes": null
+      "point": "`return`",
+      "sub_points": [
+        "By default returns from the nearest enclosing function or anonymous function."
+      ],
+      "snippet_codes": [
+        " fun example() {\n    println(\"Hello\")\n    return // Returns from the example function\n    println(\"This won't be printed\")\n }",
+        " fun example() {\n    val lambda = {\n        println(\"In the lambda\")\n        return\n // Returns from the example() function, not the lambda itself\n    }\n    lambda()\n    println(\"This will not be printed\")\n }",
+        " fun example() {\n    val lambda = {\n        println(\"In the lambda\")\n        return@lambda // Returns from the lambda itself\n    }\n    lambda()\n    println(\"This will be printed\")\n }"
+      ]
     },
     {
       "id": 24,
-      "point": "`break`: terminates the nearest enclosing loop.",
-      "sub_points": null,
-      "snippet_codes": null
+      "point": "`break",
+      "sub_points": [
+        "Terminates the nearest enclosing loop."
+      ],
+      "snippet_codes": [
+        " fun main() {\n        for (i in 1..5) {\n            if (i == 3) {\n                println(\"Breaking the loop at i = $i\")\n                break // Exits the loop when i == 3\n            }\n            println(\"i = $i\")\n        }\n        println(\"Loop terminated\")\n }\n\n    i = 1\n    i = 2\n    Breaking the loop at i = 3\n    Loop terminated",
+        " fun main() {\n        for (i in 1..3) {\n            for (j in 1..3) {\n                if (j == 2) {\n                    println(\"Breaking inner loop at i = $i, j = $j\")\n                    break // Only exits the inner loop\n                }\n                println(\"i = $i, j = $j\")\n            }\n        }\n }\n\n    i = 1, j = 1\n    Breaking inner loop at i = 1, j = 2\n    i = 2, j = 1\n    Breaking inner loop at i = 2, j = 2\n    i = 3, j = 1\n    Breaking inner loop at i = 3, j = 2",
+        "     fun main() {\n        outer@ for (i in 1..3) {\n            for (j in 1..3) {\n                if (j == 2) {\n                    println(\"Breaking outer loop at i = $i, j = $j\")\n                    break@outer // Exits the outer loop\n                }\n                println(\"i = $i, j = $j\")\n            }\n        }\n        println(\"Outer loop terminated\")\n }\n\n    i = 1, j = 1\n    Breaking outer loop at i = 1, j = 2\n    Outer loop terminated"
+      ]
     },
     {
       "id": 25,
-      "point": "`continue`: proceeds to the next step of the nearest enclosing loop.",
-      "sub_points": null,
-      "snippet_codes": null
+      "point": "`continue`",
+      "sub_points": [
+        "Proceeds to the next step of the nearest enclosing loop."
+      ],
+      "snippet_codes": [
+        " fun main() {\n        for (i in 1..5) {\n            if (i == 3) {\n                println(\"Skipping iteration at i = $i\")\n                continue // Skips the rest of the code in this iteration\n            }\n            println(\"i = $i\")\n        }\n }\n\n    i = 1\n    i = 2\n    Skipping iteration at i = 3\n    i = 4\n    i = 5",
+        " fun main() {\n        for (i in 1..3) {\n            for (j in 1..3) {\n                if (j == 2) {\n                    println(\"Skipping inner loop iteration at i = $i, j = $j\")\n                    continue // Skips the current iteration of the inner loop\n                }\n                println(\"i = $i, j = $j\")\n            }\n        }\n }\n\n    i = 1, j = 1\n    Skipping inner loop iteration at i = 1, j = 2\n    i = 1, j = 3\n    i = 2, j = 1\n    Skipping inner loop iteration at i = 2, j = 2\n    i = 2, j = 3\n    i = 3, j = 1\n    Skipping inner loop iteration at i = 3, j = 2\n    i = 3, j = 3",
+        " fun main() {\n        outer@ for (i in 1..3) {\n            for (j in 1..3) {\n                if (j == 2) {\n                    println(\"Skipping outer loop iteration at i = $i, j = $j\")\n                    continue@outer \n                // Skips the current iteration of the outer loop\n                }\n                println(\"i = $i, j = $j\")\n            }\n        }\n }\n\n    i = 1, j = 1\n    Skipping outer loop iteration at i = 1, j = 2\n    i = 2, j = 1\n    Skipping outer loop iteration at i = 2, j = 2\n    i = 3, j = 1\n    Skipping outer loop iteration at i = 3, j = 2"
+      ]
     },
     {
       "id": 26,
-      "point": "There is not any checked exception in kotlin.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 27,
       "point": "To handling exceptions, we can use try-catch-finally blocks.",
       "sub_points": null,
       "snippet_codes": [
@@ -225,26 +246,35 @@
       ]
     },
     {
+      "id": 27,
+      "point": "There is not any checked exception in kotlin (All exceptions are unchecked).",
+      "sub_points": [
+        "Checked exception like IoException and unchecked exception like NullPointerException."
+      ],
+      "snippet_codes": null
+    },
+    {
       "id": 28,
       "point": "To explicit throw exception by function use `@Throws` annotation.",
       "sub_points": null,
       "snippet_codes": [
-        " @Throws(Exception::class)\n fun function() {\n     TODO(\"Not implemented yet\")\n }"
+        " //In java\n public void riskyMethod() throws IOException {\n        throw new IOException(\"Checked exception in Java\");\n }",
+        " //In kotlin\n @Throws(IOException::class)\n fun riskyMethod() {\n        throw java.io.IOException(\"Exception in Kotlin\")\n }"
       ]
     },
     {
       "id": 29,
       "point": "Kotlin has the following collections for grouping items.",
       "sub_points": [
-        "`Array`: is Ordered collections of items that immutable and you can only change the value of indices but you can not add new index.",
-        "`List`: is Ordered collections of items just like arrays but you can not change the value of indices.",
-        "`Set`: is Unique unordered collections of items.",
-        "`Map`: is Sets of key-value pairs where keys are unique and map to only one value."
+        "Array: is Ordered collections of items that immutable and you can only change the value of indices but you can not add new index.",
+        "List: is Ordered collections of items just like arrays but you can not change the value of indices.",
+        "Set: is Unique unordered collections of items.",
+        "Map: is Sets of key-value pairs where keys are unique and map to only one value."
       ],
       "snippet_codes": [
         " val array: Array<Int> = arrayOf(1, 2, 1)\n array[1] = 3",
         " val list: List<Int> = listOf(1, 2, 1)\n val mutableList: MutableList<Int> = mutableListOf(1, 2, 2)\n mutableList.add(5)",
-        " val set: Set<Int> = setOf(1, 2, 2)\n val mutableSet: MutableSet<Int> = mutableSetOf(1, 2, 2)\n mutableSet.add(-1)",
+        " val set: Set<Int> = setOf(1, 2, 5)\n val mutableSet: MutableSet<Int> = mutableSetOf(1, 2, 5)\n mutableSet.add(-1)",
         " val map: Map<Int, Boolean> = mapOf(Pair(1, true), Pair(1, false))\n val mutableMap: MutableMap<Int, Int> = mutableMapOf(Pair(1, 1))\n mutableMap[10] = 100L"
       ]
     }
