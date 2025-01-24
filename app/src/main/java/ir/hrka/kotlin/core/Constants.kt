@@ -24,8 +24,8 @@ object Constants {
     const val FORCE_UPDATE_STATE = 3
 
     const val CONNECT_TIMEOUT = 3L
-    const val WRITE_TIMEOUT = 60L
-    const val READ_TIMEOUT = 60L
+    const val WRITE_TIMEOUT = 10L
+    const val READ_TIMEOUT = 10L
 
     const val TOPICS_SCREEN_COURSE_ARGUMENT = "courseArg"
     const val TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT = "updatedTopicId"
