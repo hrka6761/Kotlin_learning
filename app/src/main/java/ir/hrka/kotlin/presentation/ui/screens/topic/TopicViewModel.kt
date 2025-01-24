@@ -122,7 +122,7 @@ class TopicViewModel @Inject constructor(
 
             updateTopicsStateOnDBUseCase(
                 topicsIds = updatedTopics,
-                state = false
+                state = true
             ).forEach { result ->
                 if (result is Resource.Error)
                     errorResult = result
