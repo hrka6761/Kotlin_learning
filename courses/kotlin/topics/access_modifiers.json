@@ -6,10 +6,10 @@
       "id": 1,
       "point": "There are four visibility modifiers in Kotlin.",
       "sub_points": [
-        "`private`",
-        "`protected`",
-        "`internal`",
-        "`public`"
+        "private",
+        "protected",
+        "internal",
+        "public"
       ],
       "snippet_codes": null
     },
@@ -27,8 +27,10 @@
     },
     {
       "id": 4,
-      "point": "`internal` means that any client inside this module who sees the declaring class sees its internal members(a module is a set of Kotlin files compiled together).",
-      "sub_points": null,
+      "point": "`internal` means that any client inside this module who sees the declaring class sees its internal members.",
+      "sub_points": [
+        "A module is a set of Kotlin files that compiled together"
+      ],
       "snippet_codes": null
     },
     {
@@ -51,19 +53,26 @@
     },
     {
       "id": 8,
-      "point": "When we declare a class private, we cannot inherit from it anywhere except in the same file or class.",
+      "point": "When we declare a private member in a file, we cannot access it anywhere except in the same file.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
       "id": 9,
-      "point": "When we declare a class private, we can only inherit from it when the subClass is internal or private.",
+      "point": "When we declare a class private, we can only inherit from it when the subClass is private.",
+      "sub_points": null,
+      "snippet_codes": [
+        " private open class TopLevelClassB()",
+        " private class Derived : TopLevelClassB()"
+      ]
+    },
+    {
+      "id": 10,
+      "point": "When we declare a class internal, we can only inherit from it when the subClass is internal or private.",
       "sub_points": null,
       "snippet_codes": [
         " internal open class TopLevelClassA()",
-        " private open class TopLevelClassB()",
         " private class Derived1 : TopLevelClassA()\n internal class Derived2 : TopLevelClassA()",
-        " private class Derived3 : TopLevelClassB()"
       ]
     }
   ]

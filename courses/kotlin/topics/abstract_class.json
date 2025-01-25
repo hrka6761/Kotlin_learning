@@ -30,13 +30,13 @@
     },
     {
       "id": 5,
-      "point": "Abstract members is open and public by default.",
+      "point": "Abstract members are open and public by default.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
       "id": 6,
-      "point": "Concrete members must be open for overriding.",
+      "point": "Concrete members are final and public by default and must be open for overriding.",
       "sub_points": null,
       "snippet_codes": null
     },

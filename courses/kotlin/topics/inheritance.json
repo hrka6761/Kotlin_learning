@@ -37,7 +37,7 @@
     },
     {
       "id": 5,
-      "point": "By default, all functions of Kotlin classes are final an cannot be overridden these in subclasses.",
+      "point": "By default, all members of Kotlin classes are final an cannot be overridden these in subclasses.",
       "sub_points": null,
       "snippet_codes": null
     },
@@ -71,10 +71,8 @@
     },
     {
       "id": 9,
-      "point": "We can to prohibit re-overriding by using final.",
-      "sub_points": [
-        "This members can no longer be overridden in subclasses."
-      ],
+      "point": "We can to prohibit re-overriding by using final. this members can no longer be overridden in subclasses.",
+      "sub_points": null,
       "snippet_codes": [
         " interface KotlinInterface {\n    val value: Long\n    fun fun1()\n    ...\n }",
         " class KotlinClass : KotlinInterface {\n    final override value: Long = 1L\n\n    final override fun1() {\n        // Do something\n    }\n }"
@@ -100,7 +98,7 @@
     },
     {
       "id": 13,
-      "point": "In a subclass can call its superclass functions and property accessor implementations using the super keyword.",
+      "point": "In a subclass can call its superclass functions and properties accessors implementation by using the super keyword.",
       "sub_points": null,
       "snippet_codes": [
         " abstract KotlinAbstractClass {\n\n    open var variable: String\n        get() {\n            // KotlinAbstractClass implementation\n        }\n        set(value) {\n            // KotlinAbstractClass implementation\n        }\n\n    open fun fun1() {\n        // KotlinAbstractClass implementation\n    }\n    ...\n }",
@@ -126,7 +124,7 @@
     },
     {
       "id": 16,
-      "point": "To denote the supertype from which the inherited implementation is taken,\n * use super qualified by the supertype name in angle brackets.",
+      "point": "To denote the supertype from which the inherited implementation is taken,\n use super qualified by the supertype name in angle brackets.",
       "sub_points": null,
       "snippet_codes": [
         " class DerivedClass : KotlinClass(), KotlinInterface1,\n     KotlinInterface2 {\n\n     override fun fun1() {\n         super<KotlinClass>.fun1()\n         ...\n     }\n\n     fun fun2() {\n        super<KotlinInterface2>.fun2()\n        super<KotlinInterface1>.fun2()\n        ...\n     }\n }"
@@ -134,7 +132,7 @@
     },
     {
       "id": 17,
-      "point": "In the subclass, we cannot reduce the access level of the member but we can increase.",
+      "point": "In the subclass, we cannot reduce the access level of the member but we can increase it.",
       "sub_points": [
         "If it public in super class, we cannot reduce to protected or private.",
         "If it protected in super class, we can increase to public."

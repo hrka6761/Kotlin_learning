@@ -16,28 +16,26 @@
     },
     {
       "id": 3,
-      "point": "An enum class cannot derive from a class.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 4,
-      "point": "We can override members in every instance or by own enum class.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 5,
-      "point": "Enum class can contain abstract member that must be implemented by all instances.",
-      "sub_points": null,
+      "point": "An enum class can implement interfaces.",
+      "sub_points": [
+        "An enum class can implement the members of an interface either in every instance individually or in the body of the enum class."
+      ],
       "snippet_codes": [
-        " interface KotlinInterface1 {\n     fun fun1()\n }",
-        " interface KotlinInterface2 {\n     fun fun2()\n }",
-        " enum class EnumClass(val value: Int) :\n     KotlinInterface1,\n     KotlinInterface2 {\n\n     Instance1(1) {\n         override val absValue: Int\n             get() = { ... }\n\n         override fun absFun() { ... }\n         override fun fun2() { ... }\n     },\n     Instance2(2) {\n         override val absValue: Int\n             get() = { ... }\n\n         override fun absFun() { ... }\n         override fun fun2() { ... }\n     }, ...\n\n     override fun fun2() { ... }\n\n     abstract val absValue: Int\n     abstract fun absFun()\n }"
+        " interface KotlinInterface {\n\n    fun interfaceFun()\n }",
+        " enum class EnumClass : KotlinInterface {\n    A {\n        override fun interfaceFun() {\n            TODO(\"Not yet implemented\")\n        }\n    },\n    B {\n        override fun interfaceFun() {\n            TODO(\"Not yet implemented\")\n        }\n    };\n }",
+        " enum class EnumClass : KotlinInterface{\n    A,B;\n\n    override fun interfaceFun() {\n        TODO(\"Not yet implemented\")\n    }\n }"
       ]
     },
     {
-      "id": 6,
+      "id": 4,
+      "point": "Enum class can contain abstract member that must be implemented by all instances.",
+      "sub_points": null,
+      "snippet_codes": [
+        " enum class EnumClass {\n    A {\n        override val abstractValue: String\n            get() = \"Test\"\n\n        override fun abstractFun() {\n            TODO(\"Not yet implemented\")\n        }\n    },\n    B {\n        override val abstractValue: String = \"Test\"\n\n        override fun abstractFun() {\n            TODO(\"Not yet implemented\")\n        }\n    };\n\n    abstract val abstractValue: String\n\n    abstract fun abstractFun()\n }"
+      ]
+    },
+    {
+      "id": 5,
       "point": "Primary constructor of enum class is private.",
       "sub_points": [
         "we cannot instantiate it outside the class body."
@@ -45,7 +43,7 @@
       "snippet_codes": null
     },
     {
-      "id": 7,
+      "id": 6,
       "point": "No class can derive from the enum class.",
       "sub_points": [
         "Enum classes cannot be open and always is final."
@@ -53,19 +51,19 @@
       "snippet_codes": null
     },
     {
-      "id": 8,
+      "id": 7,
       "point": "All enum classes implemented the Comparable interface by default.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 9,
+      "id": 8,
       "point": "Each enum constant is an object.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 10,
+      "id": 9,
       "point": "Enum classes in Kotlin have synthetic properties and methods for listing the defined enum constants and getting an enum constant by its name.",
       "sub_points": null,
       "snippet_codes": [
@@ -73,15 +71,15 @@
       ]
     },
     {
-      "id": 11,
-      "point": "Every enum constant also has properties: name and ordinal,\n * for obtaining its name and position (starting from 0) in the enum class declaration.",
+      "id": 10,
+      "point": "Every enum constant also has properties: name and ordinal, for obtaining its name and position (starting from 0) in the enum class declaration.",
       "sub_points": null,
       "snippet_codes": [
         " val name: String = Instance1.name\n val index: Int = Instance1.ordinal"
       ]
     },
     {
-      "id": 12,
+      "id": 11,
       "point": "The valueOf() method throws an IllegalArgumentException if the specified name does not match any of the enum constants defined in the class.",
       "sub_points": null,
       "snippet_codes": [

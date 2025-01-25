@@ -6,7 +6,7 @@
       "id": 1,
       "point": "`Unit`",
       "sub_points": [
-        "It is an object that oly have a method (toString)."
+        "It is an object that oly have toString method."
       ],
       "snippet_codes": [
         " public object Unit {\n     override fun toString(): String = \"kotlin.Unit\"\n }"

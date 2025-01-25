@@ -18,50 +18,47 @@
     },
     {
       "id": 3,
-      "point": "The Functions of a class are final by default and must be open to overriding.",
+      "point": "The Functions and the Properties of a class are final by default and must be open to overriding.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
       "id": 4,
-      "point": "The Properties of a class must be open to overriding.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 5,
       "point": "An open member can not be private.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 6,
-      "point": "If a class has a primary constructor, secondary constructors must be invoke primary constructor, directly or indirectly by calling another secondary constructor that the primary constructor calls.",
-      "sub_points": null,
+      "id": 5,
+      "point": "When a class defines a primary constructor, all secondary constructors must either:",
+      "sub_points": [
+        "Directly delegate to the primary constructor using the this keyword.",
+        "Indirectly delegate to the primary constructor by chaining through another secondary constructor, which itself eventually delegates to the primary constructor."
+      ],
       "snippet_codes": null
+    },
+    {
+      "id": 6,
+      "point": "During the initialization of an instance, the initializer blocks are executed in the same order as they appear in the class body, interleaved with the property initializers.",
+      "sub_points": null,
+      "snippet_codes": [
+        " class Example {\n    \n    init {\n        ...\n    }\n}"
+      ]
     },
     {
       "id": 7,
-      "point": "During the initialization of an instance, the initializer blocks are executed in the same order as they appear in the class body, interleaved with the property initializers.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 8,
       "point": "Members that declared in the companion object block must be called by the class name without instantiating.",
-      "sub_points": null,
+      "sub_points": [
+        "Members declared inside a companion object are similar to static members in Java.",
+        "You cannot access companion object members using an instance of the class.",
+        "Class members can access the private members of the corresponding companion object."
+      ],
       "snippet_codes": [
         " class Person(val age: Int) {\n     companion object {\n          val MAX_AGE = 100\n     }\n }\n\n Person.MAX_AGE\n\n val p1 = Person(10)\n p1.age"
       ]
     },
     {
-      "id": 9,
-      "point": "Class members can access the private members of the corresponding companion object.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 10,
+      "id": 8,
       "point": "After decompile in java create static final class Companion and member function of companion object is declared in it and member property of companion object is declared as static final property.",
       "sub_points": [
         "To get byteCode and decompile to java code go to the bellow path in the android studio.\n(Tools -> Kotlin -> Show Kotlin Bytecode)"

@@ -30,7 +30,7 @@
     },
     {
       "id": 5,
-      "point": "Compiler generates following members for data class.",
+      "point": "Compiler generates following functions for data class.",
       "sub_points": [
         "equals()",
         "hashCode()",
