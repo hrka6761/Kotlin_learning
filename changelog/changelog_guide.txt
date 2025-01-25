@@ -3,6 +3,7 @@ VERSION TYPES:
 NewFeature (When add new feature)
 Hotfix (When solve critical bug)
 BugFix (When solve normal bug)
+UpdateCourses (When update courses)
 UpdateKotlinTopics (When update kotlin topics)
 UpdateCoroutineTopics (When update coroutine topics)
 UpdateKotlinTopicPoints (When update kotlin topics content)
