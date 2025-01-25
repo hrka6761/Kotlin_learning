@@ -20,7 +20,6 @@ class TopicDeserializer : JsonDeserializer<Topic> {
             courseName = jsonObject["course_name"]?.asString ?: "Unknown",
             topicTitle = jsonObject["topic_title"]?.asString ?: "Corrupted topic",
             fileName = jsonObject["topic_file_name"]?.asString ?: "",
-            pointsNumber = jsonObject["points_number"]?.asInt ?: 0,
             hasVisualizer = jsonObject["has_visualizer"]?.asBoolean ?: false,
             isActive = jsonObject["is_active"]?.asBoolean ?: false,
             visualizerDestination = jsonObject["visualizer_destination"]?.asString ?: "",

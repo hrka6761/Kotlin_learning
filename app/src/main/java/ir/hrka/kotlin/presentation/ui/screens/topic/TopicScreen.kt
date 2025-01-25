@@ -351,22 +351,6 @@ fun TopicItem(
                     fontWeight = FontWeight.Bold
                 )
 
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        modifier = Modifier.size(12.dp),
-                        painter = painterResource(R.drawable.point_number),
-                        contentDescription = ""
-                    )
-
-                    Text(
-                        fontSize = 12.sp,
-                        text = topic.pointsNumber.toString()
-                    )
-                }
-
                 if (topic.hasVisualizer)
                     if ((appVersionCode ?: DEFAULT_VERSION_CODE) >= topic.visualizerVersionCode)
                         Row(
@@ -412,7 +396,6 @@ fun TopicsScreenPreview() {
             courseName = "kotlin",
             topicTitle = "Common classes and functions",
             fileName = "",
-            pointsNumber = 29,
             hasVisualizer = true,
             visualizerDestination = "",
             visualizerVersionCode = 0,
