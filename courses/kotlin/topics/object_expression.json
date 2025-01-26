@@ -35,9 +35,9 @@
         "The explicitly declared type if there is more than one declared supertype."
       ],
       "snippet_codes": [
-        " // anonymousObject is Any\n val anonymousObject = object : KotlinClass { ... }\n\n // Returned anonymousObject Any\n fun getAnonymousObject() = object : KotlinClass { ... }",
-        " // anonymousObject is KotlinClass\n val anonymousObject: KotlinClass =\n    object : KotlinClass { ... }\n\n // Returned anonymousObject KotlinClass\n fun getAnonymousObject(): KotlinClass =\n    object : KotlinClass { ... }",
-        " interface KotlinInterface {  ...  }\n\n // anonymousObject is KotlinInterface\n val anonymousObject: KotlinInterface =\n    object : KotlinClass, KotlinInterface { ... }\n\n // Returned anonymousObject KotlinInterface\n fun getAnonymousObject(): KotlinInterface =\n    object : KotlinClass, KotlinInterface { ... }"
+        " // anonymousObject is Any\n val anonymousObject = object : KotlinClass { ... }\n\n // Returned anonymousObject is Any\n fun getAnonymousObject() = object : KotlinClass { ... }",
+        " // anonymousObject is KotlinClass\n val anonymousObject: KotlinClass =\n    object : KotlinClass { ... }\n\n // Returned anonymousObject is KotlinClass\n fun getAnonymousObject(): KotlinClass =\n    object : KotlinClass { ... }",
+        " interface KotlinInterface {  ...  }\n\n // anonymousObject is KotlinInterface\n val anonymousObject: KotlinInterface =\n    object : KotlinClass, KotlinInterface { ... }\n\n // Returned anonymousObject is KotlinInterface\n fun getAnonymousObject(): KotlinInterface =\n    object : KotlinClass, KotlinInterface { ... }"
       ]
     },
     {

@@ -10,29 +10,28 @@
     },
     {
       "id": 2,
-      "point": "Inside a function, a vararg parameter of type T is visible as an array of T.",
-      "sub_points": null,
-      "snippet_codes": null
+      "point": "the vararg keyword is used to define a parameter that can accept a variable number of arguments.",
+      "sub_points": [
+        "Inside a function, a vararg parameter of type T is visible as an array of T.",
+        "Only one parameter can be marked as vararg."
+      ],
+      "snippet_codes": [
+        " fun fun1(vararg paramName: DataType) {\n    // Use paramName as an array\n }"
+      ]
     },
     {
       "id": 3,
-      "point": "Only one parameter can be marked as vararg.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 4,
-      "point": "If you already have an array and want to pass its contents to the function, use the spread operator.",
+      "point": "If you already have an array and want to pass its contents to the function, use the spread operator (*).",
       "sub_points": [
         "prefix the array with *."
       ],
       "snippet_codes": [
         " fun fun1(vararg ints: Int) {\n      if (ints is Array<Int>) {} // true\n }",
-        " val intArray = [1,2,3]\n fun1(intArray)"
+        " val intArray = [1,2,3]\n fun1(*intArray)"
       ]
     },
     {
-      "id": 5,
+      "id": 4,
       "point": "There are three type of function scope.",
       "sub_points": [
         "Top level function (in a file).",
@@ -46,7 +45,7 @@
       ]
     },
     {
-      "id": 6,
+      "id": 5,
       "point": "Infix function",
       "sub_points": [
         "They must be member functions or extension functions.",
@@ -60,7 +59,7 @@
       ]
     },
     {
-      "id": 7,
+      "id": 6,
       "point": "tailrec function",
       "sub_points": [
         "It is a recursive function that is optimized by the compiler to prevent stack overflow errors by reusing the same stack frame for recursive calls."
@@ -70,25 +69,25 @@
       ]
     },
     {
-      "id": 8,
+      "id": 7,
       "point": "In the `tailrec` function, optimization is only possible if the recursive call is the last operation in the function.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 9,
+      "id": 8,
       "point": "You cannot use tail recursion when there is more code after the recursive call, within try/catch/finally blocks, or on open functions.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 10,
+      "id": 9,
       "point": "Kotlin functions are first-class, which means they can be stored in variables and data structures, and can be passed as arguments to and returned from other higher-order functions.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 11,
+      "id": 10,
       "point": "higher-order function",
       "sub_points": [
         "It is a function that takes functions as parameters, or returns a function."
@@ -98,7 +97,7 @@
       ]
     },
     {
-      "id": 12,
+      "id": 11,
       "point": "Function literals are functions that are not declared but are passed immediately as an expression.",
       "sub_points": null,
       "snippet_codes": [
@@ -107,7 +106,7 @@
       ]
     },
     {
-      "id": 13,
+      "id": 12,
       "point": "Lambda expressions and anonymous functions are function literals.",
       "sub_points": null,
       "snippet_codes": [
@@ -116,13 +115,13 @@
       ]
     },
     {
-      "id": 14,
+      "id": 13,
       "point": "If an exception is thrown from an lambda passed into high order function rest of the code after it dose not execute.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 15,
+      "id": 14,
       "point": "We can use a callable reference to an existing declaration.",
       "sub_points": null,
       "snippet_codes": [
@@ -131,7 +130,7 @@
       ]
     },
     {
-      "id": 16,
+      "id": 15,
       "point": "A lambda expression or anonymous function (as well as a local function and an object expression) can access its closure, which includes the variables declared in the outer scope.",
       "sub_points": null,
       "snippet_codes": [
@@ -139,7 +138,7 @@
       ]
     },
     {
-      "id": 17,
+      "id": 16,
       "point": "Using higher-order functions imposes certain runtime penalties.",
       "sub_points": [
         "each function is an object.",
@@ -148,13 +147,13 @@
       "snippet_codes": null
     },
     {
-      "id": 18,
+      "id": 17,
       "point": "A closure is a scope of variables that can be accessed in the body of the function.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 19,
+      "id": 18,
       "point": "Inline functions",
       "sub_points": [
         "When you mark a function as inline, the Kotlin compiler replaces the function call with the actual function body. his avoids creating a function object and stack frame for each call, which reduces overhead and can improve performance.",
@@ -166,25 +165,25 @@
       ]
     },
     {
-      "id": 20,
+      "id": 19,
       "point": "Avoid inlining large functions because the generated code to grow.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 21,
+      "id": 20,
       "point": "The inline modifier affects both the function itself and the lambdas passed to it and all of those will be inlined into the call site.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 22,
+      "id": 21,
       "point": "We can not use local function in inline functions.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 23,
+      "id": 22,
       "point": "If you don't want all of the lambdas passed to an inline function to be inlined, mark some of your function parameters with the `noinline` modifier.",
       "sub_points": null,
       "snippet_codes": [
@@ -192,7 +191,7 @@
       ]
     },
     {
-      "id": 24,
+      "id": 23,
       "point": "Use the reified modifier to make the type parameter accessible inside the inline function.",
       "sub_points": [
         "No reflection is needed and normal operators like !is and as are now available for you to use."
@@ -202,13 +201,13 @@
       ]
     },
     {
-      "id": 25,
+      "id": 24,
       "point": "Normal functions (not marked as inline) cannot have reified parameters.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 26,
+      "id": 25,
       "point": "The inline modifier can be used on accessors of properties that don't have backing fields.",
       "sub_points": [
         "inline property cannot have backing field.",
@@ -220,13 +219,13 @@
       ]
     },
     {
-      "id": 27,
+      "id": 26,
       "point": "At the call site, inline accessors are inlined as regular inline functions.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 28,
+      "id": 27,
       "point": "operator functions",
       "sub_points": [
         "To implement an operator function, provide a member function or an extension function with a specific name for the corresponding type."
@@ -236,7 +235,7 @@
       ]
     },
     {
-      "id": 29,
+      "id": 28,
       "point": "suspend functions",
       "sub_points": [
         "When we mark a function with `suspend`, we can only use this function in coroutines or another suspend function."

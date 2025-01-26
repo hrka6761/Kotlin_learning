@@ -15,12 +15,6 @@
     },
     {
       "id": 2,
-      "point": "A nested class marked as inner can access the members of its outer class.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 3,
       "point": "Inner classes carry a reference to an object of an outer class.",
       "sub_points": [
         "We can access the member of outer class in the inner class.",
@@ -31,13 +25,13 @@
       ]
     },
     {
-      "id": 4,
+      "id": 3,
       "point": "An inner class is like a regular nested class in java, but a nested class is like static nested class in java.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 5,
+      "id": 4,
       "point": "A nested class in an interface is like static nested class in java.",
       "sub_points": null,
       "snippet_codes": null

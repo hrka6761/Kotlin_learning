@@ -124,7 +124,7 @@
     {
       "topic_id": 13,
       "course_name": "kotlin",
-      "topic_title": "Nested/inner classes",
+      "topic_title": "Nested/Inner classes",
       "topic_file_name": "nested_inner_classes.json",
       "has_visualizer": false,
       "visualizer_version_code": 0,

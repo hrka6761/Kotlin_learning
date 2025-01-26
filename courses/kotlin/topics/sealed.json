@@ -39,18 +39,20 @@
     },
     {
       "id": 6,
-      "point": "We can override function of interface that implemented by sealed class in every sub class or by own sealed class.",
+      "point": "We can override members of interface that implemented by sealed class in every sub class or by own sealed class.",
       "sub_points": null,
-      "snippet_codes": null
+      "snippet_codes": [
+        " interface KotlinInterface {\n    \n    val interfaceVal: String\n    \n    fun interfaceFun()\n }",
+        " sealed class Example : KotlinInterface {\n\n    class Child1 : Example()\n    class Child2 : Example()\n\n    override val interfaceVal: String\n        get() = \"Test\"\n\n    override fun interfaceFun() {\n        TODO(\"Not yet implemented\")\n    }\n }",
+        " sealed class Example : KotlinInterface {\n\n    class Child1 : Example() {\n        override val interfaceVal: String = \"Test\"\n\n        override fun interfaceFun() {\n            TODO(\"Not yet implemented\")\n        }\n    }\n\n    class Child2(override val interfaceVal: String) : Example() {\n        override fun interfaceFun() {\n            TODO(\"Not yet implemented\")\n        }\n    }\n }"
+      ]
     },
     {
       "id": 7,
       "point": "Sealed class can contain abstract member that must be implemented by all sub classes.",
       "sub_points": null,
       "snippet_codes": [
-        " interface KotlinInterface1 {\n     fun fun1()\n }",
-        " interface KotlinInterface2 {\n     fun fun2()\n }",
-        " sealed class sealedClass(val value: Int) :\n     KotlinInterface1,\n     KotlinInterface2 {\n\n     class Child1(value: Int) : SealedClass(value) {\n         override val absValue: Int\n             get() = { ... }\n\n         override fun absFun() { ... }\n         override fun fun2() { ... }\n     }\n     class Child2(value: Int) : SealedClass(value) {\n         override val absValue: Int\n             get() = { ... }\n\n         override fun absFun() { ... }\n         override fun fun2() { ... }\n     }\n     data class Child3(value: Int) : SealedClass(value) {\n         override val absValue: Int\n             get() = { ... }\n\n         override fun absFun() { ... }\n         override fun fun2() { ... }\n     }\n\n     abstract val absValue: Int\n     abstract fun absFun()\n }"
+        " sealed class Example {\n\n    class Child1(override val interfaceVal: String) : Example() {\n        override fun interfaceFun() {\n            TODO(\"Not yet implemented\")\n        }\n    }\n\n    class Child2 : Example() {\n        override val interfaceVal: String\n            get() = \"Test\"\n\n        override fun interfaceFun() {\n            TODO(\"Not yet implemented\")\n        }\n    }\n\n\n    abstract val interfaceVal: String\n\n    abstract fun interfaceFun()\n }"
       ]
     },
     {
@@ -66,7 +68,8 @@
       "point": "When you combine sealed classes or interfaces with the when expression, you can cover the behavior of all possible subclasses and ensure that no new subclasses are created to affect your code adversely (you don't need to add an else clause).",
       "sub_points": null,
       "snippet_codes": [
-        " val instance: SealedClass\n\n when(instance) {\n     is SealedClass.Child1 -> { ... }\n     is SealedClass.Child2 -> { ... }\n     is SealedClass.Child3 -> { ... }\n }"
+        " sealed class Example {\n\n    class Child1 : Example()\n    class Child12 : Example()\n    class Child13 : Example()\n}",
+        " val variable: Example\n    \n when(variable) {\n        is Example.Child1 -> { ... }\n        is Example.Child2 -> { ... }\n        is Example.Child3 -> {}\n }"
       ]
     }
   ]

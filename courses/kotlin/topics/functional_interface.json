@@ -23,7 +23,7 @@
     },
     {
       "id": 3,
-      "point": "Fun interfaces cannot have abstract properties.",
+      "point": "Functional interfaces cannot have abstract properties.",
       "sub_points": null,
       "snippet_codes": null
     }
