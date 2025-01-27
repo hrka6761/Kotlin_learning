@@ -1,5 +1,5 @@
 {
-  "last_version_id": 9,
+  "last_version_id": 10,
   "last_version_code": 12,
   "min_supported_version_code": 12,
   "versions": [
@@ -113,6 +113,17 @@
         "Reduce the size of the app.",
         "Resolve bug in topics state update.",
         "Remove point number from topic item."
+      ]
+    },
+    {
+      "version_id": 10,
+      "version_name": "6.4.1",
+      "version_code": 12,
+      "version_type": "UpdateKotlinTopics",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Change topic data"
       ]
     }
   ]
