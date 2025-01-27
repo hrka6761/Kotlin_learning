@@ -4,13 +4,13 @@
   "points": [
     {
       "id": 1,
-      "point": "When you call such a function on an object with a lambda expression provided, it forms a temporary scope and In this scope, you can access the object without its name.",
+      "point": "Scope functions don't introduce any new technical capabilities, but they can make your code more concise and readable.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
       "id": 2,
-      "point": "Scope functions don't introduce any new technical capabilities, but they can make your code more concise and readable.",
+      "point": "When you call such a function on an object with a lambda expression provided, it forms a temporary scope and In this scope, you can access the object without its name.",
       "sub_points": null,
       "snippet_codes": null
     },

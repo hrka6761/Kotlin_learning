@@ -23,7 +23,7 @@
       "id": 3,
       "point": "If you already have an array and want to pass its contents to the function, use the spread operator (*).",
       "sub_points": [
-        "prefix the array with *."
+        "Prefix the array with *."
       ],
       "snippet_codes": [
         " fun fun1(vararg ints: Int) {\n      if (ints is Array<Int>) {} // true\n }",
@@ -38,18 +38,14 @@
         "Local function (in a function).",
         "Member function (in a class)."
       ],
-      "snippet_codes": [
-        " class KotlinClass() {\n     infix fun infixFun(a: Int) {}\n }",
-        " infix fun KotlinClass.infixFun(a: Int) {}",
-        " val kotlinClass = KotlinClass()\n kotlinClass infixFun 1"
-      ]
+      "snippet_codes": null
     },
     {
       "id": 5,
       "point": "Infix function",
       "sub_points": [
-        "They must be member functions or extension functions.",
-        "They must have a single parameter.",
+        "Must be declared as a member function or extension function.",
+        "It must contain a single parameter.",
         "The parameter must not accept variable number of arguments and must have no default value."
       ],
       "snippet_codes": [
@@ -132,7 +128,9 @@
     {
       "id": 15,
       "point": "A lambda expression or anonymous function (as well as a local function and an object expression) can access its closure, which includes the variables declared in the outer scope.",
-      "sub_points": null,
+      "sub_points": [
+        "A closure is a scope of variables that can be accessed in the body of the function."
+      ],
       "snippet_codes": [
         " val lambda = { str: String -> Log.i(Tag, str) }\n highOrderFunction(lambda)\n // lambda can access to highOrderFunction members"
       ]
@@ -148,12 +146,6 @@
     },
     {
       "id": 17,
-      "point": "A closure is a scope of variables that can be accessed in the body of the function.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 18,
       "point": "Inline functions",
       "sub_points": [
         "When you mark a function as inline, the Kotlin compiler replaces the function call with the actual function body. his avoids creating a function object and stack frame for each call, which reduces overhead and can improve performance.",
@@ -165,25 +157,25 @@
       ]
     },
     {
-      "id": 19,
+      "id": 18,
       "point": "Avoid inlining large functions because the generated code to grow.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 20,
+      "id": 19,
       "point": "The inline modifier affects both the function itself and the lambdas passed to it and all of those will be inlined into the call site.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 21,
+      "id": 20,
       "point": "We can not use local function in inline functions.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 22,
+      "id": 21,
       "point": "If you don't want all of the lambdas passed to an inline function to be inlined, mark some of your function parameters with the `noinline` modifier.",
       "sub_points": null,
       "snippet_codes": [
@@ -191,27 +183,22 @@
       ]
     },
     {
-      "id": 23,
+      "id": 22,
       "point": "Use the reified modifier to make the type parameter accessible inside the inline function.",
       "sub_points": [
-        "No reflection is needed and normal operators like !is and as are now available for you to use."
+        "No reflection is needed and normal operators like `!is` and `as` are now available for you to use.",
+        "Normal functions (not marked as inline) cannot have reified parameters."
       ],
       "snippet_codes": [
         " inline fun <reified T> reifiedType(value: T): Boolean {\n     val clazz = KotlinClass()\n\n     return clazz is T\n }"
       ]
     },
     {
-      "id": 24,
-      "point": "Normal functions (not marked as inline) cannot have reified parameters.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 25,
+      "id": 23,
       "point": "The inline modifier can be used on accessors of properties that don't have backing fields.",
       "sub_points": [
-        "inline property cannot have backing field.",
-        "inline modifier is not allowed on virtual members.",
+        "Inlined property cannot have backing field.",
+        "Inlined modifier is not allowed on virtual members.",
         "In an interface only private or final members can be inlined."
       ],
       "snippet_codes": [
@@ -219,13 +206,13 @@
       ]
     },
     {
-      "id": 26,
+      "id": 24,
       "point": "At the call site, inline accessors are inlined as regular inline functions.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 27,
+      "id": 25,
       "point": "operator functions",
       "sub_points": [
         "To implement an operator function, provide a member function or an extension function with a specific name for the corresponding type."
@@ -235,7 +222,7 @@
       ]
     },
     {
-      "id": 28,
+      "id": 26,
       "point": "suspend functions",
       "sub_points": [
         "When we mark a function with `suspend`, we can only use this function in coroutines or another suspend function."

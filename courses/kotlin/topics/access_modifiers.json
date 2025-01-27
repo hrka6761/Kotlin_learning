@@ -72,7 +72,7 @@
       "sub_points": null,
       "snippet_codes": [
         " internal open class TopLevelClassA()",
-        " private class Derived1 : TopLevelClassA()\n internal class Derived2 : TopLevelClassA()",
+        " private class Derived1 : TopLevelClassA()\n internal class Derived2 : TopLevelClassA()"
       ]
     }
   ]

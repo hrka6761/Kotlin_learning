@@ -47,7 +47,7 @@
       "sub_points": null,
       "snippet_codes": [
         " interface KotlinInterface {\n    val value: Int\n    ...\n }",
-        " class KotlinClass(override val value: Int)\n     : KotlinInterface {\n    ...\n }"
+        " class KotlinClass(override val value: Int) : KotlinInterface {\n    ...\n }"
       ]
     },
     {
