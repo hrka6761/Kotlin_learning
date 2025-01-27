@@ -1,7 +1,7 @@
 {
-  "last_version_id": 8,
-  "last_version_code": 11,
-  "min_supported_version_code": 11,
+  "last_version_id": 9,
+  "last_version_code": 12,
+  "min_supported_version_code": 12,
   "versions": [
     {
       "version_id": 1,
@@ -100,6 +100,19 @@
         "Change course details",
         "Add snippet code in the visualizers",
         "Add coroutineScope function Visualizer"
+      ]
+    },
+    {
+      "version_id": 9,
+      "version_name": "6.4.0",
+      "version_code": 12,
+      "version_type": "Hotfix",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Reduce the size of the app.",
+        "Resolve bug in topics state update.",
+        "Remove point number from topic item."
       ]
     }
   ]
