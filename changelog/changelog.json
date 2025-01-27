@@ -1,5 +1,5 @@
 {
-  "last_version_id": 10,
+  "last_version_id": 11,
   "last_version_code": 12,
   "min_supported_version_code": 12,
   "versions": [
@@ -120,6 +120,17 @@
       "version_name": "6.4.1",
       "version_code": 12,
       "version_type": "UpdateKotlinTopics",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Change topic data"
+      ]
+    },
+    {
+      "version_id": 11,
+      "version_name": "6.4.2",
+      "version_code": 12,
+      "version_type": "UpdateCoroutineTopics",
       "updated_coroutine_topics": null,
       "updated_kotlin_topics": null,
       "change_log": [
