@@ -16,7 +16,7 @@
         " interface Base {\n\n     val value: Int\n     var variable: String\n\n     fun fun1()\n     fun fun2()\n     fun fun3()\n     fun fun4()\n     fun fun5()\n     fun fun6()\n     fun fun7()\n }",
         " class BaseImpl1() : Base {\n     override val value: Int\n         get() = 1\n     override var variable: String\n         get() = \"BaseImpl1\"\n         set(value) {}\n\n     override fun fun1() { BaseImpl1 implementation }\n     override fun fun2() { BaseImpl1 implementation }\n     override fun fun3() { BaseImpl1 implementation }\n     override fun fun4() { BaseImpl1 implementation }\n     override fun fun5() { BaseImpl1 implementation }\n     override fun fun6() { BaseImpl1 implementation }\n     override fun fun7() { BaseImpl1 implementation }\n }",
         " class BaseImpl2() : Base {\n     override val value: Int\n         get() = 2\n     override var variable: String\n         get() = \"BaseImpl2\"\n         set(value) {}\n\n     override fun fun1() { BaseImpl2 implementation }\n     override fun fun2() { BaseImpl2 implementation }\n     override fun fun3() { BaseImpl2 implementation }\n     override fun fun4() { BaseImpl2 implementation }\n     override fun fun5() { BaseImpl2 implementation }\n     override fun fun6() { BaseImpl2 implementation }\n     override fun fun7() { BaseImpl2 implementation }\n }",
-        " class DelegateClass1(baseImplementation: Base) :\n        Base by baseImplementation"
+        " class DelegateClass(baseImpl: Base) : Base by baseImpl"
       ]
     },
     {
@@ -24,7 +24,7 @@
       "point": "The compiler will use your override implementations instead of those in the delegate object.",
       "sub_points": null,
       "snippet_codes": [
-        " class DelegateClass2(baseImplementation: Base) :\n        Base by baseImplementation {\n\n     override val value1: Int\n         get() = 3\n\n     override fun fun1() { DelegateClass2 implementation }\n }"
+        " class DelegateClass(baseImpl: Base) : Base by baseImpl {\n\n     override val value: Int\n         get() = 3\n\n     override fun fun1() { DelegateClass implementation }\n }"
       ]
     },
     {
@@ -56,10 +56,10 @@
         "We can use the map instance itself as the delegate for a delegated property."
       ],
       "snippet_codes": [
-        " class Data1(map: Map<String, String?>) {\n     val p1: String by map\n     val p2: Int by map\n }",
-        " class Data2(map: MutableMap<String, String?>) {\n     var p1: String by map\n     var p2: Int by map\n }",
+        " class Data1(map: Map<String, Any?>) {\n     val p1: String by map\n     val p2: Int by map\n }",
+        " class Data2(map: MutableMap<String, Any?>) {\n     var p1: String by map\n     var p2: Int by map\n }",
         " val data1 = mapOf<String, Any?>(\n      Pair(\"p1\", \"str\"), Pair(\"p2\", 1)\n )\n Data1(data1)",
-        " val data2 = mutableMapOf<String, Any?>(\n      Pair(\"p1\", \"str\"), Pair(\"p2\", 1)\n * )\n Data2(data2)"
+        " val data2 = mutableMapOf<String, Any?>(\n      Pair(\"p1\", \"str\"), Pair(\"p2\", 1)\n )\n Data2(data2)"
       ]
     },
     {
@@ -97,9 +97,8 @@
       "point": "A property can delegate its getter and setter to another property.",
       "sub_points": null,
       "snippet_codes": [
-        " val delegatedAnotherProperty: Int by ::lazyProperty",
         " val topLevelProperty: Int by lazy(\n     mode = LazyThreadSafetyMode.NONE,\n     initializer = {\n         return@lazy 1\n     }\n )\n val delegatedAnotherProperty: Int by ::topLevelProperty",
-        " val clazz = Class()\n val delegatedAnotherProperty3: Int by clazz::in"
+        " val clazz = Class()\n val delegatedAnotherProperty3: Int by clazz::intValue"
       ]
     },
     {
@@ -153,7 +152,7 @@
     },
     {
       "id": 17,
-      "point": "T the type of object which owns the delegated property and V the type of the property value.",
+      "point": "T is the type of object which owns the delegated property and V is the type of the property value.",
       "sub_points": null,
       "snippet_codes": [
         " public fun interface ReadOnlyProperty<in T, out V>\n public interface ReadWriteProperty<in T, V>"

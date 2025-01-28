@@ -14,43 +14,45 @@
     },
     {
       "id": 2,
+      "point": "To use an extension outside its declaring package, import it at the call site.",
+      "sub_points": null,
+      "snippet_codes": [
+        " import ir.hrka.kotlin.core.utilities.decodeBase64"
+      ]
+    },
+    {
+      "id": 3,
       "point": "The this keyword inside an extension function or getter and setter body of extension property corresponds to the receiver object.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 3,
+      "id": 4,
       "point": "If an extension is declared outside its receiver type, it cannot access the receiver's private or protected members.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 4,
+      "id": 5,
       "point": "By defining an extension, you are not inserting new members into a class, only making new functions callable with the dot-notation on variables of this type.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 5,
+      "id": 6,
       "point": "If a class has a member function, and an extension function is defined which has the same receiver type, the same name, and is applicable to given arguments, the member always wins.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 6,
+      "id": 7,
       "point": "It's perfectly OK for extension functions to overload member functions that have the same name but a different signature.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 7,
-      "point": "Since extensions do not actually insert members into classes, there's no efficient way for an extension property to have a backing field. This is why initializers are not allowed for extension properties.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
       "id": 8,
-      "point": "Extensions behavior can only be defined by explicitly providing getters/setters.",
+      "point": "Since extensions do not actually insert members into classes, there's no efficient way for an extension property to have a backing field. This is why initializers are not allowed for extension properties.",
       "sub_points": null,
       "snippet_codes": null
     },
@@ -75,14 +77,6 @@
     },
     {
       "id": 11,
-      "point": "To use an extension outside its declaring package, import it at the call site.",
-      "sub_points": null,
-      "snippet_codes": [
-        " import ir.hrka.kotlin.cheatSheet.extensionFun1"
-      ]
-    },
-    {
-      "id": 12,
       "point": "We can declare extensions as members of a class, in this way there are two implicit receivers.",
       "sub_points": [
         "Dispatch receiver: Instance of class that in which the extension is declared.",
@@ -94,19 +88,19 @@
       ]
     },
     {
-      "id": 13,
+      "id": 12,
       "point": "In the event of a conflict name between the members of dispatch receiver and extension receiver, the extension receiver takes precedence.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 14,
+      "id": 13,
       "point": "In extension function 'this' refer to the extension receiver and 'this@DispatchReceiver' refer to the dispatch receiver.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 15,
+      "id": 14,
       "point": "when defining an extension with a nullable receiver type, we recommend performing a this == null check inside the function body to avoid compiler errors.",
       "sub_points": null,
       "snippet_codes": null

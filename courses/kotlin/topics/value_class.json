@@ -6,7 +6,8 @@
       "id": 1,
       "point": "Sometimes it is useful to wrap a value in a class to create a more domain-specific type, However, it introduces runtime overhead due to additional heap allocations, To solve such issues, Kotlin introduces a special kind of class called an inline class.",
       "sub_points": [
-        "Inline classes are a subset of value-based classes."
+        "Inline classes are a subset of value-based classes.",
+        "Other value-based classes such as data classes and enum classes."
       ],
       "snippet_codes": [
         " // For JVM backends\n @JvmInline\n value class ValueClass (val value: Int)"
