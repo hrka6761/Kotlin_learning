@@ -265,7 +265,7 @@ fun TopicsAppBar(
     course: Course?
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(course?.courseTitle ?: "Kotlin Learning") },
+        title = { Text(course?.courseTitle ?: "") },
         navigationIcon = {
             IconButton(
                 onClick = { navHostController.popBackStack() }
@@ -295,7 +295,6 @@ fun TopicItem(
                 .alpha(if (topic.isActive) 1f else 0.3f)
                 .clickable {
                     if (topic.isActive) {
-                        Log.i(TAG, "TopicItem: $topic")
                         navHostController
                             .currentBackStackEntry
                             ?.savedStateHandle
