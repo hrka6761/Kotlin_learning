@@ -1,7 +1,7 @@
 {
-  "last_version_id": 12,
-  "last_version_code": 12,
-  "min_supported_version_code": 12,
+  "last_version_id": 13,
+  "last_version_code": 13,
+  "min_supported_version_code": 13,
   "versions": [
     {
       "version_id": 1,
@@ -146,6 +146,18 @@
       "updated_kotlin_topics": [5,7,15,16],
       "change_log": [
         "Change topic data"
+      ]
+    },
+    {
+      "version_id": 13,
+      "version_name": "6.5.0",
+      "version_code": 13,
+      "version_type": "Hotfix",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Resolve bug in topic app bar",
+        "Add token in app apk and aab output."
       ]
     }
   ]
