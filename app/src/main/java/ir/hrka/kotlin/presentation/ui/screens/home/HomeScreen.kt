@@ -1,8 +1,10 @@
 package ir.hrka.kotlin.presentation.ui.screens.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -10,7 +12,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -74,19 +76,12 @@ import ir.hrka.kotlin.domain.entities.db.Course
 @Composable
 fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
 
-    val viewModel: HomeViewModel = hiltViewModel()
-    val snackBarHostState = remember { SnackbarHostState() }
-    val executionState by viewModel.executionState.collectAsState()
-    val failedState by viewModel.failedState.collectAsState()
     val configuration = LocalConfiguration.current
-    val courses by viewModel.courses.collectAsState()
-    val saveCourseOnDBResult by viewModel.saveCourseOnDBResult.collectAsState()
-    val updateCoursesVersionIdResult by viewModel.updateCoursesVersionIdResult.collectAsState()
-
+    val snackBarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { HomeAppBar(activity, viewModel, navHostController) },
+        topBar = { HomeAppBar(navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -95,83 +90,40 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
             )
         }
     ) { innerPaddings ->
-        when (configuration.orientation) {
-            ORIENTATION_PORTRAIT -> PortraitScreen(
-                navHostController,
-                innerPaddings,
-                executionState,
-                failedState,
-                courses
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPaddings),
+            contentAlignment = Alignment.TopCenter
+        ) {
 
-            ORIENTATION_LANDSCAPE -> LandscapeScreen(
-                navHostController,
-                innerPaddings,
-                executionState,
-                failedState,
-                courses
-            )
-        }
-    }
+            val viewModel: HomeViewModel = hiltViewModel()
+            val failedState by viewModel.failedState.collectAsState()
+            val courses by viewModel.courses.collectAsState()
+            val executionState by viewModel.executionState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        if (executionState == ExecutionState.Start) {
-            viewModel.setExecutionState(ExecutionState.Loading)
-            if (viewModel.hasCoursesUpdate)
-                viewModel.getCoursesFromGit()
-            else
-                viewModel.getCoursesFromDB()
-        }
-    }
-
-    LaunchedEffect(courses) {
-        if (executionState != ExecutionState.Stop)
             when (courses) {
                 is Resource.Initial -> {}
-                is Resource.Loading -> {}
+                is Resource.Loading -> {
+                    Loading(executionState)
+                }
+
                 is Resource.Success -> {
-                    if (viewModel.hasCoursesUpdate)
-                        courses.data?.let { viewModel.saveCoursesOnDB(it) }
-                    else
-                        viewModel.setExecutionState(ExecutionState.Stop)
+                    when (configuration.orientation) {
+                        ORIENTATION_PORTRAIT -> CoursesColumnList(navHostController, courses.data)
+                        ORIENTATION_LANDSCAPE -> CoursesRowList(navHostController, courses.data)
+                    }
                 }
 
                 is Resource.Error -> {
-                    viewModel.setExecutionState(ExecutionState.Stop)
-                    viewModel.setFailedState(true)
+                    Failed(failedState)
                 }
             }
-    }
 
-    LaunchedEffect(saveCourseOnDBResult) {
-        if (executionState != ExecutionState.Stop)
-            when (saveCourseOnDBResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    viewModel.updateCoursesVersionId()
-                }
-
-                is Resource.Error -> {
-                    viewModel.setExecutionState(ExecutionState.Stop)
-                }
+            LaunchedEffect(Unit) {
+                viewModel.getCourses()
             }
-    }
-
-    LaunchedEffect(updateCoursesVersionIdResult) {
-        if (executionState != ExecutionState.Stop)
-            when (updateCoursesVersionIdResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    viewModel.setExecutionState(ExecutionState.Stop)
-                    viewModel.updateCoursesVersionIdInGlobalData()
-                }
-
-                is Resource.Error -> {
-                    viewModel.setExecutionState(ExecutionState.Stop)
-                }
-            }
+        }
     }
 
     BackHandler {
@@ -180,60 +132,11 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
 }
 
 @Composable
-fun PortraitScreen(
-    navHostController: NavHostController,
-    innerPaddings: PaddingValues,
-    executionState: ExecutionState,
-    failedState: Boolean,
-    coursesList: Resource<List<Course>?>
-) {
+fun Loading(executionState: ExecutionState) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPaddings),
-        contentAlignment = Alignment.TopCenter
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .alpha(if (failedState) 1f else 0f),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(60.dp),
-                painter = painterResource(R.drawable.error),
-                contentDescription = null
-            )
-
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                text = stringResource(R.string.failed_to_fetch_the_data),
-                textAlign = TextAlign.Center
-            )
-        }
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 3000.dp)
-        ) {
-            coursesList.data?.let {
-                items(it.size) { index ->
-                    CourseItem(
-                        ORIENTATION_PORTRAIT,
-                        navHostController,
-                        it[index]
-                    )
-                }
-            }
-        }
-
         CircularProgressIndicator(
             modifier = Modifier
                 .width(50.dp)
@@ -246,78 +149,75 @@ fun PortraitScreen(
 }
 
 @Composable
-fun LandscapeScreen(
-    navHostController: NavHostController,
-    innerPaddings: PaddingValues,
-    executionState: ExecutionState,
-    failedState: Boolean,
-    coursesList: Resource<List<Course>?>
-) {
-    Box(
+fun Failed(failedState: Boolean) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPaddings),
-        contentAlignment = Alignment.CenterStart
+            .alpha(if (failedState) 1f else 0f),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Column(
+        Icon(
             modifier = Modifier
-                .fillMaxSize()
-                .alpha(if (failedState) 1f else 0f),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(60.dp),
-                painter = painterResource(R.drawable.error),
-                contentDescription = null
-            )
+                .width(60.dp)
+                .height(60.dp),
+            painter = painterResource(R.drawable.error),
+            contentDescription = null
+        )
 
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                text = stringResource(R.string.failed_to_fetch_the_data),
-                textAlign = TextAlign.Center
-            )
-        }
-
-        LazyRow(
+        Text(
             modifier = Modifier
-                .fillMaxHeight()
-                .widthIn(max = 3000.dp)
-        ) {
-            coursesList.data?.let {
-                items(it.size) { index ->
-                    CourseItem(
-                        ORIENTATION_LANDSCAPE,
-                        navHostController,
-                        it[index]
-                    )
-                }
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            text = stringResource(R.string.failed_to_fetch_the_data),
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun CoursesColumnList(navHostController: NavHostController, courses: List<Course>?) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = 3000.dp)
+    ) {
+        courses?.let {
+            items(it.size) { index ->
+                CourseItem(
+                    ORIENTATION_PORTRAIT,
+                    it[index],
+                    navHostController
+                )
             }
         }
+    }
+}
 
-        CircularProgressIndicator(
-            modifier = Modifier
-                .width(50.dp)
-                .height(50.dp)
-                .alpha(if (executionState == ExecutionState.Loading) 1f else 0f)
-                .align(Alignment.Center),
-            strokeWidth = 2.dp
-        )
+@Composable
+fun CoursesRowList(navHostController: NavHostController, courses: List<Course>?) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxHeight()
+            .widthIn(max = 3000.dp)
+    ) {
+        courses?.let {
+            items(it.size) { index ->
+                CourseItem(
+                    ORIENTATION_LANDSCAPE,
+                    it[index],
+                    navHostController
+                )
+            }
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeAppBar(
-    activity: MainActivity,
-    viewModel: HomeViewModel,
-    navHostController: NavHostController
-) {
+fun HomeAppBar(navHostController: NavHostController) {
+    val activity = (LocalContext.current as MainActivity)
+
     CenterAlignedTopAppBar(
         title = { Text(stringResource(R.string.home_app_bar_title)) },
         navigationIcon = {
@@ -327,7 +227,8 @@ fun HomeAppBar(
                     .height(40.dp)
                     .padding(start = 12.dp)
                     .clickable {
-                        viewModel.openUrl(activity, SOURCE_URL)
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(SOURCE_URL))
+                        activity.startActivity(intent)
                     },
                 painter = painterResource(R.drawable.logo),
                 contentDescription = null,
@@ -353,8 +254,8 @@ fun HomeAppBar(
 @Composable
 fun CourseItem(
     orientation: Int,
-    navHostController: NavHostController,
-    course: Course
+    course: Course,
+    navHostController: NavHostController
 ) {
     ElevatedCard(
         modifier =
