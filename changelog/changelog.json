@@ -1,5 +1,5 @@
 {
-  "last_version_id": 13,
+  "last_version_id": 14,
   "last_version_code": 13,
   "min_supported_version_code": 13,
   "versions": [
@@ -158,6 +158,17 @@
       "change_log": [
         "Resolve bug in topic app bar",
         "Add token in app apk and aab output."
+      ]
+    },
+    {
+      "version_id": 14,
+      "version_name": "6.5.1",
+      "version_code": 13,
+      "version_type": "UpdateKotlinTopicPoints",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": [17,18,19,20,21],
+      "change_log": [
+        "Modify some topics points"
       ]
     }
   ]
