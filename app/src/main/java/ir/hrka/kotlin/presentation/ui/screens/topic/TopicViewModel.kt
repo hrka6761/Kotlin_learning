@@ -8,7 +8,9 @@ import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.Constants.KOTLIN_COURSE_NAME
 import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.utilities.ExecutionState
+import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
+import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
@@ -54,60 +56,185 @@ class TopicViewModel @Inject constructor(
     val topics: StateFlow<Resource<List<Topic>?>> = _topics
     private val _updateTopicsOnDBResult: MutableStateFlow<Resource<Boolean?>> =
         MutableStateFlow(Resource.Initial())
-    val updateTopicsOnDBResult: StateFlow<Resource<Boolean?>> = _updateTopicsOnDBResult
     private val _updateTopicsStateOnDBResult: MutableStateFlow<Resource<Boolean?>> =
         MutableStateFlow(Resource.Initial())
-    val updateTopicsStateOnDBResult: MutableStateFlow<Resource<Boolean?>> =
-        _updateTopicsStateOnDBResult
     private val _updateVersionIdResult: MutableStateFlow<Resource<Boolean?>> =
         MutableStateFlow(Resource.Initial())
-    val updateVersionIdResult: StateFlow<Resource<Boolean?>> = _updateVersionIdResult
 
 
-    fun setExecutionState(state: ExecutionState) {
+    fun getTopics(course: Course?, updatedId: Int?) {
+        if (updatedId != null) {
+            updateTopicStateInList(updatedId)
+        } else {
+            course?.let {
+                initTopicsResult(it)
+                initUpdateTopicsOnDBResult(it)
+                initUpdateVersionIdResult(it)
+                initUpdateTopicsStateOnDBResult(it)
+
+                if (_executionState.value == Start) {
+                    setExecutionState(Loading)
+
+                    if (hasTopicsUpdate(it)) {
+                        getTopicsFromGit(it)
+                        return
+                    }
+
+                    if (hasTopicsPointsUpdate(it)) {
+                        updateTopicsStateOnDB(it)
+                        return
+                    }
+
+                    getTopicsFromDB(it)
+                }
+            }
+        }
+    }
+
+    fun getAppVersionCode(): Int? = globalData.appVersionCode
+
+
+    private fun initTopicsResult(course: Course) {
+        viewModelScope.launch {
+            _topics.collect { result ->
+                if (_executionState.value != Stop) {
+                    when (result) {
+                        is Resource.Initial -> {}
+                        is Resource.Loading -> {}
+
+                        is Resource.Success -> {
+                            if (hasTopicsUpdate(course))
+                                result.data?.let { updateTopicsOnDB(course, it) }
+                            else
+                                setExecutionState(Stop)
+                        }
+
+                        is Resource.Error -> {
+                            setExecutionState(Stop)
+                            setFailedState(true)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initUpdateTopicsOnDBResult(course: Course) {
+        viewModelScope.launch {
+            _updateTopicsOnDBResult.collect { result ->
+                if (_executionState.value != Stop) {
+                    when (result) {
+                        is Resource.Initial -> {}
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            updateVersionId(course)
+                        }
+
+                        is Resource.Error -> {
+                            setExecutionState(Stop)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initUpdateVersionIdResult(course: Course) {
+        viewModelScope.launch {
+            _updateVersionIdResult.collect { result ->
+                if (_executionState.value != Stop) {
+                    when (result) {
+                        is Resource.Initial -> {}
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            if (hasTopicsUpdate(course)) {
+                                setExecutionState(Stop)
+                                updateVersionIdInGlobalData(course)
+                                return@collect
+                            }
+
+                            if (hasTopicsPointsUpdate(course)) {
+                                getTopicsFromDB(course)
+                                updateVersionIdInGlobalData(course)
+                            }
+                        }
+
+                        is Resource.Error -> {
+                            if (hasTopicsPointsUpdate(course))
+                                getTopicsFromDB(course)
+                            else
+                                setExecutionState(Stop)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initUpdateTopicsStateOnDBResult(course: Course) {
+        viewModelScope.launch {
+            _updateTopicsStateOnDBResult.collect { result ->
+                if (_executionState.value != Stop) {
+                    when (result) {
+                        is Resource.Initial -> {}
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            updateVersionId(course)
+                        }
+
+                        is Resource.Error -> {
+                            getTopicsFromDB(course)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setExecutionState(state: ExecutionState) {
         _executionState.value = state
     }
 
-    fun setFailedState(state: Boolean) {
+    private fun setFailedState(state: Boolean) {
         _failedState.value = state
     }
 
-    fun hasTopicsUpdate(course: Course): Boolean {
+    private fun hasTopicsUpdate(course: Course): Boolean {
         return if (course.courseName == KOTLIN_COURSE_NAME)
             hasKotlinTopicsUpdate
         else
             hasCoroutineTopicsUpdate
     }
 
-    fun hasTopicsPointsUpdate(course: Course): Boolean {
+    private fun hasTopicsPointsUpdate(course: Course): Boolean {
         return if (course.courseName == KOTLIN_COURSE_NAME)
             hasKotlinTopicsPointsUpdate
         else
             hasCoroutineTopicsPointsUpdate
     }
 
-    fun getTopicsFromGit(course: Course) {
+    private fun getTopicsFromGit(course: Course) {
         viewModelScope.launch(io) {
             _topics.value = Resource.Loading()
             _topics.value = getTopicsFromGitUseCase(course)
         }
     }
 
-    fun getTopicsFromDB(course: Course) {
+    private fun getTopicsFromDB(course: Course) {
         viewModelScope.launch(io) {
             _topics.value = Resource.Loading()
             _topics.value = getTopicsFromDBUseCase(course)
         }
     }
 
-    fun updateTopicsOnDB(course: Course, topics: List<Topic>) {
+    private fun updateTopicsOnDB(course: Course, topics: List<Topic>) {
         viewModelScope.launch(io) {
             _updateTopicsOnDBResult.value = Resource.Loading()
             _updateTopicsOnDBResult.value = updateTopicsOnDBUseCase(topics, course)
         }
     }
 
-    fun updateTopicsStateOnDB(course: Course) {
+    private fun updateTopicsStateOnDB(course: Course) {
         viewModelScope.launch(io) {
             _updateTopicsStateOnDBResult.value = Resource.Loading()
 
@@ -135,7 +262,7 @@ class TopicViewModel @Inject constructor(
         }
     }
 
-    fun updateVersionId(course: Course) {
+    private fun updateVersionId(course: Course) {
         viewModelScope.launch(io) {
             val versionId = lastVersionId ?: DEFAULT_VERSION_ID
             _updateVersionIdResult.value = Resource.Loading()
@@ -147,7 +274,7 @@ class TopicViewModel @Inject constructor(
         }
     }
 
-    fun updateVersionIdInGlobalData(course: Course) {
+    private fun updateVersionIdInGlobalData(course: Course) {
         if (course.courseName == KOTLIN_COURSE_NAME) {
             globalData.hasKotlinTopicsUpdate = false
             globalData.hasKotlinTopicsPointsUpdate = false
@@ -157,7 +284,7 @@ class TopicViewModel @Inject constructor(
         }
     }
 
-    fun updateTopicStateInList(id: Int) {
+    private fun updateTopicStateInList(id: Int) {
         _topics.value.data?.forEach { topic ->
             if (topic.id == id) {
                 topic.hasUpdate = false
@@ -165,6 +292,4 @@ class TopicViewModel @Inject constructor(
             }
         }
     }
-
-    fun getAppVersionCode(): Int? = globalData.appVersionCode
 }

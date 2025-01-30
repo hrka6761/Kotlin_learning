@@ -16,6 +16,7 @@ import androidx.navigation.navArgument
 import ir.hrka.kotlin.core.Constants.POINTS_SCREEN_TOPIC_ARGUMENT
 import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_COURSE_ARGUMENT
+import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import ir.hrka.kotlin.core.utilities.Screen.Topic
@@ -70,7 +71,12 @@ fun AppContent() {
                     ?.savedStateHandle
                     ?.get<Course>(TOPICS_SCREEN_COURSE_ARGUMENT)
 
-                TopicsScreen(activity, navHostController, course)
+                val updatedId = navHostController
+                    .currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<Int>(TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT)
+
+                TopicsScreen(navHostController, course, updatedId)
             }
             composable(
                 route = Point()

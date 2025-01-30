@@ -1,7 +1,6 @@
 package ir.hrka.kotlin.presentation.ui.screens.topic
 
 import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,41 +48,24 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_CODE
 import ir.hrka.kotlin.core.Constants.POINTS_SCREEN_TOPIC_ARGUMENT
 import ir.hrka.kotlin.core.Constants.TAG
-import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT
-import ir.hrka.kotlin.core.utilities.ExecutionState.Start
-import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
-import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
+import ir.hrka.kotlin.presentation.ui.screens.home.Failed
+import ir.hrka.kotlin.presentation.ui.screens.home.Loading
 
 @Composable
 fun TopicsScreen(
-    activity: MainActivity,
     navHostController: NavHostController,
-    course: Course?
+    course: Course?,
+    updatedId: Int?
 ) {
-
-    val viewModel: TopicViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
-    val topics by viewModel.topics.collectAsState()
-    val executionState by viewModel.executionState.collectAsState()
-    val failedState by viewModel.failedState.collectAsState()
-    val updateTopicsOnDBResult by viewModel.updateTopicsOnDBResult.collectAsState()
-    val updateTopicsStateOnDBResult by viewModel.updateTopicsStateOnDBResult.collectAsState()
-    val updateVersionIdResult by viewModel.updateVersionIdResult.collectAsState()
-    val updatedId = navHostController
-        .currentBackStackEntry
-        ?.savedStateHandle
-        ?.get<Int>(TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT)
-
-    updatedId?.let { viewModel.updateTopicStateInList(it) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -100,161 +80,54 @@ fun TopicsScreen(
     ) { innerPaddings ->
 
         Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPaddings),
+            contentAlignment = Alignment.TopCenter
         ) {
+            val viewModel: TopicViewModel = hiltViewModel()
+            val topics by viewModel.topics.collectAsState()
+            val executionState by viewModel.executionState.collectAsState()
+            val failedState by viewModel.failedState.collectAsState()
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(if (failedState) 1f else 0f),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(60.dp),
-                    painter = painterResource(R.drawable.error),
-                    contentDescription = null
-                )
-
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    text = stringResource(R.string.failed_to_fetch_the_data),
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            LazyVerticalStaggeredGrid(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPaddings),
-                columns = StaggeredGridCells.Fixed(1),
-                contentPadding = PaddingValues(8.dp)
-            ) {
-                topics.data?.let {
-                    items(it.size) { index ->
-                        TopicItem(it[index], index, navHostController, viewModel.getAppVersionCode())
-                    }
-                }
-            }
-
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .width(50.dp)
-                    .height(50.dp)
-                    .alpha(if (executionState == Loading) 1f else 0f),
-                strokeWidth = 2.dp
-            )
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        course?.let {
-            if (executionState == Start) {
-                viewModel.setExecutionState(Loading)
-
-                if (viewModel.hasTopicsUpdate(it)) {
-                    viewModel.getTopicsFromGit(it)
-                    return@LaunchedEffect
-                }
-
-                if (viewModel.hasTopicsPointsUpdate(it)) {
-                    viewModel.updateTopicsStateOnDB(it)
-                    return@LaunchedEffect
-                }
-
-                viewModel.getTopicsFromDB(it)
-            }
-        }
-    }
-
-    LaunchedEffect(topics) {
-        if (executionState != Stop) {
             when (topics) {
                 is Resource.Initial -> {}
-                is Resource.Loading -> {}
+                is Resource.Loading -> {
+                    Loading(executionState)
+                }
 
                 is Resource.Success -> {
-                    if (viewModel.hasTopicsUpdate(course!!))
-                        topics.data?.let { viewModel.updateTopicsOnDB(course, it) }
-                    else
-                        viewModel.setExecutionState(Stop)
+                    TopicsList(viewModel, navHostController, topics.data)
                 }
 
                 is Resource.Error -> {
-                    viewModel.setExecutionState(Stop)
-                    viewModel.setFailedState(true)
+                    Failed(failedState)
                 }
+            }
+
+            LaunchedEffect(Unit) {
+                viewModel.getTopics(course, updatedId)
             }
         }
     }
+}
 
-    LaunchedEffect(updateTopicsOnDBResult) {
-        if (executionState != Stop) {
-            when (updateTopicsOnDBResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    viewModel.updateVersionId(course!!)
-                }
-
-                is Resource.Error -> {
-                    viewModel.setExecutionState(Stop)
-                }
+@Composable
+fun TopicsList(
+    viewModel: TopicViewModel,
+    navHostController: NavHostController,
+    topics: List<Topic>?
+) {
+    LazyVerticalStaggeredGrid(
+        modifier = Modifier.fillMaxSize(),
+        columns = StaggeredGridCells.Fixed(1),
+        contentPadding = PaddingValues(8.dp)
+    ) {
+        topics?.let {
+            items(it.size) { index ->
+                TopicItem(it[index], index, navHostController, viewModel.getAppVersionCode())
             }
         }
-    }
-
-    LaunchedEffect(updateVersionIdResult) {
-        if (executionState != Stop) {
-            when (updateVersionIdResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    if (viewModel.hasTopicsUpdate(course!!)) {
-                        viewModel.setExecutionState(Stop)
-                        viewModel.updateVersionIdInGlobalData(course)
-                        return@LaunchedEffect
-                    }
-
-                    if (viewModel.hasTopicsPointsUpdate(course)) {
-                        viewModel.getTopicsFromDB(course)
-                        viewModel.updateVersionIdInGlobalData(course)
-                    }
-                }
-
-                is Resource.Error -> {
-                    if (viewModel.hasTopicsPointsUpdate(course!!))
-                        viewModel.getTopicsFromDB(course)
-                    else
-                        viewModel.setExecutionState(Stop)
-                }
-            }
-        }
-    }
-
-    LaunchedEffect(updateTopicsStateOnDBResult) {
-        if (executionState != Stop) {
-            when (updateTopicsStateOnDBResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    viewModel.updateVersionId(course!!)
-                }
-
-                is Resource.Error -> {
-                    viewModel.getTopicsFromDB(course!!)
-                }
-            }
-        }
-    }
-
-    BackHandler {
-        navHostController.popBackStack()
     }
 }
 
