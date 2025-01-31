@@ -1,12 +1,9 @@
 package ir.hrka.kotlin.presentation.ui.screens.point
 
-import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,7 +37,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -51,37 +46,24 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_CODE
-import ir.hrka.kotlin.core.Constants.TAG
-import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT
-import ir.hrka.kotlin.core.utilities.ExecutionState.Start
-import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
-import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.domain.entities.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
+import ir.hrka.kotlin.presentation.ui.screens.home.Failed
+import ir.hrka.kotlin.presentation.ui.screens.home.Loading
 
 @Composable
 fun PointsScreen(
-    activity: MainActivity,
     navHostController: NavHostController,
     topic: Topic?
 ) {
-
-    val viewModel: PointViewModel = hiltViewModel()
     val snackBarHostState = remember { SnackbarHostState() }
-    val points by viewModel.points.collectAsState()
-    val failedState by viewModel.failedState.collectAsState()
-    val executionState by viewModel.executionState.collectAsState()
-    val updatePointsOnDBResult by viewModel.updatePointsOnDBResult.collectAsState()
-    val updateTopicOnDBResult by viewModel.updateTopicStateOnDBResult.collectAsState()
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { PointsScreenAppBar(topic, navHostController, viewModel.getAppVersionCode()) },
+        topBar = { PointsScreenAppBar(topic, navHostController) },
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -91,140 +73,60 @@ fun PointsScreen(
         },
     ) { innerPaddings ->
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPaddings),
             contentAlignment = Alignment.Center
         ) {
+            val viewModel: PointsViewModel = hiltViewModel()
+            val points by viewModel.points.collectAsState()
+            val failedState by viewModel.failedState.collectAsState()
+            val executionState by viewModel.executionState.collectAsState()
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(if (failedState) 1f else 0f),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(60.dp),
-                    painter = painterResource(R.drawable.error),
-                    contentDescription = null
-                )
-
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    text = "Failed to fetch the data",
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            LazyVerticalStaggeredGrid(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(innerPaddings),
-                columns = StaggeredGridCells.Fixed(1),
-                contentPadding = PaddingValues(8.dp)
-            ) {
-                val list = points.data
-
-                list?.let {
-                    items(it.size) { index ->
-
-                        PointItem(list[index], index)
-                    }
-                }
-            }
-
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .width(50.dp)
-                    .height(50.dp)
-                    .alpha(if (executionState == Loading) 1f else 0f),
-                strokeWidth = 2.dp
-            )
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        if (executionState == Start) {
-            viewModel.setExecutionState(Loading)
-            topic?.let {
-                if (topic.hasUpdate)
-                    viewModel.getPointsFromGit(it)
-                else
-                    viewModel.getPointsFromDB(it)
-            }
-        }
-    }
-
-    LaunchedEffect(points) {
-        if (executionState != Stop) {
             when (points) {
                 is Resource.Initial -> {}
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    topic?.let {
-                        if (topic.hasUpdate)
-                            points.data?.let { viewModel.updatePointsOnDB(topic, it) }
-                        else
-                            viewModel.setExecutionState(Stop)
-                    }
+                is Resource.Loading -> {
+                    Loading(executionState)
+                }
 
+                is Resource.Success -> {
+                    PointsList(points.data)
                 }
 
                 is Resource.Error -> {
-                    viewModel.setExecutionState(Stop)
-                    viewModel.setFailedState(true)
+                    Failed(failedState)
                 }
+            }
+
+            LaunchedEffect(Unit) {
+                viewModel.getPoints(topic, navHostController)
             }
         }
     }
+}
 
-    LaunchedEffect(updatePointsOnDBResult) {
-        if (executionState != Stop) {
-            when (updatePointsOnDBResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    topic?.let { viewModel.updateTopicStateOnDB(it) }
-                }
-
-                is Resource.Error -> {
-                    viewModel.setExecutionState(Stop)
-                }
+@Composable
+fun PointsList(points: List<Point>?) {
+    LazyVerticalStaggeredGrid(
+        modifier = Modifier
+            .fillMaxWidth(),
+        columns = StaggeredGridCells.Fixed(1),
+        contentPadding = PaddingValues(8.dp)
+    ) {
+        points?.let {
+            items(it.size) { index ->
+                PointItem(it[index], index)
             }
         }
-    }
-
-    LaunchedEffect(updateTopicOnDBResult) {
-        if (executionState != Stop) {
-            when (updateTopicOnDBResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    navHostController
-                        .previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT, topic?.id)
-                    viewModel.setExecutionState(Stop)
-                }
-
-                is Resource.Error -> {
-                    viewModel.setExecutionState(Stop)
-                }
-            }
-        }
-    }
-
-    BackHandler {
-        navHostController.popBackStack()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PointsScreenAppBar(topic: Topic?, navHostController: NavHostController, appVersionCode: Int?) {
+fun PointsScreenAppBar(topic: Topic?, navHostController: NavHostController) {
+    val viewModel: PointsViewModel = hiltViewModel()
+    val appVersionCode = viewModel.getAppVersionCode()
+
     TopAppBar(
         title = {
             Text(
@@ -388,22 +290,6 @@ fun SnippetCodeItem(snippetCode: String) {
 @Preview(showBackground = true)
 @Composable
 fun PointsScreenPreview() {
-//    PointsScreen(
-//        MainActivity(),
-//        rememberNavController(),
-//        Topic(
-//        id = 1,
-//            hasUpdate = true,
-//            courseName = "Kotlin",
-//            fileName = "basic.json",
-//            topicTitle = "Basic",
-//            pointsNumber = 29,
-//            topicImage = "",
-//            hasVisualizer = true,
-//            isActive = true
-//        )
-//    )
-
     PointItem(
         point = Point(
             id = 1,
