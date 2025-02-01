@@ -1,0 +1,42 @@
+{
+  "topic_id": 27,
+  "topic_name": "CoroutineScope function",
+  "points": [
+    {
+      "id": 1,
+      "point": "The CoroutineScope function (with a uppercase C) is a regular function (not a suspending function) that creates an instance of CoroutineScope with a specified CoroutineContext. This scope is used to launch coroutines that can run independently of the caller's lifecycle.",
+      "sub_points": [
+        "The CoroutineScope function (with a uppercase C) is a regular function while the coroutineScope function (with a lowercase c) is a suspend function that must be called in a coroutine or another suspend function.",
+        "The function name CoroutineScope starts with an uppercase letter, which is unusual for a function.",
+        "By this function we can create an Scope with the specified CoroutineContext, which allows you to launch coroutines that live within this scope."
+      ],
+      "snippet_codes": [
+        " CoroutineScope(Dispatchers.IO + Job() + CoroutineName(\"name\"))\n     .launch {\n         launch(Job()) { }\n         launch(Job()) { }\n         launch(Job()) { }\n     }"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "There is also a CoroutineScope interface.",
+      "sub_points": null,
+      "snippet_codes": [
+        " interface CoroutineScope {\n\n    val coroutineContext: CoroutineContext\n }"
+      ]
+    },
+    {
+      "id": 3,
+      "point": "The coroutineScope function (with a lowercase c) creates a CoroutineScope and calls the specified suspend block with this scope. The provided scope inherits its coroutineContext from the outer scope.",
+      "sub_points": null,
+      "snippet_codes": [
+        " suspend fun <R> coroutineScope(block: suspend CoroutineScope.() -> R): R {\n     contract {\n         callsInPlace(block, InvocationKind.EXACTLY_ONCE)\n     }\n     return suspendCoroutineUninterceptedOrReturn { uCont ->\n         val coroutine = ScopeCoroutine(uCont.context, uCont)\n         coroutine.startUndispatchedOrReturn(coroutine, block)\n     }\n  }"
+      ]
+    },
+    {
+      "id": 4,
+      "point": "The CoroutineScope function (with a uppercase C) creates a CoroutineScope that wraps the given coroutine context.",
+      "sub_points": null,
+      "snippet_codes": [
+        " @Suppress(\"FunctionName\")\n public fun CoroutineScope(context: CoroutineContext): CoroutineScope =\n     ContextScope(if (context[Job] != null) context else context + Job())"
+      ]
+    }
+  ]
+}
