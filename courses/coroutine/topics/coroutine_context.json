@@ -1,0 +1,103 @@
+{
+  "topic_id": 28,
+  "topic_name": "Coroutine context",
+  "points": [
+    {
+      "id": 1,
+      "point": "A coroutine context is indeed a collection of various elements that control the behavior of coroutines.\n These are an element of the CoroutineContext:",
+      "sub_points": [
+        "Dispatcher",
+        "Job",
+        "CoroutineName",
+        "CoroutineExceptionHandler",
+        "ThreadContextElement"
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "Dispatcher determines the thread or thread pool where the coroutine will be executed.",
+      "sub_points": [
+        "Dispatchers.Main: (Run coroutine on main thread)",
+        "Dispatchers.IO: (Run coroutine on pool of IO thread)",
+        "Dispatchers.Default: (Run coroutine on pool of IO thread that optimized for CPU intensive task)",
+        "Dispatchers.Unconfined: (start running coroutine on the caller thread but only until the first suspension point)",
+        "newSingleThreadContext: (creates a thread for the coroutine to run)"
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "With Job, We can control the coroutine lifecycle. (cancel it, join it, start it, get status).",
+      "sub_points": [
+        "We can use explicitly job (Create a common job instance) or implicitly job (returned from coroutine builder).",
+        "Use explicit jobs when managing multiple coroutines under a common scope.",
+        "Use implicit jobs when you only need to cancel or track a single coroutine."
+      ],
+      "snippet_codes": [
+        " // Explicitly job\n val explicitlyJob = Job()\nval scope = CoroutineScope(Dispatchers.IO + explicitlyJob)\n\n val implicitlyJob = scope.launch { ... }\n\n explicitlyJob.cancel()",
+        " // Implicitly job\n val implicitlyJob = CoroutineScope(Dispatchers.IO).launch { ... }\n\n implicitlyJob.cancel()"
+      ]
+    },
+    {
+      "id": 4,
+      "point": "When launch is used without parameters, it inherits the context from the CoroutineScope it is being launched from.",
+      "sub_points": null,
+      "snippet_codes": [
+        " // The inner coroutine is launched independently and inherits\n // the CoroutineContext from the parent (Dispatchers.IO)\n val scope = CoroutineScope(Dispatchers.IO)\n scope.launch {\n     launch {\n     }\n }"
+      ]
+    },
+    {
+      "id": 5,
+      "point": "The unconfined dispatcher is appropriate for coroutines which neither consume CPU time nor update any shared data (like UI) confined to a specific thread.",
+      "sub_points": null,
+      "snippet_codes": [
+        " launch(Dispatchers.Unconfined) {\n     println(\"Started on thread: ${Thread.currentThread().name}\")\n     delay(1000) // Suspension point\n     println(\"Resumed on thread: ${Thread.currentThread().name}\")\n }",
+        " // Started on thread: main\n // Resumed on thread: DefaultDispatcher-worker-1"
+      ]
+    },
+    {
+      "id": 6,
+      "point": "We can use the + operator for multiple elements for a coroutine context.",
+      "sub_points": null,
+      "snippet_codes": [
+        " val job = Job()\n val name = CoroutineName(\"Test\")\n val IODispatcher = Dispatchers.IO\n\n CoroutineScope(job + name + IODispatcher).launch { ... }"
+      ]
+    },
+    {
+      "id": 7,
+      "point": "Default dispatchers depending on the context in which the coroutine is launched:",
+      "sub_points": [
+        "The default dispatcher for runBlocking is confined to the calling thread.",
+        "In GlobalScope uses Dispatchers.Default.",
+        "CoroutineScope without Dispatcher: inherits the dispatcher from the context in which the scope was created. If no dispatcher is specified in the parent context, it falls back to Dispatchers.Default."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 8,
+      "point": "When a coroutine is launched in the CoroutineScope of another coroutine, it inherits its context via CoroutineScope. coroutineContext and the Job of the new coroutine becomes a child of the parent coroutine's job.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 9,
+      "point": "CoroutineExceptionHandler is an optional element in the coroutine context to handle uncaught exceptions.",
+      "sub_points": null,
+      "snippet_codes": [
+        " val handler = CoroutineExceptionHandler { _, exception ->\n     Log.e(\"MyViewModel\", \"Caught exception: ${exception.message}\")\n }\n fun fetchData() {\n     viewModelScope.launch(handler) {\n         throw RuntimeException(\"Network request failed!\")\n     }\n }"
+      ]
+    },
+    {
+      "id": 10,
+      "point": "User-specified name of coroutine. This name is used in debugging mode.",
+      "sub_points": [
+        "To display the coroutine name in Android Studio logcat, add the following code to your application class:\n System.setProperty(\"kotlinx.coroutines.debug\", \"on\")"
+      ],
+      "snippet_codes": [
+        " val name = CoroutineName(\"Test\")\n val thread = Dispatchers.Main\n CoroutineScope(thread + name).launch {\n     Log.i(TAG, Thread.currentThread().name)\n }",
+        " main @Test#32"
+      ]
+    }
+  ]
+}
