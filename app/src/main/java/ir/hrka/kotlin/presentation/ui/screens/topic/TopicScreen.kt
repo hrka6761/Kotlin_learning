@@ -97,6 +97,7 @@ fun TopicsScreen(
                 }
 
                 is Resource.Success -> {
+                    updatedId?.let { viewModel.updateTopicStateInList(it) }
                     TopicsList(viewModel, navHostController, topics.data)
                 }
 
@@ -106,7 +107,7 @@ fun TopicsScreen(
             }
 
             LaunchedEffect(Unit) {
-                viewModel.getTopics(course, updatedId)
+                viewModel.getTopics(course)
             }
         }
     }

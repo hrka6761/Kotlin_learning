@@ -62,31 +62,36 @@ class TopicViewModel @Inject constructor(
         MutableStateFlow(Resource.Initial())
 
 
-    fun getTopics(course: Course?, updatedId: Int?) {
-        if (updatedId != null) {
-            updateTopicStateInList(updatedId)
-        } else {
-            course?.let {
-                initTopicsResult(it)
-                initUpdateTopicsOnDBResult(it)
-                initUpdateVersionIdResult(it)
-                initUpdateTopicsStateOnDBResult(it)
+    fun updateTopicStateInList(id: Int) {
+        _topics.value.data?.forEach { topic ->
+            if (topic.id == id) {
+                topic.hasUpdate = false
+                return
+            }
+        }
+    }
 
-                if (_executionState.value == Start) {
-                    setExecutionState(Loading)
+    fun getTopics(course: Course?) {
+        course?.let {
+            initTopicsResult(it)
+            initUpdateTopicsOnDBResult(it)
+            initUpdateVersionIdResult(it)
+            initUpdateTopicsStateOnDBResult(it)
 
-                    if (hasTopicsUpdate(it)) {
-                        getTopicsFromGit(it)
-                        return
-                    }
+            if (_executionState.value == Start) {
+                setExecutionState(Loading)
 
-                    if (hasTopicsPointsUpdate(it)) {
-                        updateTopicsStateOnDB(it)
-                        return
-                    }
-
-                    getTopicsFromDB(it)
+                if (hasTopicsUpdate(it)) {
+                    getTopicsFromGit(it)
+                    return
                 }
+
+                if (hasTopicsPointsUpdate(it)) {
+                    updateTopicsStateOnDB(it)
+                    return
+                }
+
+                getTopicsFromDB(it)
             }
         }
     }
@@ -281,15 +286,6 @@ class TopicViewModel @Inject constructor(
         } else {
             globalData.hasCoroutineTopicsUpdate = false
             globalData.hasCoroutineTopicsPointsUpdate = false
-        }
-    }
-
-    private fun updateTopicStateInList(id: Int) {
-        _topics.value.data?.forEach { topic ->
-            if (topic.id == id) {
-                topic.hasUpdate = false
-                return
-            }
         }
     }
 }
