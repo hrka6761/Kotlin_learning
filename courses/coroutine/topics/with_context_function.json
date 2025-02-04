@@ -1,0 +1,24 @@
+{
+  "topic_id": 31,
+  "topic_name": "withContext function",
+  "points": [
+    {
+      "id": 1,
+      "point": "`withContext` is a suspending function that allows you to switch the coroutine's execution context.",
+      "sub_points": [
+        "It can only be called from within another coroutine or suspending function.",
+        "It executes block in the given context and returns its result.",
+        "It doesn't create a new coroutine, it just changes the current coroutine context."
+      ],
+      "snippet_codes": [
+        " fun main() {\n     GlobalScope.launch(Dispatchers.IO) {\n         task1()\n         withContext(Dispatchers.Main) {\n             task2()\n         }\n         task3()\n     }\n }\n private suspend fun task1() {\n     delay(2000)\n }\n private suspend fun task2() {\n     delay(2000)\n }\n private suspend fun task3() {\n     delay(1000)\n }"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "`withContext` suspends the current coroutine, switches its execution context, runs the provided block, and then resumes execution in the original context.",
+      "sub_points": null,
+      "snippet_codes": null
+    }
+  ]
+}
