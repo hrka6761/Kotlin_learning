@@ -62,7 +62,7 @@
       "point": "suspending function",
       "sub_points": [
         "They can only be used inside coroutines.",
-        "We can use other suspending functions in this functions (like delay in this example) to suspend execution of a coroutine."
+        "We can use other suspending functions in this functions (like delay, yield, ...) to suspend execution of a coroutine."
       ],
       "snippet_codes": [
         " suspend fun suspendingFunction() { ... }"
