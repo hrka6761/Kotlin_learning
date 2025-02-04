@@ -1,0 +1,48 @@
+{
+  "topic_id": 30,
+  "topic_name": "async function ",
+  "points": [
+    {
+      "id": 1,
+      "point": "async is another coroutine builder in Kotlin that launches a new coroutine and returns a Deferred<T>.",
+      "sub_points": [
+        "Unlike launch, which returns a Job and does not return a result, async is used when you need to return a value from a coroutine.",
+        "Use async when you need to return a value.",
+        "Deferred<T> extends Job and represents a task that produces a result asynchronously."
+      ],
+      "snippet_codes": [
+        " val coroutineContext = thread + job + scopeCoroutineName\n val parentScope = CoroutineScope(coroutineContext)\n parentScope.launch {\n     val first = async {\n         delay(5_000)\n         return@async 12\n     }\n     val second = async {\n         delay(2_000)\n         return@async 25\n     }\n     val result = first.await() + second.await()\n }"
+      ]
+    },
+    {
+      "id": 2,
+      "point": "The coroutine context is inherited from a CoroutineScope, but you can also specify additional context elements using the context argument.",
+      "sub_points": [
+        "Each coroutine can have its own context."
+      ],
+      "snippet_codes": [
+        " val coroutineContext = thread + job + scopeCoroutineName\n val parentScope = CoroutineScope(coroutineContext)\n val innerCoroutineContext = anotherThread + anotherJob\n parentScope.launch {\n     val first = async(innerCoroutineContext) {\n         delay(5_000)\n         return@async 12\n     }\n     val second = async {\n         delay(2_000)\n         return@async 25\n     }\n     val result = first.await() + second.await()\n }"
+      ]
+    },
+    {
+      "id": 3,
+      "point": "By default, the coroutine is immediately scheduled for execution. Other start options can be specified via start parameter.",
+      "sub_points": [
+        "CoroutineStart.Default: immediately schedules the coroutine for execution according to its context.",
+        "CoroutineStart.Lazy: Starts the coroutine lazily, only when it is needed.(The coroutine is explicitly started using start() or await().",
+        "CoroutineStart.ATOMIC: Atomically schedules the coroutine for execution according to its context. This is similar to DEFAULT, but the coroutine cannot be cancelled before it starts executing.",
+        "CoroutineStart.UNDISPATCHED: Immediately executes the coroutine until its first suspension point in the current thread similarly to the coroutine being started using Dispatchers. Unconfined. However, when the coroutine is resumed from suspension it is dispatched according to the CoroutineDispatcher in its context."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 4,
+      "point": "Difference between start() and await() is:",
+      "sub_points": [
+        "`start()` starts the coroutine but does not wait for the result.",
+        "`await()` starts the coroutine if not already started and waits for the result."
+      ],
+      "snippet_codes": null
+    }
+  ]
+}
