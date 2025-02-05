@@ -1,0 +1,50 @@
+{
+  "topic_id": 32,
+  "topic_name": "Exception handling in launch",
+  "points": [
+    {
+      "id": 1,
+      "point": "By default, exceptions in coroutines launched with `launch` are uncaught and crash the app unless handled properly.",
+      "sub_points": [
+        "Uncaught exceptions are exceptions that occur during the execution of a program but are not handled by any try-catch blocks or other exception handling mechanisms."
+      ],
+      "snippet_codes": [
+        " viewModelScope.launch {\n            throw RuntimeException(\"Something went wrong!\")\n        }",
+        " FATAL EXCEPTION: main @coroutine#33\n Process: ir.hrka.kotlin, PID: 21834\n java.lang.RuntimeException: Something went wrong!\n ..."
+      ]
+    },
+    {
+      "id": 2,
+      "point": "Coroutine builders come in two flavors:",
+      "sub_points": [
+        "Propagating exceptions automatically (launch) that treat exceptions as uncaught exceptions and if the exceptions do not handled, the application crashes.",
+        "Exposing exceptions to users (async) that are relying on the user to consume the final exception for example via await functions."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "For handling exceptions globally in `launch`, use a CoroutineExceptionHandler:",
+      "sub_points": null,
+      "snippet_codes": [
+        " val handler = CoroutineExceptionHandler { coroutineContext, throwable ->\n     // Do something\n }\n viewModelScope.launch(handler) {\n     throw RuntimeException(\"Something went wrong!\")\n }"
+      ]
+    },
+    {
+      "id": 4,
+      "point": "All children coroutines (coroutines created in the context of another Job) delegate handling of their exceptions to their parent coroutine, which also delegates to the parent, and so on until the root, so the CoroutineExceptionHandler installed in their context is never used.",
+      "sub_points": null,
+      "snippet_codes": [
+        " val handler = CoroutineExceptionHandler { coroutineContext, throwable ->\n     // Do something\n }\n viewModelScope.launch() {\n     launch {\n         delay(5_000)\n     }\n     launch {\n         delay(2_000)\n         throw RuntimeException(\"Something went wrong!\")\n     }\n }"
+      ]
+    },
+    {
+      "id": 5,
+      "point": "Based on below code:\n When you create a coroutine using `launch` inside another coroutine, the child inherits the parent’s Job by default.\nThis means if the parent gets canceled, all children are canceled too.\nHowever, if you provide a new Job() explicitly, the coroutine becomes independent and is no longer tied to the parent’s lifecycle.",
+      "sub_points": null,
+      "snippet_codes": [
+        " val handler = CoroutineExceptionHandler { coroutineContext, throwable ->\n     // Do something\n }\n viewModelScope.launch(handler) {\n     launch {\n         task2()\n     }\n     launch(Job()) {\n         task3()\n     }\n }"
+      ]
+    }
+  ]
+}
