@@ -1,0 +1,23 @@
+{
+  "topic_id": 33,
+  "topic_name": "Exception handling in async",
+  "points": [
+    {
+      "id": 1,
+      "point": "async builder always catches all exceptions and represents them in the resulting Deferred object, so its `CoroutineExceptionHandler` has no effect either.",
+      "sub_points": [
+        "In the `async` function, exceptions are exposed to users and they rely on the user to consume the final exception for example via await or receive."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "To handle exceptions in `async`:",
+      "sub_points": "We can handle exception by `supervisorScope`.(Follow the supervisorScope topic)",
+      "snippet_codes": [
+        " val deferred = async {\n     try {\n         // Code that may throw an exception\n     } catch (e: Exception) {\n         // Handle exception\n     }\n }",
+        " val deferred = async { ... }\n try {\n     val result = deferred.await()\n } catch (e: Exception) {\n     // Handle the exception from await()\n }"
+      ]
+    }
+  ]
+}
