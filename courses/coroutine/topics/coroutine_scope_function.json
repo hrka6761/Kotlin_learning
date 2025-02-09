@@ -4,8 +4,10 @@
   "points": [
     {
       "id": 1,
-      "point": "The coroutineScope function is a suspending function that creates a new coroutine scope.",
+      "point": "The coroutineScope function is a suspending function that creates a new scope in the current scope context and dose not create a new coroutine.",
       "sub_points": [
+        "It inherits the coroutine context from its caller.",
+        "The purpose of coroutineScope is to manage the lifecycle of child coroutines and ensure that all coroutines launched within that scope complete before the scope itself finishes.",
         "It ensures that all of them complete before the coroutineScope itself completes.",
         "It can only be called from within another coroutine or suspending function.",
         "If any coroutine within the scope fails, the scope itself fails, and all coroutines within it are cancelled."
