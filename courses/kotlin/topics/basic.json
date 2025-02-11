@@ -61,7 +61,7 @@
       "id": 6,
       "point": "A `field` is only used as a part of a property to hold its value in memory.",
       "sub_points": [
-        "`field` cannot be declared directly and Kotlin provides it the accessors."
+        "`field` cannot be declared directly and Kotlin provides it in the accessors."
       ],
       "snippet_codes": null
     },
@@ -135,7 +135,7 @@
     },
     {
       "id": 15,
-      "point": "Numbers are stored as primitive types at compile time except:",
+      "point": "Numbers, characters, and boolean values are stored as primitive types at compile time except:",
       "sub_points": [
         "When you create a primitive types as nullable reference such as Int?.",
         "When you use generics."
@@ -155,9 +155,9 @@
     },
     {
       "id": 17,
-      "point": "UInt is represented as an Int at runtime.",
+      "point": "Unsigned types (UInt, ULong, UShort, and UByte) are represented as their corresponding signed types (Int, Long, Short, and Byte) at runtime.",
       "sub_points": [
-        "Although UInt is represented as an Int at runtime, its behavior ensures that operations (e.g., addition, subtraction) and properties (e.g., UInt.MAX_VALUE) adhere to the unsigned semantics."
+        "Although unsigned types (UInt, ULong, UShort, and UByte) are represented as their corresponding signed types (Int, Long, Short, and Byte) at runtime, their behavior ensures that operations (e.g., addition, subtraction) and properties (e.g., UInt.MAX_VALUE) adhere to unsigned semantics."
       ],
       "snippet_codes": null
     },
@@ -180,7 +180,8 @@
       "point": "Smart casts occurred after using `is` and `!is` operators in a control flow like `if` and `when`.",
       "sub_points": null,
       "snippet_codes": [
-        " if (animal is Dog)\n      animal.bark()"
+        " class Dog : Animal {\n\n     fun bark() { ... }\n }",
+        " val animal: Animal = Dog()\n if (animal is Dog)\n      animal.bark()"
       ]
     },
     {
@@ -266,10 +267,10 @@
       "id": 29,
       "point": "Kotlin has the following collections for grouping items.",
       "sub_points": [
-        "Array: is Ordered collections of items that immutable and you can only change the value of indices but you can not add new index.",
-        "List: is Ordered collections of items just like arrays but you can not change the value of indices.",
-        "Set: is Unique unordered collections of items.",
-        "Map: is Sets of key-value pairs where keys are unique and map to only one value."
+        "Array: Ordered collections of items that immutable and you can only change the value of indices but you can not add new index.",
+        "List: Ordered collections of items just like arrays but you can not change the value of indices.",
+        "Set: Unique unordered collections of items.",
+        "Map: Sets of key-value pairs where keys are unique and map to only one value."
       ],
       "snippet_codes": [
         " val array: Array<Int> = arrayOf(1, 2, 1)\n array[1] = 3",

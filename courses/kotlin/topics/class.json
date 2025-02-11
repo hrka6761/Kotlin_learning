@@ -12,24 +12,29 @@
     },
     {
       "id": 2,
-      "point": "A class is public and final and with a public zero-param constructor by default.",
-      "sub_points": null,
-      "snippet_codes": null
+      "point": "A class is `public` and `final` and with a public zero-param constructor by default.",
+      "sub_points": [
+        "A `final` class is a class that cannot be inherited.(Follow inheritance topic)",
+        "The `public` modifier makes a class accessible from anywhere.(Follow access modifier topic)",
+        "The `open` keyword allows a class to be inherited."
+      ],
+      "snippet_codes": [
+        " class Person {}"
+      ]
     },
     {
       "id": 3,
-      "point": "The Functions and the Properties of a class are final by default and must be open to overriding.",
-      "sub_points": null,
-      "snippet_codes": null
+      "point": "The functions and the properties of a class are final by default and must be open to overriding.",
+      "sub_points": [
+        "An open member can not be private.",
+        "The `open` keyword allows a member to be overridden in a subclass."
+      ],
+      "snippet_codes": [
+        " open class Person (open val age: Int) { \n     open fun work() { ... }\n }"
+      ]
     },
     {
       "id": 4,
-      "point": "An open member can not be private.",
-      "sub_points": null,
-      "snippet_codes": null
-    },
-    {
-      "id": 5,
       "point": "When a class defines a primary constructor, all secondary constructors must either:",
       "sub_points": [
         "Directly delegate to the primary constructor using the this keyword.",
@@ -38,7 +43,7 @@
       "snippet_codes": null
     },
     {
-      "id": 6,
+      "id": 5,
       "point": "During the initialization of an instance, the initializer blocks are executed in the same order as they appear in the class body, interleaved with the property initializers.",
       "sub_points": null,
       "snippet_codes": [
