@@ -1,0 +1,53 @@
+{
+  "topic_id": 28,
+  "topic_name": "Supervision",
+  "points": [
+    {
+      "id": 1,
+      "point": "Cancellation is a bidirectional relationship propagating through the whole hierarchy of coroutines.",
+      "sub_points": [
+        "When a parent coroutine is canceled, all of its child coroutines are automatically canceled.",
+        "By default, when a child coroutine fails with an exception, the parent also gets canceled(Except in specific cases like CancellationException)."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 2,
+      "point": "When unidirectional cancellation is required we can use `SupervisorScope` and `SupervisorJob`.",
+      "sub_points": null,
+      "snippet_codes": null
+    },
+    {
+      "id": 3,
+      "point": "SupervisorJob",
+      "sub_points": [
+        "It is similar to a regular `Job` with the only exception that cancellation is propagated only downwards.",
+        "Child failures do not cancel the parent and other children continue executing even if one fails."
+      ],
+      "snippet_codes": [
+        " suspend fun task1() {\n     delay(2_000)\n } \n \n suspend fun task2() {\n     delay(500)\n }\n \n suspend fun task3() {\n     delay(1_000)\n     throw RuntimeException(\"Exception in the task3\")\n }",
+        " val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->\n     // Do something\n }\n val supervisorJob = Job()\n val scope = CoroutineScope(Dispatchers.Main + supervisorJob + exceptionHandler)\n scope.launch {\n     task1()\n }\n scope.launch {\n     task2()\n }\n scope.launch {\n     task3()\n }"
+      ]
+    },
+    {
+      "id": 4,
+      "point": "supervisorScope",
+      "sub_points": [
+        "It propagates the cancellation in one direction only and cancels all its children only if it failed itself.",
+        "It also waits for all children before completion just like coroutineScope does.",
+        "`supervisorScope` is similar to `coroutineScope` in that both create a new coroutine scope and suspend until all child coroutines inside them complete.",
+        "Use `coroutineScope` when all child coroutines should be canceled if one fails.",
+        "Use `supervisorScope` when child coroutines should run independently, even if one fails."
+      ],
+      "snippet_codes": null
+    },
+    {
+      "id": 5,
+      "point": "Another crucial difference between regular and supervisor jobs is exception handling. Every child should handle its exceptions by itself via the exception handling mechanism.",
+      "sub_points": [
+        "This difference comes from the fact that child's failure does not propagate to the parent."
+      ],
+      "snippet_codes": null
+    }
+  ]
+}
