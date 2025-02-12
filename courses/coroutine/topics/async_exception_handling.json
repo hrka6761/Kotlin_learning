@@ -13,7 +13,9 @@
     {
       "id": 2,
       "point": "To handle exceptions in `async`:",
-      "sub_points": "We can handle exception by `supervisorScope`.(Follow the supervisorScope topic)",
+      "sub_points": [
+        "We can handle exception by `supervisorScope`.(Follow the supervisorScope topic)"
+      ],
       "snippet_codes": [
         " val deferred = async {\n     try {\n         // Code that may throw an exception\n     } catch (e: Exception) {\n         // Handle exception\n     }\n }",
         " val deferred = async { ... }\n try {\n     val result = deferred.await()\n } catch (e: Exception) {\n     // Handle the exception from await()\n }"
