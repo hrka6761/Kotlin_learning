@@ -170,6 +170,23 @@
       "change_log": [
         "Modify some topics points"
       ]
+    },
+    {
+      "version_id": 15,
+      "version_name": "6.6.0",
+      "version_code": 13,
+      "version_type": "UpdateCoroutineTopics",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Adding CoroutineScope function topic",
+        "Adding Coroutine context topic",
+        "Adding launch topic",
+        "Adding async topic",
+        "Adding Exception handling in launch topic",
+        "Adding Exception handling in async topic",
+        "Adding Supervision topic"
+      ]
     }
   ]
 }
