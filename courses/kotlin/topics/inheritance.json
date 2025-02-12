@@ -64,6 +64,7 @@
       "point": "We can also override a val property with a var property, but not vice versa.",
       "sub_points": null,
       "snippet_codes": [
+        " interface KotlinInterface {\n    val value: Int\n    ...\n }",
         " class KotlinClass(override var value: Int) : KotlinInterface {\n     ...\n }",
         " class KotlinClass : KotlinInterface() {\n     override var value: Int\n         get() = {\n             // Do something\n         }\n         set(value) {\n             // Do something\n         }\n    ...\n }",
         " class KotlinClass : KotlinInterface() {\n     override var value: Int = 1\n    ...\n }"
