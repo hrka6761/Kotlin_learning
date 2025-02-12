@@ -1,5 +1,5 @@
 {
-  "last_version_id": 16,
+  "last_version_id": 17,
   "last_version_code": 13,
   "min_supported_version_code": 13,
   "versions": [
@@ -199,6 +199,17 @@
         "Modify basic.json",
         "Modify class.json",
         "Modify inheritance.json"
+      ]
+    },
+    {
+      "version_id": 17,
+      "version_name": "6.6.2",
+      "version_code": 13,
+      "version_type": "Hotfix",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Modify async_exception_handling.json"
       ]
     }
   ]
