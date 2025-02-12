@@ -1,5 +1,5 @@
 {
-  "last_version_id": 14,
+  "last_version_id": 16,
   "last_version_code": 13,
   "min_supported_version_code": 13,
   "versions": [
@@ -186,6 +186,19 @@
         "Adding Exception handling in launch topic",
         "Adding Exception handling in async topic",
         "Adding Supervision topic"
+      ]
+    },
+    {
+      "version_id": 16,
+      "version_name": "6.6.1",
+      "version_code": 13,
+      "version_type": "UpdateKotlinTopicPoints",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": [1,2,5],
+      "change_log": [
+        "Modify basic.json",
+        "Modify class.json",
+        "Modify inheritance.json"
       ]
     }
   ]
