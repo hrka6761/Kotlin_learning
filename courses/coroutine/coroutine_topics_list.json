@@ -50,6 +50,86 @@
       "visualizer_version_code": 11,
       "visualizer_destination": "coroutine_scope_function_destination",
       "is_active": true
+    },
+    {
+      "topic_id": 27,
+      "course_name": "coroutine",
+      "topic_title": "CoroutineScope function",
+      "topic_file_name": "regular_coroutine_scope_function.json",
+      "has_visualizer": false,
+      "visualizer_version_code": 14,
+      "visualizer_destination": "regular_coroutine_scope_function_destination",
+      "is_active": true
+    },
+    {
+      "topic_id": 28,
+      "course_name": "coroutine",
+      "topic_title": "Coroutine context",
+      "topic_file_name": "coroutine_context.json",
+      "has_visualizer": false,
+      "visualizer_version_code": 14,
+      "visualizer_destination": "coroutine_context_destination",
+      "is_active": true
+    },
+    {
+      "topic_id": 29,
+      "course_name": "coroutine",
+      "topic_title": "launch",
+      "topic_file_name": "launch_function.json",
+      "has_visualizer": false,
+      "visualizer_version_code": 14,
+      "visualizer_destination": "launch_function_destination",
+      "is_active": true
+    },
+    {
+      "topic_id": 30,
+      "course_name": "coroutine",
+      "topic_title": "async",
+      "topic_file_name": "async_function.json",
+      "has_visualizer": false,
+      "visualizer_version_code": 14,
+      "visualizer_destination": "async_function_destination",
+      "is_active": true
+    },
+    {
+      "topic_id": 31,
+      "course_name": "coroutine",
+      "topic_title": "withContext",
+      "topic_file_name": "with_context_function.json",
+      "has_visualizer": false,
+      "visualizer_version_code": 14,
+      "visualizer_destination": "with_context_function_destination",
+      "is_active": true
+    },
+    {
+      "topic_id": 32,
+      "course_name": "coroutine",
+      "topic_title": "Exception handling in launch",
+      "topic_file_name": "launch_exception_handling.json",
+      "has_visualizer": false,
+      "visualizer_version_code": 14,
+      "visualizer_destination": "launch_exception_handling_destination",
+      "is_active": true
+    },
+    {
+      "topic_id": 33,
+      "course_name": "coroutine",
+      "topic_title": "Exception handling in async",
+      "topic_file_name": "async_exception_handling.json",
+      "has_visualizer": false,
+      "visualizer_version_code": 14,
+      "visualizer_destination": "async_exception_handling_destination",
+      "is_active": true
+    },
+    {
+      "topic_id": 34,
+      "course_name": "coroutine",
+      "topic_title": "Supervision",
+      "topic_file_name": "supervision.json",
+      "has_visualizer": false,
+      "visualizer_version_code": 14,
+      "visualizer_destination": "supervision_destination",
+      "is_active": true
     }
   ]
 }
