@@ -4,12 +4,12 @@
   "points": [
     {
       "id": 1,
-      "point": "launch is a coroutine builder and launches a new coroutine without blocking the current thread and returns a reference to the coroutine as a Job.",
+      "point": "launch is a coroutine builder and launches a new coroutine without blocking the current thread and returns a reference to the coroutine as a `Job`.",
       "sub_points": [
         "A coroutine must be launched within a scope (based on the principle of structured concurrency)."
       ],
       "snippet_codes": [
-        " val scope = CoroutineScope(coroutineContext)\n \n scope.launch { ... }"
+        " val scope = CoroutineScope(coroutineContext)\n\n scope.launch { ... }"
       ]
     },
     {
@@ -19,7 +19,7 @@
         "Each coroutine can have its own context."
       ],
       "snippet_codes": [
-        " val coroutineContext = thread + job + scopeCoroutineName\n val parentScope = CoroutineScope(coroutineContext)\n val innerCoroutineContext = anotherThread + anotherJob\n parentScope.launch {\n     launch(innerCoroutineContext) { ... }\n }"
+        " val coroutineContext = thread + job + scopeCoroutineName\n val parentScope = CoroutineScope(coroutineContext)\n val childCoroutineContext = anotherThread + anotherJob\n\n parentScope.launch {\n     launch(childCoroutineContext) { ... }\n }"
       ]
     },
     {
@@ -27,7 +27,7 @@
       "point": "By default, the coroutine is immediately scheduled for execution. Other start options can be specified via start parameter.",
       "sub_points": [
         "CoroutineStart.Default: immediately schedules the coroutine for execution according to its context.",
-        "CoroutineStart.Lazy: Starts the coroutine lazily, only when it is needed.(The coroutine is explicitly started using start() or join().",
+        "CoroutineStart.Lazy: Starts the coroutine lazily, only when it is needed.(The coroutine is explicitly started using start() or join()).",
         "CoroutineStart.ATOMIC: Atomically schedules the coroutine for execution according to its context. This is similar to DEFAULT, but the coroutine cannot be cancelled before it starts executing.",
         "CoroutineStart.UNDISPATCHED: Immediately executes the coroutine until its first suspension point in the current thread similarly to the coroutine being started using Dispatchers. Unconfined. However, when the coroutine is resumed from suspension it is dispatched according to the CoroutineDispatcher in its context."
       ],
