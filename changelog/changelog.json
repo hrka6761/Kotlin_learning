@@ -1,5 +1,5 @@
 {
-  "last_version_id": 18,
+  "last_version_id": 19,
   "last_version_code": 13,
   "min_supported_version_code": 13,
   "versions": [
@@ -227,6 +227,17 @@
         "Modify launch_exception_handling.json",
         "Modify async_exception_handling.json",
         "Modify supervision.json"
+      ]
+    },
+    {
+      "version_id": 19,
+      "version_name": "6.6.4",
+      "version_code": 13,
+      "version_type": "UpdateCoroutineTopicPoints",
+      "updated_coroutine_topics": [32],
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Modify launch_exception_handling.json"
       ]
     }
   ]
