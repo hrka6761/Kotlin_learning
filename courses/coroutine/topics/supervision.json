@@ -7,7 +7,7 @@
       "point": "Cancellation is a bidirectional relationship propagating through the whole hierarchy of coroutines.",
       "sub_points": [
         "When a parent coroutine is canceled, all of its child coroutines are automatically canceled.",
-        "By default, when a child coroutine fails with an exception, the parent also gets canceled(Except in specific cases like CancellationException)."
+        "By default, when a child coroutine fails with an exception, the parent also gets canceled (Except in specific cases like CancellationException)."
       ],
       "snippet_codes": null
     },
@@ -26,11 +26,21 @@
       ],
       "snippet_codes": [
         " suspend fun task1() {\n     delay(2_000)\n } \n \n suspend fun task2() {\n     delay(500)\n }\n \n suspend fun task3() {\n     delay(1_000)\n     throw RuntimeException(\"Exception in the task3\")\n }",
-        " val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->\n     // Do something\n }\n val supervisorJob = Job()\n val scope = CoroutineScope(Dispatchers.Main + supervisorJob + exceptionHandler)\n scope.launch {\n     task1()\n }\n scope.launch {\n     task2()\n }\n scope.launch {\n     task3()\n }"
+        " val handler = CoroutineExceptionHandler {\n coroutineContext, throwable ->\n     // Do something\n }\n val job = Job()\n val thread = Dispatchers.Main\n \n val scope = CoroutineScope(thread + job + handler)\n \n scope.launch {\n     task1()\n }\n scope.launch {\n     task2()\n }\n scope.launch {\n     task3()\n }"
       ]
     },
     {
       "id": 4,
+      "point": "Another crucial difference between regular and supervisor jobs is exception handling. Every child should handle its exceptions by itself via the exception handling mechanism.",
+      "sub_points": [
+        "This difference comes from the fact that child's failure does not propagate to the parent."
+      ],
+      "snippet_codes": [
+        " val handler = CoroutineExceptionHandler {\n coroutineContext, throwable ->\n     // Do something\n }\n \n supervisorScope {\n     launch {\n         delay(2000)\n     }\n     launch(handler) {\n         delay(1000)\n         throw RuntimeException(\"Thrown exception!!!\")\n     }\n }"
+      ]
+    },
+    {
+      "id": 5,
       "point": "supervisorScope",
       "sub_points": [
         "It is a suspending function that must be called in a coroutine or another suspend function.",
@@ -39,22 +49,14 @@
       "snippet_codes": null
     },
     {
-      "id": 5,
+      "id": 6,
       "point": "`supervisorScope` is similar to `coroutineScope` in that both create a new scope and suspend until all child coroutines inside them complete.",
       "sub_points": [
         "Use `coroutineScope` when all child coroutines should be canceled if one fails.",
         "Use `supervisorScope` when child coroutines should run independently, even if one fails."
       ],
-      "snippet_codes": null
-    },
-    {
-      "id": 6,
-      "point": "Another crucial difference between regular and supervisor jobs is exception handling. Every child should handle its exceptions by itself via the exception handling mechanism.",
-      "sub_points": [
-        "This difference comes from the fact that child's failure does not propagate to the parent."
-      ],
       "snippet_codes": [
-        " val handler = CoroutineExceptionHandler { coroutineContext, throwable ->\n     // Do something\n }\n \n supervisorScope {\n     launch {\n         delay(2000)\n     }\n     launch(handler) {\n         delay(1000)\n         throw RuntimeException(\"Thrown exception!!!\")\n     }\n }"
+        " runBlocking {\n     supervisorScope {\n         launch {\n             delay(1000)\n             Log.i(TAG, \"Task 1 completed\")\n         }\n         launch {\n             delay(500)\n             throw RuntimeException(\"Task 2 failed\")\n         }\n         launch {\n             delay(1500)\n             Log.i(TAG, \"Task 3 completed\")\n         }\n     }\n     Log.i(TAG, \"Done\")\n }"
       ]
     }
   ]
