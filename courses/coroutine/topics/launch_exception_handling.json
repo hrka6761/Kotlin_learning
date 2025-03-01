@@ -51,7 +51,7 @@
       "point": "When multiple children of a coroutine fail with an exception, the general rule is \"the first exception wins\", so the first exception gets handled. All additional exceptions that happen after the first one are attached to the first exception as suppressed ones.",
       "sub_points": null,
       "snippet_codes": [
-        " val handler = CoroutineExceptionHandler {\n coroutineContext, throwable ->\n     print(\"suppressed exception = ${throwable.suppressed.contentToString()}\")\n }\n val job = Job()\n val coroutineContext = job + handler + Dispatchers.Main\n val scope = CoroutineScope(coroutineContext)\n scope.launch {\n     throw Exception(\"Coroutine 1 throw exception !!!!\")\n }\n scope.launch {\n     throw Exception(\"Coroutine 2 throw exception !!!!\")\n }"
+        " val handler = CoroutineExceptionHandler {\n         coroutineContext, throwable ->\n     Log.i(\n         TAG, \n         \"suppressed exception = ${throwable.suppressed.contentToString()}\"\n }\n val job = Job()\n val coroutineContext = job + handler + Dispatchers.Main\n val scope = CoroutineScope(coroutineContext)\n scope.launch {\n     throw Exception(\"Coroutine 1 throw exception !!!!\")\n }\n scope.launch {\n     throw Exception(\"Coroutine 2 throw exception !!!!\")\n }"
       ]
     }
   ]
