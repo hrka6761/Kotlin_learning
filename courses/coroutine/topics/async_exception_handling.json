@@ -4,9 +4,9 @@
   "points": [
     {
       "id": 1,
-      "point": "async builder always catches all exceptions and represents them in the resulting Deferred object, so its `CoroutineExceptionHandler` has no effect either.",
+      "point": "`async` builder always catches all exceptions and represents them in the resulting Deferred object, so its `CoroutineExceptionHandler` has no effect either.",
       "sub_points": [
-        "In the `async` function, exceptions are exposed to users and they rely on the user to consume the final exception for example via await or receive."
+        "In the `async` function, exceptions are exposed to users and they rely on the user to consume the final exception for example via `await`."
       ],
       "snippet_codes": null
     },
@@ -14,6 +14,8 @@
       "id": 2,
       "point": "To handle exceptions in `async`:",
       "sub_points": [
+        "We can use a try-catch block in code that has the potential to throw an exception.",
+        "We can use a try-catch block where we call `await()`.",
         "We can handle exception by `supervisorScope`.(Follow the supervisorScope topic)"
       ],
       "snippet_codes": [
