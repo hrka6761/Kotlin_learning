@@ -27,7 +27,7 @@
       "point": "For handling exceptions globally in `launch`, use a `CoroutineExceptionHandler`:",
       "sub_points": null,
       "snippet_codes": [
-        " val handler = CoroutineExceptionHandler { coroutineContext, throwable ->\n     // Do something\n }\n viewModelScope.launch(handler) {\n     throw RuntimeException(\"Something went wrong!\")\n }"
+        " val handler = CoroutineExceptionHandler {\n coroutineContext, throwable ->\n     // Do something\n }\n viewModelScope.launch(handler) {\n     throw RuntimeException(\"Something went wrong!\")\n }"
       ]
     },
     {
@@ -35,7 +35,7 @@
       "point": "All children coroutines (coroutines created in the context of another Job) delegate handling of their exceptions to their parent coroutine, which also delegates to the parent, and so on until the root, so the `CoroutineExceptionHandler` installed in their context is never used.",
       "sub_points": null,
       "snippet_codes": [
-        " val handler = CoroutineExceptionHandler { coroutineContext, throwable ->\n     // Do something\n }\n viewModelScope.launch() {\n     launch {\n         delay(5_000)\n     }\n     launch {\n         delay(2_000)\n         throw RuntimeException(\"Something went wrong!\")\n     }\n }"
+        " val handler = CoroutineExceptionHandler {\n coroutineContext, throwable ->\n     // Do something\n }\n viewModelScope.launch() {\n     launch {\n         delay(5_000)\n     }\n     launch {\n         delay(2_000)\n         throw RuntimeException(\"Something went wrong!\")\n     }\n }"
       ]
     },
     {
@@ -43,7 +43,7 @@
       "point": "If the parent coroutine dose not handle the exception but the child handle exception by self, `CoroutineExceptionHandler` is ignored in child coroutines and application is crashed.",
       "sub_points": null,
       "snippet_codes": [
-        " val handler = CoroutineExceptionHandler { coroutineContext, throwable ->\n     // Do something\n }\n viewModelScope.launch {\n     launch {\n         task2()\n     }\n     launch(handler) {\n         task3()\n     }\n }"
+        " val handler = CoroutineExceptionHandler {\n coroutineContext, throwable ->\n     // Do something\n }\n viewModelScope.launch {\n     launch {\n         task2()\n     }\n     launch(handler) {\n         task3()\n     }\n }"
       ]
     },
     {
@@ -51,7 +51,7 @@
       "point": "When multiple children of a coroutine fail with an exception, the general rule is \"the first exception wins\", so the first exception gets handled. All additional exceptions that happen after the first one are attached to the first exception as suppressed ones.",
       "sub_points": null,
       "snippet_codes": [
-        " val handler = CoroutineExceptionHandler { coroutineContext, throwable ->\n     print(\"suppressed exception = ${throwable.suppressed.contentToString()}\")\n }\n val job = Job()\n val coroutineContext = job + handler + Dispatchers.Main\n val scope = CoroutineScope(coroutineContext)\n scope.launch {\n     throw Exception(\"Coroutine 1 throw exception !!!!\")\n }\n scope.launch {\n     throw Exception(\"Coroutine 2 throw exception !!!!\")\n }"
+        " val handler = CoroutineExceptionHandler {\n coroutineContext, throwable ->\n     print(\"suppressed exception = ${throwable.suppressed.contentToString()}\")\n }\n val job = Job()\n val coroutineContext = job + handler + Dispatchers.Main\n val scope = CoroutineScope(coroutineContext)\n scope.launch {\n     throw Exception(\"Coroutine 1 throw exception !!!!\")\n }\n scope.launch {\n     throw Exception(\"Coroutine 2 throw exception !!!!\")\n }"
       ]
     }
   ]
