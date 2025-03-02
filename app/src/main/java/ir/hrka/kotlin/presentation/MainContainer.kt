@@ -2,6 +2,8 @@ package ir.hrka.kotlin.presentation
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -56,12 +58,16 @@ fun AppContent() {
                 SplashScreen(activity, navHostController)
             }
             composable(
-                route = Home()
+                route = Home(),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
                 HomeScreen(activity, navHostController)
             }
             composable(
-                route = Topic()
+                route = Topic(),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
                 val course = navHostController
                     .previousBackStackEntry
@@ -76,7 +82,9 @@ fun AppContent() {
                 TopicsScreen(navHostController, course, updatedId)
             }
             composable(
-                route = Point()
+                route = Point(),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
                 val topic = navHostController
                     .previousBackStackEntry
@@ -86,32 +94,44 @@ fun AppContent() {
                 PointsScreen(navHostController, topic)
             }
             composable(
-                route = About()
+                route = About(),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
                 AboutScreen(activity, navHostController)
             }
             composable(
-                route = SequentialProgramming()
+                route = SequentialProgramming(),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
                 SequentialProgrammingScreen(activity, navHostController)
             }
             composable(
-                route = MultiThreadProgramming()
+                route = MultiThreadProgramming(),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
                 MultiThreadProgrammingScreen(activity, navHostController)
             }
             composable(
-                route = (Coroutines())
+                route = (Coroutines()),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
                 CoroutinesScreen(activity, navHostController)
             }
             composable(
-                route = (RunBlocking())
+                route = (RunBlocking()),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
                 RunBlockingScreen(activity, navHostController)
             }
             composable(
-                route = (CoroutineScopeFunction())
+                route = (CoroutineScopeFunction()),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
                 CoroutineScopeFunctionScreen(activity, navHostController)
             }
