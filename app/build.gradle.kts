@@ -116,4 +116,7 @@ dependencies {
     // Glide
     implementation(libs.glide)
     implementation(libs.glide.compose)
+
+    // Browser
+    implementation(libs.androidx.browser)
 }

@@ -7,6 +7,7 @@ import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -227,8 +228,12 @@ fun HomeAppBar(navHostController: NavHostController) {
                     .height(40.dp)
                     .padding(start = 12.dp)
                     .clickable {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(SOURCE_URL))
-                        activity.startActivity(intent)
+                        val customTabsIntent = CustomTabsIntent.Builder()
+                            .setShowTitle(true)
+                            .setUrlBarHidingEnabled(true)
+                            .build()
+
+                        customTabsIntent.launchUrl(activity, Uri.parse(SOURCE_URL))
                     },
                 painter = painterResource(R.drawable.logo),
                 contentDescription = null,
