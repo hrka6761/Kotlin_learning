@@ -2,6 +2,7 @@ package ir.hrka.kotlin.presentation.ui.screens.splash
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,11 +36,13 @@ import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.stringResource
 import ir.hrka.kotlin.core.Constants.BAZAAR_URL
 import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATE_UNKNOWN_STATE
 import ir.hrka.kotlin.core.Constants.UPDATE_STATE
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
@@ -49,6 +52,7 @@ import ir.hrka.kotlin.core.utilities.Screen.Home
 fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
 
     val snackBarHostState = remember { SnackbarHostState() }
+    val viewModel: SplashViewModel = hiltViewModel()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -66,6 +70,8 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 .padding(innerPaddings)
         ) {
             val (logo, title, authorImg, authorName, progressBar) = createRefs()
+            val executionState by viewModel.executionState.collectAsState()
+            val updateState by viewModel.updateState.collectAsState()
 
             Image(
                 modifier = Modifier
@@ -115,104 +121,81 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                 contentDescription = null,
             )
 
-            Loading(
-                modifier = Modifier
-                    .width(35.dp)
-                    .height(35.dp)
+            CircularProgressIndicator(
+                Modifier
+                    .size(35.dp)
+                    .alpha(if (updateState == UPDATE_UNKNOWN_STATE || updateState == NO_UPDATE_STATE) 1f else 0f)
                     .constrainAs(progressBar) {
                         bottom.linkTo(authorName.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                    }
+                    },
+                strokeWidth = 1.dp
             )
-            UpdateDialog(activity, navHostController)
-            StartApp(activity, navHostController)
+
+            if (updateState == UPDATE_STATE || updateState == FORCE_UPDATE_STATE)
+                AlertDialog(
+                    modifier = Modifier.fillMaxWidth(),
+                    onDismissRequest = {},
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BAZAAR_URL))
+                                activity.startActivity(intent)
+                            }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.new_version_dialog_update_btn),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                if (updateState == FORCE_UPDATE_STATE)
+                                    activity.finish()
+                                else
+                                    navHostController.navigate(Home())
+                            }
+                        ) {
+                            Text(text = stringResource(R.string.new_version_dialog_cancel_btn))
+                        }
+                    },
+                    icon = { Icon(painterResource(R.drawable.update), contentDescription = null) },
+                    title = {
+                        Text(text = stringResource(R.string.new_version_dialog_title_update))
+                    },
+                    text = {
+                        Column {
+                            Text(
+                                text = stringResource(R.string.new_version_dialog_desc_available)
+                            )
+                            if (updateState == FORCE_UPDATE_STATE)
+                                Text(
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    text = stringResource(R.string.new_version_dialog_desc_available_mandatory_update)
+                                )
+                        }
+                    },
+                    shape = RoundedCornerShape(16.dp),
+                    tonalElevation = 16.dp
+                )
+
+            LaunchedEffect(Unit) {
+                viewModel.checkChangelog(activity)
+            }
+
+            LaunchedEffect(updateState) {
+                if (executionState != Stop && updateState == NO_UPDATE_STATE)
+                    navHostController.navigate(Home())
+            }
         }
     }
 }
 
-@Composable
-fun Loading(modifier: Modifier) {
-    val viewModel: SplashViewModel = hiltViewModel()
-    val updateState by viewModel.updateState.collectAsState()
-
-    CircularProgressIndicator(
-        modifier = modifier
-            .alpha(if (updateState == UPDATE_UNKNOWN_STATE || updateState == NO_UPDATE_STATE) 1f else 0f),
-        strokeWidth = 1.dp
-    )
-}
-
-@Composable
-fun UpdateDialog(activity: MainActivity, navHostController: NavHostController) {
-    val viewModel: SplashViewModel = hiltViewModel()
-    val updateState by viewModel.updateState.collectAsState()
-
-    if (updateState == UPDATE_STATE || updateState == FORCE_UPDATE_STATE)
-        AlertDialog(
-            modifier = Modifier.fillMaxWidth(),
-            onDismissRequest = {},
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BAZAAR_URL))
-                        activity.startActivity(intent)
-                    }
-                ) {
-                    Text(
-                        text = stringResource(R.string.new_version_dialog_update_btn),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        if (updateState == FORCE_UPDATE_STATE)
-                            activity.finish()
-                        else
-                            navHostController.navigate(Home())
-                    }
-                ) {
-                    Text(text = stringResource(R.string.new_version_dialog_cancel_btn))
-                }
-            },
-            icon = { Icon(painterResource(R.drawable.update), contentDescription = null) },
-            title = {
-                Text(text = stringResource(R.string.new_version_dialog_title_update))
-            },
-            text = {
-                Column {
-                    Text(
-                        text = stringResource(R.string.new_version_dialog_desc_available)
-                    )
-                    if (updateState == FORCE_UPDATE_STATE)
-                        Text(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            text = stringResource(R.string.new_version_dialog_desc_available_mandatory_update)
-                        )
-                }
-            },
-            shape = RoundedCornerShape(16.dp),
-            tonalElevation = 16.dp
-        )
-}
-
-@Composable
-fun StartApp(activity: MainActivity, navHostController: NavHostController) {
-    val viewModel: SplashViewModel = hiltViewModel()
-    val executionState by viewModel.executionState.collectAsState()
-    val updateState by viewModel.updateState.collectAsState()
-
-    LaunchedEffect(updateState) {
-        viewModel.checkChangelog(activity)
-
-        if (executionState != Stop && updateState == NO_UPDATE_STATE)
-            navHostController.navigate(Home())
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

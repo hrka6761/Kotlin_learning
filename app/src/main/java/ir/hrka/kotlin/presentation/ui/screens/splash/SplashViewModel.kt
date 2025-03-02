@@ -2,6 +2,7 @@ package ir.hrka.kotlin.presentation.ui.screens.splash
 
 import android.content.Context
 import android.content.pm.PackageInfo
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,6 +11,7 @@ import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_CODE
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
+import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.UPDATE_UNKNOWN_STATE
 import ir.hrka.kotlin.core.utilities.ExecutionState
@@ -55,13 +57,14 @@ class SplashViewModel @Inject constructor(
 
 
     fun checkChangelog(activity: MainActivity) {
-        initChangelogResult()
-        initCoursesVersionIdResult()
-        initKotlinVersionIdResult()
-        initCoroutineVersionIdResult(activity)
-
         if (_executionState.value == Start) {
             setExecutionState(Loading)
+
+            initChangelogResult()
+            initCoursesVersionIdResult()
+            initKotlinVersionIdResult()
+            initCoroutineVersionIdResult(activity)
+
             getAppChangelog()
         }
     }
