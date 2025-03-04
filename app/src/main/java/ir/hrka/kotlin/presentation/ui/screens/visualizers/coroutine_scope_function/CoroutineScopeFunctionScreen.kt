@@ -64,10 +64,10 @@ fun CoroutineScopeFunctionScreen(activity: MainActivity, navHostController: NavH
     val snackBarHostState = remember { SnackbarHostState() }
     val executionState by viewModel.executionState.collectAsState()
     val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
+    val scopeState by viewModel.scopeState.observeAsState(initial = Stop())
     val coroutine1State by viewModel.coroutine1State.observeAsState(initial = Stop())
-    val coroutine2State by viewModel.scopeState.observeAsState(initial = Stop())
-    val coroutine3State by viewModel.coroutine2State.observeAsState(initial = Stop())
-    val coroutine4State by viewModel.coroutine3State.observeAsState(initial = Stop())
+    val coroutine2State by viewModel.coroutine2State.observeAsState(initial = Stop())
+    val coroutine3State by viewModel.coroutine3State.observeAsState(initial = Stop())
     val task1State by viewModel.task1State.observeAsState(initial = Stop())
     val task2State by viewModel.task2State.observeAsState(initial = Stop())
     val task3State by viewModel.task3State.observeAsState(initial = Stop())
@@ -136,8 +136,8 @@ fun CoroutineScopeFunctionScreen(activity: MainActivity, navHostController: NavH
                                     .fillMaxWidth()
                                     .padding(bottom = 16.dp),
                                 text = "Running some tasks by coroutineScope function in the main thread.\n" +
-                                        "The coroutineScope function is executed in the coroutine created by CoroutineScope(Dispatchers. Main).launch { ... }." +
-                                        "The coroutineScope function suspend the coroutine that execute in it until until all launched its children complete."
+                                        "The coroutineScope function is executed in the coroutine created by CoroutineScope(Dispatchers. Main).launch { ... }.\n" +
+                                        "The coroutineScope function suspend the coroutine that execute in it until all launched its children complete."
                             )
                             ElevatedCard(
                                 modifier = Modifier
@@ -209,16 +209,16 @@ fun CoroutineScopeFunctionScreen(activity: MainActivity, navHostController: NavH
                     Task(state = task2State)
 
                     Scope(
-                        state = coroutine2State
+                        state = scopeState
                     ) {
                         Coroutine(
-                            state = coroutine3State
+                            state = coroutine2State
                         ) {
                             Task(state = task3State)
                         }
 
                         Coroutine(
-                            state = coroutine4State
+                            state = coroutine3State
                         ) {
                             Task(state = task4State)
                         }
