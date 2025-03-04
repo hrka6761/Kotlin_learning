@@ -29,6 +29,7 @@
     <string name="multi_thread_programming_app_bar_title">Multi Thread Programming</string>
     <string name="coroutines_app_bar_title">Coroutines</string>
     <string name="coroutine_scope_function_app_bar_title">coroutineScope function</string>
+    <string name="regular_coroutine_scope_function_app_bar_title">CoroutineScope function</string>
     <string name="run_blocking_app_bar_title">RunBlocking</string>
     <string name="saving_points_on_the_database_msg">Saving points on the database.</string>
     <string name="failed_to_save_points_on_the_database_msg">Failed to Save points on the database.</string>
