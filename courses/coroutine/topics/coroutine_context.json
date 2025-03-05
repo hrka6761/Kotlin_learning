@@ -21,21 +21,12 @@
         "When a coroutine is launched in the CoroutineScope of another coroutine, it inherits its context via `CoroutineScope.coroutineContext` and the `Job` of the new coroutine becomes a child of the parent coroutine's `job`."
       ],
       "snippet_codes": [
-        " // The inner coroutine is launched independently and inherits\n // the CoroutineContext from the parent (Dispatchers.IO)\n val scope = CoroutineScope(Dispatchers.IO)\n scope.launch {\n     launch {\n     }\n }"
+        " // The coroutine is launched independently and inherits\n // the CoroutineContext from the parent (scopeContext)\n val scopeContext = ...\n val scope = CoroutineScope(scopeContext)\n \n scope.launch { ... }",
+        " // The inner coroutine is launched independently and dose not inherit\n // the CoroutineContext from the parent (scopeContext)\n val scopeContext = ...\n val coroutineContext = ...\n val scope = CoroutineScope(scopeContext)\n \n scope.launch {\n     launch(coroutineContext) { ... }\n }"
       ]
     },
     {
       "id": 3,
-      "point": "Default dispatchers depending on the context in which the coroutine is launched:",
-      "sub_points": [
-        "The default dispatcher for `runBlocking` is confined to the calling thread.",
-        "In `GlobalScope` uses `Dispatchers.Default`.",
-        "`CoroutineScope` without `Dispatcher`: inherits the `dispatcher` from the context in which the scope was created. If no dispatcher is specified in the parent context, it falls back to`Dispatchers.Default`."
-      ],
-      "snippet_codes": null
-    },
-    {
-      "id": 4,
       "point": "We can use the `+` operator for multiple elements for a coroutine context.",
       "sub_points": null,
       "snippet_codes": [
@@ -43,7 +34,7 @@
       ]
     },
     {
-      "id": 5,
+      "id": 4,
       "point": "`Dispatcher` determines the thread or thread pool where the coroutine will be executed.",
       "sub_points": [
         "Dispatchers.Main: (Run coroutine on main thread)",
@@ -55,11 +46,21 @@
       "snippet_codes": null
     },
     {
+      "id": 5,
+      "point": "Default dispatchers depending on the context in which the coroutine is launched:",
+      "sub_points": [
+        "The default dispatcher for `runBlocking` is confined to the calling thread.",
+        "In `GlobalScope` uses `Dispatchers.Default`.",
+        "`CoroutineScope` without `Dispatcher`: inherits the `dispatcher` from the context in which the scope was created. If no dispatcher is specified in the parent context, it falls back to`Dispatchers.Default`."
+      ],
+      "snippet_codes": null
+    },
+    {
       "id": 6,
       "point": "The `Unconfined` dispatcher is appropriate for coroutines which neither consume CPU time nor update any shared data (like UI) confined to a specific thread.",
       "sub_points": null,
       "snippet_codes": [
-        " launch(Dispatchers.Unconfined) {\n     println(\"Started on thread: ${Thread.currentThread().name}\")\n     delay(1000) // Suspension point\n     println(\"Resumed on thread: ${Thread.currentThread().name}\")\n }",
+        " launch(Dispatchers.Unconfined) {\n     Log.i(TAG, \"Started on thread: ${Thread.currentThread().name}\")\n     delay(1000) // Suspension point\n     Log.i(TAG, \"Resumed on thread: ${Thread.currentThread().name}\")\n }",
         " // Started on thread: main\n // Resumed on thread: DefaultDispatcher-worker-1"
       ]
     },
