@@ -44,21 +44,21 @@
     {
       "topic_id": 26,
       "course_name": "coroutine",
-      "topic_title": "coroutineScope function",
-      "topic_file_name": "coroutine_scope_function.json",
-      "has_visualizer": true,
-      "visualizer_version_code": 11,
-      "visualizer_destination": "coroutine_scope_function_destination",
-      "is_active": true
-    },
-    {
-      "topic_id": 27,
-      "course_name": "coroutine",
       "topic_title": "CoroutineScope function",
       "topic_file_name": "regular_coroutine_scope_function.json",
       "has_visualizer": false,
       "visualizer_version_code": 14,
       "visualizer_destination": "regular_coroutine_scope_function_destination",
+      "is_active": true
+    },
+    {
+      "topic_id": 27,
+      "course_name": "coroutine",
+      "topic_title": "coroutineScope function",
+      "topic_file_name": "coroutine_scope_function.json",
+      "has_visualizer": true,
+      "visualizer_version_code": 11,
+      "visualizer_destination": "coroutine_scope_function_destination",
       "is_active": true
     },
     {
