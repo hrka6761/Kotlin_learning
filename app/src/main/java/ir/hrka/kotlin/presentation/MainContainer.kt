@@ -92,7 +92,7 @@ fun AppContent() {
                     ?.savedStateHandle
                     ?.get<ir.hrka.kotlin.domain.entities.db.Topic>(POINTS_SCREEN_TOPIC_ARGUMENT)
 
-                PointsScreen(navHostController, topic)
+                PointsScreen(activity, navHostController, topic)
             }
             composable(
                 route = About(),

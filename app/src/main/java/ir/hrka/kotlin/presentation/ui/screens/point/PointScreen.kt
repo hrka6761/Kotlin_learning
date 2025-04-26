@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.presentation.ui.screens.point
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -49,13 +51,17 @@ import androidx.navigation.NavHostController
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_CODE
 import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.utilities.sharePoint
+import ir.hrka.kotlin.core.utilities.translatePoint
 import ir.hrka.kotlin.domain.entities.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
+import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.presentation.ui.screens.home.Failed
 import ir.hrka.kotlin.presentation.ui.screens.home.Loading
 
 @Composable
 fun PointsScreen(
+    activity: Activity,
     navHostController: NavHostController,
     topic: Topic?
 ) {
@@ -90,7 +96,7 @@ fun PointsScreen(
                 }
 
                 is Resource.Success -> {
-                    PointsList(points.data)
+                    PointsList(activity, points.data)
                 }
 
                 is Resource.Error -> {
@@ -106,7 +112,10 @@ fun PointsScreen(
 }
 
 @Composable
-fun PointsList(points: List<Point>?) {
+fun PointsList(
+    activity: Activity,
+    points: List<Point>?
+) {
     LazyVerticalStaggeredGrid(
         modifier = Modifier
             .fillMaxWidth(),
@@ -115,7 +124,7 @@ fun PointsList(points: List<Point>?) {
     ) {
         points?.let {
             items(it.size) { index ->
-                PointItem(it[index], index)
+                PointItem(activity, it[index], index)
             }
         }
     }
@@ -162,14 +171,18 @@ fun PointsScreenAppBar(topic: Topic?, navHostController: NavHostController) {
 }
 
 @Composable
-fun PointItem(point: Point, index: Int) {
+fun PointItem(
+    activity: Activity,
+    point: Point,
+    index: Int
+) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
     ) {
         ConstraintLayout {
-            val (id, pointHead, subPoints, snippetCodes) = createRefs()
+            val (id, pointHead, subPoints, snippetCodes, shareButton, translateButton) = createRefs()
 
             Box(
                 contentAlignment = Alignment.Center,
@@ -193,12 +206,44 @@ fun PointItem(point: Point, index: Int) {
                 )
             }
 
+            IconButton(
+                modifier = Modifier
+                    .constrainAs(shareButton) {
+                        end.linkTo(parent.end, margin = 8.dp)
+                        top.linkTo(parent.top, margin = 8.dp)
+                    },
+                onClick = {
+                    activity.sharePoint(point)
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Share,
+                    contentDescription = null
+                )
+            }
+
+            IconButton(
+                modifier = Modifier
+                    .constrainAs(translateButton) {
+                        end.linkTo(shareButton.start)
+                        top.linkTo(parent.top, margin = 8.dp)
+                    },
+                onClick = {
+                    activity.translatePoint(point)
+                }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.translate),
+                    contentDescription = null
+                )
+            }
+
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .constrainAs(pointHead) {
-                        top.linkTo(id.bottom, margin = 8.dp)
+                        top.linkTo(shareButton.bottom, margin = 8.dp)
                         start.linkTo(parent.start, margin = 8.dp)
                         end.linkTo(parent.end, margin = 8.dp)
                     },
@@ -291,6 +336,7 @@ fun SnippetCodeItem(snippetCode: String) {
 @Composable
 fun PointsScreenPreview() {
     PointItem(
+        activity = MainActivity(),
         point = Point(
             id = 1,
             headPoint = "This is head Point.",
