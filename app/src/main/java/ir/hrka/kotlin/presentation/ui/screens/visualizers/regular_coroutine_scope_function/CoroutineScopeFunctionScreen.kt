@@ -50,6 +50,7 @@ import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentSt
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.Coroutine
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.Guidance
+import ir.hrka.kotlin.presentation.ui.screens.visualizers.Scope
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.Task
 import ir.hrka.kotlin.presentation.ui.screens.visualizers.Thread
 
@@ -61,15 +62,13 @@ fun CoroutineScopeFunctionScreen(activity: MainActivity, navHostController: NavH
     val snackBarHostState = remember { SnackbarHostState() }
     val executionState by viewModel.executionState.collectAsState()
     val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
+    val scopeState by viewModel.scopeState.observeAsState(initial = Stop())
     val coroutine1State by viewModel.coroutine1State.observeAsState(initial = Stop())
     val coroutine2State by viewModel.coroutine2State.observeAsState(initial = Stop())
     val coroutine3State by viewModel.coroutine3State.observeAsState(initial = Stop())
     val task1State by viewModel.task1State.observeAsState(initial = Stop())
     val task2State by viewModel.task2State.observeAsState(initial = Stop())
     val task3State by viewModel.task3State.observeAsState(initial = Stop())
-    val task4State by viewModel.task4State.observeAsState(initial = Stop())
-    val task5State by viewModel.task5State.observeAsState(initial = Stop())
-    val task6State by viewModel.task6State.observeAsState(initial = Stop())
     val snippetCodeState = remember { mutableStateOf(false) }
 
 
@@ -130,9 +129,7 @@ fun CoroutineScopeFunctionScreen(activity: MainActivity, navHostController: NavH
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(bottom = 16.dp),
-                                text = "Running some tasks by coroutines in the specific scope in the main thread.\n" +
-                                        "In this scope, we launched three coroutines.\n" +
-                                        "The coroutineScope function suspend the coroutine that execute in it until until all launched its children complete."
+                                text = "Running three tasks by coroutines in the specific scope in the same context.\n"
                             )
                             ElevatedCard(
                                 modifier = Modifier
@@ -144,41 +141,33 @@ fun CoroutineScopeFunctionScreen(activity: MainActivity, navHostController: NavH
                                         .background(MaterialTheme.colorScheme.primaryContainer)
                                         .fillMaxWidth()
                                         .padding(16.dp),
-                                    text = " fun main() {\n" +
-                                            "     task1()\n\n" +
-                                            "     CoroutineScope(Dispatchers.Main)\n" +
-                                            "         .launch {\n" +
-                                            "             task2()\n" +
-                                            "             \n" +
-                                            "             launch {\n" +
-                                            "                 task3()\n" +
-                                            "             }\n" +
-                                            "             \n" +
-                                            "             launch {\n" +
-                                            "                 task4()\n" +
-                                            "             }\n\n" +
-                                            "             task5()\n" +
-                                            "         }\n" +
-                                            "     \n" +
-                                            "     task6()\n" +
-                                            " }\n\n\n" +
-                                            "private fun task1() {\n" +
-                                            "    Thread.sleep(1_000)\n" +
-                                            "}\n\n" +
-                                            "private suspend fun task2() {\n" +
+                                    text = "fun main() {\n" +
+                                            "    val scope = CoroutineScope(...)\n" +
+                                            "    \n" +
+                                            "    scope.launch {\n" +
+                                            "        task1()\n" +
+                                            "    }\n" +
+                                            "    \n" +
+                                            "    scope.launch {\n" +
+                                            "        task2()\n" +
+                                            "    }\n" +
+                                            "\n" +
+                                            "    scope.launch {\n" +
+                                            "        task3()\n" +
+                                            "    }\n" +
+                                            "}\n" +
+                                            "\n" +
+                                            "\n" +
+                                            "private suspend fun task1() {\n" +
                                             "    delay(4_000)\n" +
-                                            "}\n\n" +
-                                            "private suspend fun task3() {\n" +
+                                            "}\n" +
+                                            "\n" +
+                                            "private suspend fun task2() {\n" +
                                             "    delay(2_000)\n" +
-                                            "}\n\n" +
-                                            "private suspend fun task4() {\n" +
+                                            "}\n" +
+                                            "\n" +
+                                            "private suspend fun task3() {\n" +
                                             "    delay(3_000)\n" +
-                                            "}\n\n" +
-                                            "private suspend fun task5() {\n" +
-                                            "    delay(1_000)\n" +
-                                            "}\n\n" +
-                                            "private fun task6() {\n" +
-                                            "    Thread.sleep(2_500)\n" +
                                             "}"
                                 )
                             }
@@ -193,29 +182,27 @@ fun CoroutineScopeFunctionScreen(activity: MainActivity, navHostController: NavH
                     .verticalScroll(rememberScrollState()),
                 state = mainThreadState
             ) {
-                Task(state = task1State)
-
-                Coroutine(
-                    state = coroutine1State
+                Scope(
+                    state = scopeState
                 ) {
-                    Task(state = task2State)
+                    Coroutine(
+                        state = coroutine1State
+                    ) {
+                        Task(state = task1State)
+                    }
 
                     Coroutine(
                         state = coroutine2State
                     ) {
-                        Task(state = task3State)
+                        Task(state = task2State)
                     }
 
                     Coroutine(
                         state = coroutine3State
                     ) {
-                        Task(state = task4State)
+                        Task(state = task3State)
                     }
-
-                    Task(state = task5State)
                 }
-
-                Task(state = task6State)
             }
         }
     }

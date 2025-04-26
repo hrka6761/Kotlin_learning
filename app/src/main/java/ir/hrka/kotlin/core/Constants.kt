@@ -13,6 +13,7 @@ object Constants {
     const val COROUTINES_SCREEN = "coroutines_destination"
     const val RUN_BLOCKING_SCREEN = "run_blocking_destination"
     const val COROUTINE_SCOPE_FUNCTION_SCREEN = "coroutine_scope_function_destination"
+    const val REGULAR_COROUTINE_SCOPE_FUNCTION_SCREEN = "regular_coroutine_scope_function_destination"
     const val ABOUT_SCREEN = "about"
 
     const val DEFAULT_VERSION_ID = -1

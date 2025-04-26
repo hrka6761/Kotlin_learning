@@ -26,6 +26,7 @@ import ir.hrka.kotlin.core.utilities.Screen.MultiThreadProgramming
 import ir.hrka.kotlin.core.utilities.Screen.Coroutines
 import ir.hrka.kotlin.core.utilities.Screen.RunBlocking
 import ir.hrka.kotlin.core.utilities.Screen.CoroutineScopeFunction
+import ir.hrka.kotlin.core.utilities.Screen.RegularCoroutineScopeFunction
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.presentation.ui.screens.about.AboutScreen
 import ir.hrka.kotlin.presentation.ui.screens.point.PointsScreen
@@ -127,6 +128,16 @@ fun AppContent() {
                 exitTransition = { ExitTransition.None }
             ) {
                 RunBlockingScreen(activity, navHostController)
+            }
+            composable(
+                route = (RegularCoroutineScopeFunction()),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
+            ) {
+                ir.hrka.kotlin.presentation.ui.screens.visualizers.regular_coroutine_scope_function.CoroutineScopeFunctionScreen(
+                    activity,
+                    navHostController
+                )
             }
             composable(
                 route = (CoroutineScopeFunction()),

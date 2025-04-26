@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -230,9 +231,7 @@ fun Scope(
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 shape = RoundedCornerShape(4)
             ),
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.Transparent),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
@@ -399,7 +398,7 @@ fun Guidance(
                         shape = RoundedCornerShape(20)
                     ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-            ){}
+            ) {}
 
             Text(
                 modifier = Modifier.padding(start = 2.dp, end = 10.dp),

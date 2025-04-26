@@ -8,6 +8,7 @@ import ir.hrka.kotlin.core.Constants.ABOUT_SCREEN
 import ir.hrka.kotlin.core.Constants.COROUTINES_SCREEN
 import ir.hrka.kotlin.core.Constants.COROUTINE_SCOPE_FUNCTION_SCREEN
 import ir.hrka.kotlin.core.Constants.MULTI_THREAD_PROGRAMMING_SCREEN
+import ir.hrka.kotlin.core.Constants.REGULAR_COROUTINE_SCOPE_FUNCTION_SCREEN
 import ir.hrka.kotlin.core.Constants.RUN_BLOCKING_SCREEN
 import ir.hrka.kotlin.core.Constants.SEQUENTIAL_PROGRAMMING_SCREEN
 
@@ -23,7 +24,8 @@ enum class Screen(private val destination: String) {
     MultiThreadProgramming(MULTI_THREAD_PROGRAMMING_SCREEN),
     Coroutines(COROUTINES_SCREEN),
     RunBlocking(RUN_BLOCKING_SCREEN),
-    CoroutineScopeFunction(COROUTINE_SCOPE_FUNCTION_SCREEN);
+    CoroutineScopeFunction(COROUTINE_SCOPE_FUNCTION_SCREEN),
+    RegularCoroutineScopeFunction(REGULAR_COROUTINE_SCOPE_FUNCTION_SCREEN);
 
 
     operator fun invoke() = destination
