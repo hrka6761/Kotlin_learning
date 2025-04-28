@@ -1,6 +1,6 @@
 {
-  "last_version_id": 19,
-  "last_version_code": 13,
+  "last_version_id": 21,
+  "last_version_code": 14,
   "min_supported_version_code": 13,
   "versions": [
     {
@@ -238,6 +238,33 @@
       "updated_kotlin_topics": null,
       "change_log": [
         "Modify launch_exception_handling.json"
+      ]
+    },
+    {
+      "version_id": 20,
+      "version_name": "6.7.0",
+      "version_code": 14,
+      "version_type": "NewFeature",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Resolve bug to check changelog",
+        "Remove screens transition animations",
+        "Add inner browser",
+        "add visualizer for CoroutineScopeFunction",
+        "Add share and translate button to the points"
+      ]
+    },
+    {
+      "version_id": 21,
+      "version_name": "6.7.1",
+      "version_code": 14,
+      "version_type": "UpdateCoroutineTopics",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Change coroutine topics order",
+        "Modify coroutine context topic"
       ]
     }
   ]

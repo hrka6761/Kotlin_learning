@@ -56,7 +56,7 @@
       "course_name": "coroutine",
       "topic_title": "CoroutineScope function",
       "topic_file_name": "regular_coroutine_scope_function.json",
-      "has_visualizer": false,
+      "has_visualizer": true,
       "visualizer_version_code": 14,
       "visualizer_destination": "regular_coroutine_scope_function_destination",
       "is_active": true
