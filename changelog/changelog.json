@@ -1,6 +1,6 @@
 {
-  "last_version_id": 21,
-  "last_version_code": 14,
+  "last_version_id": 22,
+  "last_version_code": 15,
   "min_supported_version_code": 13,
   "versions": [
     {
@@ -265,6 +265,17 @@
       "change_log": [
         "Change coroutine topics order",
         "Modify coroutine context topic"
+      ]
+    },
+    {
+      "version_id": 22,
+      "version_name": "6.7.1",
+      "version_code": 15,
+      "version_type": "BugFix",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Resolve bug to translate sub points"
       ]
     }
   ]
