@@ -46,6 +46,6 @@ private fun providePointTextForTranslate(point: Point) =
     buildString {
         append(point.headPoint)
         append("\n\n")
-        point.snippetsCodes?.forEach { snippetCode -> append("$snippetCode\n") }
+        point.subPoints?.forEach { snippetCode -> append("$snippetCode\n") }
     }
 
