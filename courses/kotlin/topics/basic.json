@@ -125,6 +125,41 @@
     },
     {
       "id": 14,
+      "point": "By default, Kotlin does not allow variables to hold null unless explicitly declared. If you try to assign null to a non-nullable variable, you’ll get a compilation error.",
+      "sub_points": [
+        "If you want a variable to be able to hold null, you need to declare it as nullable by adding a '?' to the type."
+      ],
+      "snippet_codes": [
+        " var name: String = \"John\"\n\n // Error: Null can not be a value of a non-null type String\n name = null",
+        " var name: String? = \"John\"\n\n // This is allowed\n name = null"
+      ]
+    },
+    {
+      "id": 15,
+      "point": "The safe call operator '?.' allows you to safely access properties or methods of a nullable object. If the object is null, the call is skipped, and the result is null.",
+      "sub_points": null,
+      "snippet_codes": [
+        " // If name is null, length will be null\n val length: Int? = name?.length"
+      ]
+    },
+    {
+      "id": 16,
+      "point": "If you are sure that a variable is not null, you can use the '!!' operator to forcefully unwrap the nullable type. If the value is null, this will throw a NullPointerException.",
+      "sub_points": null,
+      "snippet_codes": [
+        " // Throws NullPointerException if name is null\n val length: Int = name!!.length"
+      ]
+    },
+    {
+      "id": 17,
+      "point": "The Elvis operator '?:' allows you to specify a default value if an expression is null.",
+      "sub_points": null,
+      "snippet_codes": [
+        " // If name is null, length will be 0\n val length: Int = name?.length ?: 0"
+      ]
+    },
+    {
+      "id": 18,
       "point": "In Kotlin, everything is an object, even primitive types.",
       "sub_points": [
         "The primitive types include the following:"
@@ -134,7 +169,7 @@
       ]
     },
     {
-      "id": 15,
+      "id": 19,
       "point": "Numbers, characters, and boolean values are stored as primitive types at compile time except:",
       "sub_points": [
         "When you create a primitive types as nullable reference such as Int?.",
@@ -146,7 +181,7 @@
       ]
     },
     {
-      "id": 16,
+      "id": 20,
       "point": "JVM applies the memory optimization to Integers between -128 and 127.",
       "sub_points": null,
       "snippet_codes": [
@@ -154,7 +189,7 @@
       ]
     },
     {
-      "id": 17,
+      "id": 21,
       "point": "Unsigned types (UInt, ULong, UShort, and UByte) are represented as their corresponding signed types (Int, Long, Short, and Byte) at runtime.",
       "sub_points": [
         "Although unsigned types (UInt, ULong, UShort, and UByte) are represented as their corresponding signed types (Int, Long, Short, and Byte) at runtime, their behavior ensures that operations (e.g., addition, subtraction) and properties (e.g., UInt.MAX_VALUE) adhere to unsigned semantics."
@@ -162,13 +197,13 @@
       "snippet_codes": null
     },
     {
-      "id": 18,
+      "id": 22,
       "point": "All integer and decimal types are number and extend it and comparable class.",
       "sub_points": null,
       "snippet_codes": null
     },
     {
-      "id": 19,
+      "id": 23,
       "point": "To perform a runtime check use `is` and `!is` operators.",
       "sub_points": null,
       "snippet_codes": [
@@ -176,7 +211,7 @@
       ]
     },
     {
-      "id": 20,
+      "id": 24,
       "point": "Smart casts occurred after using `is` and `!is` operators in a control flow like `if` and `when`.",
       "sub_points": null,
       "snippet_codes": [
@@ -185,7 +220,7 @@
       ]
     },
     {
-      "id": 21,
+      "id": 25,
       "point": "To cast, use `as` keyword.",
       "sub_points": null,
       "snippet_codes": [
@@ -193,7 +228,7 @@
       ]
     },
     {
-      "id": 22,
+      "id": 26,
       "point": "To safe casting on nullable use `as?`.",
       "sub_points": null,
       "snippet_codes": [
@@ -201,7 +236,7 @@
       ]
     },
     {
-      "id": 23,
+      "id": 27,
       "point": "`return`",
       "sub_points": [
         "By default returns from the nearest enclosing function or anonymous function."
@@ -213,7 +248,7 @@
       ]
     },
     {
-      "id": 24,
+      "id": 28,
       "point": "`break",
       "sub_points": [
         "Terminates the nearest enclosing loop."
@@ -225,7 +260,7 @@
       ]
     },
     {
-      "id": 25,
+      "id": 29,
       "point": "`continue`",
       "sub_points": [
         "Proceeds to the next step of the nearest enclosing loop."
@@ -237,7 +272,7 @@
       ]
     },
     {
-      "id": 26,
+      "id": 30,
       "point": "To handling exceptions, we can use try-catch-finally blocks.",
       "sub_points": null,
       "snippet_codes": [
@@ -247,7 +282,7 @@
       ]
     },
     {
-      "id": 27,
+      "id": 31,
       "point": "There is not any checked exception in kotlin (All exceptions are unchecked).",
       "sub_points": [
         "Checked exception like IoException and unchecked exception like NullPointerException."
@@ -255,7 +290,7 @@
       "snippet_codes": null
     },
     {
-      "id": 28,
+      "id": 32,
       "point": "To explicit throw exception by function use `@Throws` annotation.",
       "sub_points": null,
       "snippet_codes": [
@@ -264,7 +299,7 @@
       ]
     },
     {
-      "id": 29,
+      "id": 33,
       "point": "Kotlin has the following collections for grouping items.",
       "sub_points": [
         "Array: Ordered collections of items that immutable and you can only change the value of indices but you can not add new index.",
