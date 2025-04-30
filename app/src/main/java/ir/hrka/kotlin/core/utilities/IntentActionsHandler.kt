@@ -40,6 +40,7 @@ private fun providePointTextForSharing(point: Point) =
         point.subPoints?.forEach { subPoint -> append("* $subPoint\n") }
         append("\n")
         point.snippetsCodes?.forEach { snippetCode -> append("> $snippetCode\n") }
+        append("\n\n\n https://cafebazaar.ir/app/ir.hrka.kotlin")
     }
 
 private fun providePointTextForTranslate(point: Point) =
