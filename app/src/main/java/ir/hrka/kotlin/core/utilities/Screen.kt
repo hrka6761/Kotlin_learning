@@ -13,7 +13,7 @@ import ir.hrka.kotlin.core.Constants.RUN_BLOCKING_SCREEN
 import ir.hrka.kotlin.core.Constants.SEQUENTIAL_PROGRAMMING_SCREEN
 
 
-enum class Screen(private val destination: String) {
+enum class Screen(val destination: String) {
 
     Splash(SPLASH_SCREEN),
     Home(HOME_SCREEN),
@@ -26,9 +26,6 @@ enum class Screen(private val destination: String) {
     RunBlocking(RUN_BLOCKING_SCREEN),
     CoroutineScopeFunction(COROUTINE_SCOPE_FUNCTION_SCREEN),
     RegularCoroutineScopeFunction(REGULAR_COROUTINE_SCOPE_FUNCTION_SCREEN);
-
-
-    operator fun invoke() = destination
 
 
     fun appendArg(vararg arg: Any): String {
