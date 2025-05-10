@@ -1,18 +1,9 @@
 package ir.hrka.kotlin.presentation.ui.screens.home
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
-import android.net.Uri
-import android.util.Log
-import androidx.activity.compose.BackHandler
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,10 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -40,13 +28,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -58,47 +43,66 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.request.RequestOptions
 import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.Constants.SOURCE_URL
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_COURSE_ARGUMENT
-import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.Topic
 import ir.hrka.kotlin.core.utilities.Screen.About
 import ir.hrka.kotlin.domain.entities.db.Course
+import ir.hrka.kotlin.presentation.ui.Failed
+import ir.hrka.kotlin.presentation.ui.Loading
+import ir.hrka.kotlin.presentation.ui.TopBar
 
 @SuppressLint("SwitchIntDef")
 @Composable
-fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
-
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    activity: MainActivity,
+    navHostController: NavHostController,
+    snackBarHostState: SnackbarHostState,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     val configuration = LocalConfiguration.current
-    val snackBarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = { HomeAppBar(navHostController) },
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            TopBar(
+                modifier = modifier,
+                title = stringResource(R.string.home_app_bar_title),
+                actions = {
+                    IconButton(
+                        onClick = { navHostController.navigate(About.destination) }
+                    ) {
+                        Icon(
+                            modifier = modifier
+                                .width(25.dp)
+                                .height(25.dp),
+                            painter = painterResource(R.drawable.github),
+                            contentDescription = null
+                        )
+                    }
+                }
+            )
+        },
         snackbarHost = {
             SnackbarHost(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 hostState = snackBarHostState
             )
         }
     ) { innerPaddings ->
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPaddings),
             contentAlignment = Alignment.TopCenter
         ) {
 
-            val viewModel: HomeViewModel = hiltViewModel()
             val failedState by viewModel.failedState.collectAsState()
             val courses by viewModel.courses.collectAsState()
             val executionState by viewModel.executionState.collectAsState()
@@ -126,58 +130,13 @@ fun HomeScreen(activity: MainActivity, navHostController: NavHostController) {
             }
         }
     }
-
-    BackHandler {
-        activity.finish()
-    }
 }
 
 @Composable
-fun Loading(executionState: ExecutionState) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .width(50.dp)
-                .height(50.dp)
-                .alpha(if (executionState == ExecutionState.Loading) 1f else 0f)
-                .align(Alignment.Center),
-            strokeWidth = 2.dp
-        )
-    }
-}
-
-@Composable
-fun Failed(failedState: Boolean) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .alpha(if (failedState) 1f else 0f),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            modifier = Modifier
-                .width(60.dp)
-                .height(60.dp),
-            painter = painterResource(R.drawable.error),
-            contentDescription = null
-        )
-
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            text = stringResource(R.string.failed_to_fetch_the_data),
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-fun CoursesColumnList(navHostController: NavHostController, courses: List<Course>?) {
+fun CoursesColumnList(
+    navHostController: NavHostController,
+    courses: List<Course>?
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -196,7 +155,10 @@ fun CoursesColumnList(navHostController: NavHostController, courses: List<Course
 }
 
 @Composable
-fun CoursesRowList(navHostController: NavHostController, courses: List<Course>?) {
+fun CoursesRowList(
+    navHostController: NavHostController,
+    courses: List<Course>?
+) {
     LazyRow(
         modifier = Modifier
             .fillMaxHeight()
@@ -214,47 +176,6 @@ fun CoursesRowList(navHostController: NavHostController, courses: List<Course>?)
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomeAppBar(navHostController: NavHostController) {
-    val activity = (LocalContext.current as MainActivity)
-
-    CenterAlignedTopAppBar(
-        title = { Text(stringResource(R.string.home_app_bar_title)) },
-        navigationIcon = {
-            Image(
-                modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp)
-                    .padding(start = 12.dp)
-                    .clickable {
-                        val customTabsIntent = CustomTabsIntent.Builder()
-                            .setShowTitle(true)
-                            .setUrlBarHidingEnabled(true)
-                            .build()
-
-                        customTabsIntent.launchUrl(activity, Uri.parse(SOURCE_URL))
-                    },
-                painter = painterResource(R.drawable.logo),
-                contentDescription = null,
-            )
-        },
-        actions = {
-            IconButton(
-                onClick = { navHostController.navigate(About()) }
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .width(25.dp)
-                        .height(25.dp),
-                    painter = painterResource(R.drawable.github),
-                    contentDescription = null
-                )
-            }
-        }
-    )
-}
-
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun CourseItem(
@@ -264,16 +185,16 @@ fun CourseItem(
 ) {
     ElevatedCard(
         modifier =
-        if (orientation == ORIENTATION_PORTRAIT)
-            Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-        else
-            Modifier
-                .fillMaxHeight()
-                .width(400.dp)
-                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+            if (orientation == ORIENTATION_PORTRAIT)
+                Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+            else
+                Modifier
+                    .fillMaxHeight()
+                    .width(400.dp)
+                    .padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         ConstraintLayout(
@@ -342,7 +263,7 @@ fun CourseItem(
                             ?.savedStateHandle
                             ?.set(TOPICS_SCREEN_COURSE_ARGUMENT, course)
 
-                        navHostController.navigate(Topic())
+                        navHostController.navigate(Topic.destination)
                     }
                 }
             ) {
@@ -363,5 +284,5 @@ fun CourseItem(
 )
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(MainActivity(), rememberNavController())
+//    HomeScreen(MainActivity(), rememberNavController())
 }

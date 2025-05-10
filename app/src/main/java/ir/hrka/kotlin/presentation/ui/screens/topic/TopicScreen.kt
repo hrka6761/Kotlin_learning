@@ -1,6 +1,5 @@
 package ir.hrka.kotlin.presentation.ui.screens.topic
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,13 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -33,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -47,45 +40,49 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_CODE
 import ir.hrka.kotlin.core.Constants.POINTS_SCREEN_TOPIC_ARGUMENT
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.utilities.Resource
 import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
-import ir.hrka.kotlin.presentation.ui.screens.home.Failed
-import ir.hrka.kotlin.presentation.ui.screens.home.Loading
+import ir.hrka.kotlin.presentation.ui.Failed
+import ir.hrka.kotlin.presentation.ui.Loading
+import ir.hrka.kotlin.presentation.ui.TopBar
 
 @Composable
 fun TopicsScreen(
+    modifier: Modifier = Modifier,
     navHostController: NavHostController,
+    snackBarHostState: SnackbarHostState,
+    viewModel: TopicViewModel = hiltViewModel(),
     course: Course?,
-    updatedId: Int?
+    updatedTopicId: Int?
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
-
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = { TopicsAppBar(navHostController, course) },
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            TopBar(
+                modifier = modifier,
+                title = course?.courseTitle ?: "",
+                navigationClick = { navHostController.popBackStack() }
+            )
+        },
         snackbarHost = {
             SnackbarHost(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 hostState = snackBarHostState
             )
         }
     ) { innerPaddings ->
 
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPaddings),
             contentAlignment = Alignment.TopCenter
         ) {
-            val viewModel: TopicViewModel = hiltViewModel()
             val topics by viewModel.topics.collectAsState()
             val executionState by viewModel.executionState.collectAsState()
             val failedState by viewModel.failedState.collectAsState()
@@ -97,8 +94,13 @@ fun TopicsScreen(
                 }
 
                 is Resource.Success -> {
-                    updatedId?.let { viewModel.updateTopicStateInList(it) }
-                    TopicsList(viewModel, navHostController, topics.data)
+                    updatedTopicId?.let { viewModel.updateTopicStateInList(it) }
+                    TopicsList(
+                        modifier = modifier,
+                        viewModel = viewModel,
+                        navHostController = navHostController,
+                        topics = topics.data
+                    )
                 }
 
                 is Resource.Error -> {
@@ -115,55 +117,45 @@ fun TopicsScreen(
 
 @Composable
 fun TopicsList(
+    modifier: Modifier,
     viewModel: TopicViewModel,
     navHostController: NavHostController,
     topics: List<Topic>?
 ) {
     LazyVerticalStaggeredGrid(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         columns = StaggeredGridCells.Fixed(1),
         contentPadding = PaddingValues(8.dp)
     ) {
         topics?.let {
             items(it.size) { index ->
-                TopicItem(it[index], index, navHostController, viewModel.getAppVersionCode())
+                TopicItem(
+                    modifier = modifier,
+                    topic = it[index],
+                    index = index,
+                    navHostController = navHostController,
+                    appVersionCode = viewModel.getAppVersionCode()
+                )
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopicsAppBar(
-    navHostController: NavHostController,
-    course: Course?
-) {
-    CenterAlignedTopAppBar(
-        title = { Text(course?.courseTitle ?: "") },
-        navigationIcon = {
-            IconButton(
-                onClick = { navHostController.popBackStack() }
-            ) {
-                Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
-            }
-        }
-    )
-}
-
 @Composable
 fun TopicItem(
+    modifier: Modifier,
     topic: Topic,
     index: Int,
     navHostController: NavHostController,
     appVersionCode: Int?
 ) {
     ElevatedCard(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(4.dp)
     ) {
         ConstraintLayout(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .alpha(if (topic.isActive) 1f else 0.3f)
@@ -174,7 +166,7 @@ fun TopicItem(
                             ?.savedStateHandle
                             ?.set(POINTS_SCREEN_TOPIC_ARGUMENT, topic)
 
-                        navHostController.navigate(Point())
+                        navHostController.navigate(Point.destination)
                     }
                 }
                 .padding(8.dp)
@@ -183,7 +175,7 @@ fun TopicItem(
 
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier
+                modifier = modifier
                     .width(25.dp)
                     .height(25.dp)
                     .background(
@@ -204,11 +196,12 @@ fun TopicItem(
             }
 
             Column(
-                modifier = Modifier.constrainAs(data) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(id.end, margin = 16.dp)
-                },
+                modifier = modifier
+                    .constrainAs(data) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(id.end, margin = 16.dp)
+                    },
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
@@ -244,7 +237,7 @@ fun TopicItem(
 
             if (topic.hasUpdate)
                 Icon(
-                    modifier = Modifier
+                    modifier = modifier
                         .width(15.dp)
                         .height(15.dp)
                         .constrainAs(updateLabel) {
@@ -262,20 +255,20 @@ fun TopicItem(
 @Preview(showBackground = true)
 @Composable
 fun TopicsScreenPreview() {
-    TopicItem(
-        Topic(
-            id = 1,
-            hasUpdate = true,
-            courseName = "kotlin",
-            topicTitle = "Common classes and functions",
-            fileName = "",
-            hasVisualizer = true,
-            visualizerDestination = "",
-            visualizerVersionCode = 0,
-            isActive = true
-        ),
-        14,
-        rememberNavController(),
-        11
-    )
+//    TopicItem(
+//        Topic(
+//            id = 1,
+//            hasUpdate = true,
+//            courseName = "kotlin",
+//            topicTitle = "Common classes and functions",
+//            fileName = "",
+//            hasVisualizer = true,
+//            visualizerDestination = "",
+//            visualizerVersionCode = 0,
+//            isActive = true
+//        ),
+//        14,
+//        rememberNavController(),
+//        11
+//    )
 }

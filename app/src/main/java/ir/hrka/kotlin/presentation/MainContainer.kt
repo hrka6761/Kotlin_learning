@@ -1,11 +1,12 @@
 package ir.hrka.kotlin.presentation
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,7 +14,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ir.hrka.kotlin.core.Constants.POINTS_SCREEN_TOPIC_ARGUMENT
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_COURSE_ARGUMENT
 import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT
 import ir.hrka.kotlin.core.utilities.Screen.Splash
@@ -43,30 +43,41 @@ import ir.hrka.kotlin.presentation.ui.theme.KotlinTheme
 @Suppress("DEPRECATION")
 @SuppressLint("NewApi")
 @Composable
-fun AppContent() {
+fun AppContent(modifier: Modifier = Modifier) {
     val navHostController = rememberNavController()
     val activity = (LocalContext.current as MainActivity)
+    val snackBarHostState = remember { SnackbarHostState() }
 
     KotlinTheme {
         NavHost(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             navController = navHostController,
-            startDestination = Splash()
+            startDestination = Splash.destination
         ) {
             composable(
-                route = Splash()
+                route = Splash.destination
             ) {
-                SplashScreen(activity, navHostController)
+                SplashScreen(
+                    modifier = modifier,
+                    activity = activity,
+                    navHostController = navHostController,
+                    snackBarHostState = snackBarHostState
+                )
             }
             composable(
-                route = Home(),
+                route = Home.destination,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                HomeScreen(activity, navHostController)
+                HomeScreen(
+                    modifier = modifier,
+                    activity = activity,
+                    navHostController = navHostController,
+                    snackBarHostState = snackBarHostState
+                )
             }
             composable(
-                route = Topic(),
+                route = Topic.destination,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
@@ -75,15 +86,21 @@ fun AppContent() {
                     ?.savedStateHandle
                     ?.get<Course>(TOPICS_SCREEN_COURSE_ARGUMENT)
 
-                val updatedId = navHostController
+                val updatedTopicId = navHostController
                     .currentBackStackEntry
                     ?.savedStateHandle
                     ?.get<Int>(TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT)
 
-                TopicsScreen(navHostController, course, updatedId)
+                TopicsScreen(
+                    modifier = modifier,
+                    navHostController = navHostController,
+                    snackBarHostState = snackBarHostState,
+                    course = course,
+                    updatedTopicId = updatedTopicId
+                )
             }
             composable(
-                route = Point(),
+                route = Point.destination,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
@@ -92,45 +109,51 @@ fun AppContent() {
                     ?.savedStateHandle
                     ?.get<ir.hrka.kotlin.domain.entities.db.Topic>(POINTS_SCREEN_TOPIC_ARGUMENT)
 
-                PointsScreen(activity, navHostController, topic)
+                PointsScreen(
+                    modifier = modifier,
+                    activity = activity,
+                    navHostController = navHostController,
+                    snackBarHostState = snackBarHostState,
+                    topic = topic
+                )
             }
             composable(
-                route = About(),
+                route = About.destination,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
                 AboutScreen(activity, navHostController)
             }
             composable(
-                route = SequentialProgramming(),
+                route = SequentialProgramming.destination,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
                 SequentialProgrammingScreen(activity, navHostController)
             }
             composable(
-                route = MultiThreadProgramming(),
+                route = MultiThreadProgramming.destination,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
                 MultiThreadProgrammingScreen(activity, navHostController)
             }
             composable(
-                route = (Coroutines()),
+                route = (Coroutines.destination),
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
                 CoroutinesScreen(activity, navHostController)
             }
             composable(
-                route = (RunBlocking()),
+                route = (RunBlocking.destination),
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
                 RunBlockingScreen(activity, navHostController)
             }
             composable(
-                route = (RegularCoroutineScopeFunction()),
+                route = (RegularCoroutineScopeFunction.destination),
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
@@ -140,7 +163,7 @@ fun AppContent() {
                 )
             }
             composable(
-                route = (CoroutineScopeFunction()),
+                route = (CoroutineScopeFunction.destination),
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {

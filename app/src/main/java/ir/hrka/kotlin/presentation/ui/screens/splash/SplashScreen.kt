@@ -1,8 +1,6 @@
 package ir.hrka.kotlin.presentation.ui.screens.splash
 
 import android.content.Intent
-import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
@@ -42,30 +39,38 @@ import androidx.compose.ui.res.stringResource
 import ir.hrka.kotlin.core.Constants.BAZAAR_URL
 import ir.hrka.kotlin.core.Constants.FORCE_UPDATE_STATE
 import ir.hrka.kotlin.core.Constants.NO_UPDATE_STATE
-import ir.hrka.kotlin.core.Constants.TAG
 import ir.hrka.kotlin.core.Constants.UPDATE_UNKNOWN_STATE
 import ir.hrka.kotlin.core.Constants.UPDATE_STATE
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Screen.Home
+import androidx.core.net.toUri
+import ir.hrka.kotlin.core.utilities.Screen.Splash
+import ir.hrka.kotlin.data.datasource.preference.PreferenceDataSource
+import ir.hrka.kotlin.data.repositories.preference.ReadPreferencesRepoImpl
+import ir.hrka.kotlin.di.GlobalModule
+import ir.hrka.kotlin.domain.usecases.preference.GetKotlinVersionIdUseCase
+import ir.hrka.kotlin.presentation.GlobalData
+import kotlinx.coroutines.Dispatchers
 
 @Composable
-fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
-
-    val snackBarHostState = remember { SnackbarHostState() }
-    val viewModel: SplashViewModel = hiltViewModel()
-
+fun SplashScreen(
+    modifier: Modifier = Modifier,
+    activity: MainActivity,
+    navHostController: NavHostController,
+    snackBarHostState: SnackbarHostState,
+    viewModel: SplashViewModel = hiltViewModel()
+) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         snackbarHost = {
             SnackbarHost(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 hostState = snackBarHostState
             )
         }
     ) { innerPaddings ->
         ConstraintLayout(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPaddings)
         ) {
@@ -74,7 +79,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
             val updateState by viewModel.updateState.collectAsState()
 
             Image(
-                modifier = Modifier
+                modifier = modifier
                     .width(100.dp)
                     .height(100.dp)
                     .constrainAs(logo) {
@@ -88,7 +93,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .constrainAs(title) {
                         top.linkTo(logo.bottom, margin = 8.dp)
                         start.linkTo(parent.start)
@@ -98,7 +103,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .constrainAs(authorName) {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
@@ -109,7 +114,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
             )
 
             Image(
-                modifier = Modifier
+                modifier = modifier
                     .width(25.dp)
                     .height(25.dp)
                     .constrainAs(authorImg) {
@@ -135,12 +140,12 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
 
             if (updateState == UPDATE_STATE || updateState == FORCE_UPDATE_STATE)
                 AlertDialog(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = modifier.fillMaxWidth(),
                     onDismissRequest = {},
                     confirmButton = {
                         TextButton(
                             onClick = {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BAZAAR_URL))
+                                val intent = Intent(Intent.ACTION_VIEW, BAZAAR_URL.toUri())
                                 activity.startActivity(intent)
                             }
                         ) {
@@ -157,7 +162,7 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
                                 if (updateState == FORCE_UPDATE_STATE)
                                     activity.finish()
                                 else
-                                    navHostController.navigate(Home())
+                                    navHostController.navigate(Home.destination)
                             }
                         ) {
                             Text(text = stringResource(R.string.new_version_dialog_cancel_btn))
@@ -190,7 +195,9 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
 
             LaunchedEffect(updateState) {
                 if (executionState != Stop && updateState == NO_UPDATE_STATE)
-                    navHostController.navigate(Home())
+                    navHostController.navigate(Home.destination) {
+                        popUpTo(Splash.destination) { inclusive = true }
+                    }
             }
         }
     }
@@ -200,5 +207,9 @@ fun SplashScreen(activity: MainActivity, navHostController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen(MainActivity(), rememberNavController())
+    SplashScreen(
+        activity = MainActivity(),
+        navHostController = rememberNavController(),
+        snackBarHostState = SnackbarHostState()
+    )
 }

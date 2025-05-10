@@ -19,11 +19,9 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,12 +29,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -56,35 +52,62 @@ import ir.hrka.kotlin.core.utilities.translatePoint
 import ir.hrka.kotlin.domain.entities.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.presentation.MainActivity
-import ir.hrka.kotlin.presentation.ui.screens.home.Failed
-import ir.hrka.kotlin.presentation.ui.screens.home.Loading
+import ir.hrka.kotlin.presentation.ui.Failed
+import ir.hrka.kotlin.presentation.ui.Loading
+import ir.hrka.kotlin.presentation.ui.TopBar
 
 @Composable
 fun PointsScreen(
+    modifier: Modifier = Modifier,
     activity: Activity,
     navHostController: NavHostController,
-    topic: Topic?
+    snackBarHostState: SnackbarHostState,
+    viewModel: PointsViewModel = hiltViewModel(),
+    topic: Topic?,
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
-
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = { PointsScreenAppBar(topic, navHostController) },
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            TopBar(
+                modifier = modifier,
+                title = topic?.topicTitle ?: "",
+                navigationClick = { navHostController.popBackStack() },
+                actions = {
+                    val appVersionCode = viewModel.getAppVersionCode()
+
+                    if (
+                        topic?.hasVisualizer == true &&
+                        (appVersionCode ?: DEFAULT_VERSION_CODE) >= topic.visualizerVersionCode
+                    ) {
+                        Icon(
+                            modifier = modifier
+                                .padding(end = 10.dp)
+                                .size(30.dp)
+                                .clickable {
+                                    if (topic.visualizerDestination.isNotEmpty())
+                                        navHostController.navigate(topic.visualizerDestination)
+                                },
+                            tint = MaterialTheme.colorScheme.tertiary,
+                            painter = painterResource(R.drawable.play_visualizer),
+                            contentDescription = ""
+                        )
+                    }
+                }
+            )
+        },
         snackbarHost = {
             SnackbarHost(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 hostState = snackBarHostState
             )
         },
     ) { innerPaddings ->
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPaddings),
             contentAlignment = Alignment.Center
         ) {
-            val viewModel: PointsViewModel = hiltViewModel()
             val points by viewModel.points.collectAsState()
             val failedState by viewModel.failedState.collectAsState()
             val executionState by viewModel.executionState.collectAsState()
@@ -96,7 +119,11 @@ fun PointsScreen(
                 }
 
                 is Resource.Success -> {
-                    PointsList(activity, points.data)
+                    PointsList(
+                        modifier = modifier,
+                        activity = activity,
+                        points = points.data
+                    )
                 }
 
                 is Resource.Error -> {
@@ -113,71 +140,37 @@ fun PointsScreen(
 
 @Composable
 fun PointsList(
+    modifier: Modifier,
     activity: Activity,
     points: List<Point>?
 ) {
     LazyVerticalStaggeredGrid(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         columns = StaggeredGridCells.Fixed(1),
         contentPadding = PaddingValues(8.dp)
     ) {
         points?.let {
             items(it.size) { index ->
-                PointItem(activity, it[index], index)
+                PointItem(
+                    modifier = modifier,
+                    activity = activity,
+                    point = it[index],
+                    index = index
+                )
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PointsScreenAppBar(topic: Topic?, navHostController: NavHostController) {
-    val viewModel: PointsViewModel = hiltViewModel()
-    val appVersionCode = viewModel.getAppVersionCode()
-
-    TopAppBar(
-        title = {
-            Text(
-                modifier = Modifier.padding(end = 16.dp),
-                text = topic?.topicTitle ?: "",
-                fontWeight = FontWeight.Bold
-            )
-        },
-        navigationIcon = {
-            IconButton(
-                onClick = { navHostController.popBackStack() }
-            ) {
-                Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
-            }
-        },
-        actions = {
-            if (topic?.hasVisualizer == true)
-                if ((appVersionCode ?: DEFAULT_VERSION_CODE) >= topic.visualizerVersionCode)
-                    Icon(
-                        modifier = Modifier
-                            .padding(end = 10.dp)
-                            .size(30.dp)
-                            .clickable {
-                                if (topic.visualizerDestination.isNotEmpty())
-                                    navHostController.navigate(topic.visualizerDestination)
-                            },
-                        tint = MaterialTheme.colorScheme.tertiary,
-                        painter = painterResource(R.drawable.play_visualizer),
-                        contentDescription = ""
-                    )
-        }
-    )
-}
-
 @Composable
 fun PointItem(
+    modifier: Modifier,
     activity: Activity,
     point: Point,
     index: Int
 ) {
     ElevatedCard(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(4.dp)
     ) {
@@ -186,7 +179,7 @@ fun PointItem(
 
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier
+                modifier = modifier
                     .width(25.dp)
                     .height(25.dp)
                     .background(
@@ -207,7 +200,7 @@ fun PointItem(
             }
 
             IconButton(
-                modifier = Modifier
+                modifier = modifier
                     .constrainAs(shareButton) {
                         end.linkTo(parent.end, margin = 8.dp)
                         top.linkTo(parent.top, margin = 8.dp)
@@ -223,7 +216,7 @@ fun PointItem(
             }
 
             IconButton(
-                modifier = Modifier
+                modifier = modifier
                     .constrainAs(translateButton) {
                         end.linkTo(shareButton.start)
                         top.linkTo(parent.top, margin = 8.dp)
@@ -239,7 +232,7 @@ fun PointItem(
             }
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .constrainAs(pointHead) {
@@ -255,7 +248,7 @@ fun PointItem(
 
             if (!point.subPoints.isNullOrEmpty())
                 LazyColumn(
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth()
                         .heightIn(max = 400.dp)
                         .constrainAs(subPoints) {
@@ -267,13 +260,16 @@ fun PointItem(
                         }
                 ) {
                     items(point.subPoints.size) { index ->
-                        SubPintItem(point.subPoints[index])
+                        SubPintItem(
+                            modifier = modifier,
+                            subPoints = point.subPoints[index]
+                        )
                     }
                 }
 
             if (!point.snippetsCodes.isNullOrEmpty())
                 LazyColumn(
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth()
                         .heightIn(max = 400.dp)
                         .constrainAs(snippetCodes) {
@@ -287,7 +283,10 @@ fun PointItem(
                         }
                 ) {
                     items(point.snippetsCodes.size) { index ->
-                        SnippetCodeItem(point.snippetsCodes[index])
+                        SnippetCodeItem(
+                            modifier = modifier,
+                            snippetCode = point.snippetsCodes[index]
+                        )
                     }
                 }
         }
@@ -295,15 +294,22 @@ fun PointItem(
 }
 
 @Composable
-fun SubPintItem(subPoints: String) {
+fun SubPintItem(
+    modifier: Modifier,
+    subPoints: String
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 2.dp),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Start
     ) {
-        Icon(Icons.Default.PlayArrow, contentDescription = null)
+        Icon(
+            imageVector = Icons.Default.PlayArrow,
+            contentDescription = null
+        )
+
         Text(
             text = subPoints,
             color = MaterialTheme.colorScheme.primary
@@ -312,14 +318,17 @@ fun SubPintItem(subPoints: String) {
 }
 
 @Composable
-fun SnippetCodeItem(snippetCode: String) {
+fun SnippetCodeItem(
+    modifier: Modifier,
+    snippetCode: String
+) {
     ElevatedCard(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Text(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .padding(vertical = 12.dp, horizontal = 8.dp),
@@ -336,6 +345,7 @@ fun SnippetCodeItem(snippetCode: String) {
 @Composable
 fun PointsScreenPreview() {
     PointItem(
+        modifier = Modifier,
         activity = MainActivity(),
         point = Point(
             id = 1,
