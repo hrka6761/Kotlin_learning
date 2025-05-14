@@ -37,6 +37,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -58,7 +59,7 @@ fun AboutScreen(
     val snackBarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             TopBar(
                 modifier = modifier,
@@ -68,7 +69,7 @@ fun AboutScreen(
         },
         snackbarHost = {
             SnackbarHost(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 hostState = snackBarHostState
             )
         }
@@ -76,12 +77,14 @@ fun AboutScreen(
 
         when (configuration.orientation) {
             ORIENTATION_PORTRAIT -> PortraitScreen(
+                modifier = modifier,
                 innerPaddings = innerPaddings,
                 onClickEmail = onClickEmail,
                 openUrl = openUrl
             )
 
             ORIENTATION_LANDSCAPE -> LandscapeScreen(
+                modifier = modifier,
                 innerPaddings = innerPaddings,
                 onClickEmail = onClickEmail,
                 openUrl = openUrl
@@ -92,21 +95,22 @@ fun AboutScreen(
 
 @Composable
 fun PortraitScreen(
+    modifier: Modifier = Modifier,
     innerPaddings: PaddingValues,
     onClickEmail: () -> Unit,
     openUrl: (url: String) -> Unit
 ) {
     ConstraintLayout(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(innerPaddings)
     ) {
-        val (banner, authorImg, authorName, authorEmail, githubRepo, source, linkedin) = createRefs()
+        val (openSource, authorImg, authorName, authorEmail, githubRepo, source, linkedin, contribute) = createRefs()
 
         Image(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
-                .constrainAs(banner) {
+                .constrainAs(openSource) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
@@ -116,13 +120,13 @@ fun PortraitScreen(
         )
 
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .width(80.dp)
                 .height(80.dp)
                 .constrainAs(authorImg) {
-                    top.linkTo(banner.bottom)
+                    top.linkTo(openSource.bottom)
                     start.linkTo(parent.start, margin = 16.dp)
-                    bottom.linkTo(banner.bottom)
+                    bottom.linkTo(openSource.bottom)
                 }
                 .clip(CircleShape)
                 .border(
@@ -135,12 +139,12 @@ fun PortraitScreen(
                 painter = painterResource(R.drawable.author),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = modifier.fillMaxSize()
             )
         }
 
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .constrainAs(authorName) {
                     start.linkTo(parent.start, margin = 8.dp)
@@ -151,7 +155,7 @@ fun PortraitScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .width(40.dp)
                     .height(40.dp)
                     .padding(start = 8.dp),
@@ -160,7 +164,7 @@ fun PortraitScreen(
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 text = stringResource(R.string.profile_screen_author_name),
@@ -168,7 +172,7 @@ fun PortraitScreen(
         }
 
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .constrainAs(authorEmail) {
                     start.linkTo(parent.start, margin = 8.dp)
@@ -179,7 +183,7 @@ fun PortraitScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .width(40.dp)
                     .height(40.dp)
                     .padding(start = 8.dp),
@@ -188,7 +192,7 @@ fun PortraitScreen(
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .padding(horizontal = 16.dp)
                     .clickable {
                         onClickEmail()
@@ -199,7 +203,7 @@ fun PortraitScreen(
         }
 
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .constrainAs(githubRepo) {
                     start.linkTo(parent.start, margin = 8.dp)
@@ -213,7 +217,7 @@ fun PortraitScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .width(40.dp)
                     .height(40.dp)
                     .padding(start = 8.dp),
@@ -222,7 +226,7 @@ fun PortraitScreen(
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .padding(horizontal = 16.dp),
                 text = stringResource(R.string.profile_screen_github_repo_address),
                 textAlign = TextAlign.Start,
@@ -230,7 +234,7 @@ fun PortraitScreen(
         }
 
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .constrainAs(source) {
                     start.linkTo(parent.start, margin = 8.dp)
@@ -244,7 +248,7 @@ fun PortraitScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .width(40.dp)
                     .height(40.dp)
                     .padding(start = 8.dp),
@@ -253,7 +257,7 @@ fun PortraitScreen(
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .padding(start = 16.dp),
                 text = stringResource(R.string.profile_screen_kotlin_topics_source),
                 textAlign = TextAlign.Start,
@@ -262,7 +266,7 @@ fun PortraitScreen(
         }
 
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .constrainAs(linkedin) {
                     start.linkTo(parent.start, margin = 8.dp)
@@ -276,7 +280,7 @@ fun PortraitScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .width(40.dp)
                     .height(40.dp)
                     .padding(start = 8.dp),
@@ -285,33 +289,47 @@ fun PortraitScreen(
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .padding(horizontal = 16.dp),
                 text = stringResource(R.string.profile_screen_linkedin_address),
                 textAlign = TextAlign.Start,
             )
         }
+
+        Image(
+            modifier = modifier
+                .clip(RoundedCornerShape(16.dp))
+                .constrainAs(contribute) {
+                    end.linkTo(parent.end, margin = 32.dp)
+                    start.linkTo(parent.start, margin = 32.dp)
+                    bottom.linkTo(parent.bottom, margin = 32.dp)
+                },
+            contentScale = ContentScale.Crop,
+            painter = painterResource(R.drawable.contribute),
+            contentDescription = null
+        )
     }
 }
 
 @Composable
 fun LandscapeScreen(
+    modifier: Modifier = Modifier,
     innerPaddings: PaddingValues,
     onClickEmail: () -> Unit,
     openUrl: (url: String) -> Unit
 ) {
     ConstraintLayout(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(innerPaddings)
     ) {
-        val (banner, authorImg, authorName, authorEmail, githubRepo, source, linkedin) = createRefs()
+        val (openSource, authorImg, authorName, authorEmail, githubRepo, source, linkedin, contribute) = createRefs()
 
         Image(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxHeight()
                 .width(320.dp)
-                .constrainAs(banner) {
+                .constrainAs(openSource) {
                     start.linkTo(parent.start)
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
@@ -322,13 +340,13 @@ fun LandscapeScreen(
         )
 
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .width(80.dp)
                 .height(80.dp)
                 .constrainAs(authorImg) {
                     top.linkTo(parent.top, margin = 16.dp)
-                    start.linkTo(banner.end)
-                    end.linkTo(banner.end)
+                    start.linkTo(openSource.end)
+                    end.linkTo(openSource.end)
                 }
                 .clip(CircleShape)
                 .border(
@@ -341,12 +359,12 @@ fun LandscapeScreen(
                 painter = painterResource(R.drawable.author),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = modifier.fillMaxSize()
             )
         }
 
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .constrainAs(authorName) {
                     start.linkTo(authorImg.end, margin = 8.dp)
@@ -356,7 +374,7 @@ fun LandscapeScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .width(40.dp)
                     .height(40.dp)
                     .padding(start = 8.dp),
@@ -365,7 +383,7 @@ fun LandscapeScreen(
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 text = stringResource(R.string.profile_screen_author_name),
@@ -373,7 +391,7 @@ fun LandscapeScreen(
         }
 
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .constrainAs(authorEmail) {
                     start.linkTo(authorImg.end, margin = 8.dp)
@@ -383,7 +401,7 @@ fun LandscapeScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .width(40.dp)
                     .height(40.dp)
                     .padding(start = 8.dp),
@@ -392,7 +410,7 @@ fun LandscapeScreen(
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .padding(horizontal = 16.dp)
                     .clickable {
                         onClickEmail()
@@ -407,7 +425,7 @@ fun LandscapeScreen(
         }
 
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .constrainAs(githubRepo) {
                     start.linkTo(authorImg.end, margin = 8.dp)
@@ -420,7 +438,7 @@ fun LandscapeScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .width(40.dp)
                     .height(40.dp)
                     .padding(start = 8.dp),
@@ -429,7 +447,7 @@ fun LandscapeScreen(
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .padding(horizontal = 16.dp),
                 text = stringResource(R.string.profile_screen_github_repo_address),
                 textAlign = TextAlign.Start,
@@ -437,7 +455,7 @@ fun LandscapeScreen(
         }
 
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .constrainAs(source) {
                     start.linkTo(authorImg.end, margin = 8.dp)
@@ -450,7 +468,7 @@ fun LandscapeScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .width(40.dp)
                     .height(40.dp)
                     .padding(start = 8.dp),
@@ -459,7 +477,7 @@ fun LandscapeScreen(
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .padding(start = 16.dp),
                 text = stringResource(R.string.profile_screen_kotlin_topics_source),
                 textAlign = TextAlign.Start,
@@ -467,7 +485,7 @@ fun LandscapeScreen(
         }
 
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .constrainAs(linkedin) {
                     start.linkTo(authorImg.end, margin = 8.dp)
@@ -480,7 +498,7 @@ fun LandscapeScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .width(40.dp)
                     .height(40.dp)
                     .padding(start = 8.dp),
@@ -489,12 +507,26 @@ fun LandscapeScreen(
             )
 
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .padding(horizontal = 16.dp),
                 text = stringResource(R.string.profile_screen_linkedin_address),
                 textAlign = TextAlign.Start,
             )
         }
+
+        Image(
+            modifier = modifier
+                .width(200.dp)
+                .height(90.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .constrainAs(contribute) {
+                    end.linkTo(parent.end, margin = 16.dp)
+                    top.linkTo(parent.top)
+                },
+            contentScale = ContentScale.Crop,
+            painter = painterResource(R.drawable.contribute),
+            contentDescription = null
+        )
     }
 }
 
