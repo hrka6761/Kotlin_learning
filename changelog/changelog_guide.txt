@@ -1,5 +1,6 @@
 VERSION TYPES:
 
+Improvement (Refactor an improve operations)
 NewFeature (When add new feature)
 Hotfix (When solve critical bug)
 BugFix (When solve normal bug)

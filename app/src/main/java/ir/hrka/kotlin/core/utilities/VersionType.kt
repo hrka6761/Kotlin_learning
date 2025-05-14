@@ -2,6 +2,7 @@ package ir.hrka.kotlin.core.utilities
 
 enum class VersionType {
 
+    Improvement,
     NewFeature,
     BugFix,
     Hotfix,

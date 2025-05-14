@@ -1,6 +1,6 @@
 {
-  "last_version_id": 22,
-  "last_version_code": 15,
+  "last_version_id": 23,
+  "last_version_code": 16,
   "min_supported_version_code": 13,
   "versions": [
     {
@@ -276,6 +276,18 @@
       "updated_kotlin_topics": null,
       "change_log": [
         "Resolve bug to translate sub points"
+      ]
+    },
+    {
+      "version_id": 23,
+      "version_name": "6.8.0",
+      "version_code": 16,
+      "version_type": "Improvement",
+      "updated_coroutine_topics": null,
+      "updated_kotlin_topics": null,
+      "change_log": [
+        "Code improvement",
+        "Redesign home and about"
       ]
     }
   ]
