@@ -55,4 +55,24 @@
     <string name="regular_coroutine_scope_function_screen_snippet_code_dialog_code">fun main() {\n    val scope = CoroutineScope(...)\n    \n    scope.launch {\n        task1()\n    }\n    \n    scope.launch {\n        task2()\n    }\n\n    scope.launch {\n        task3()\n    }\n}\n\n\nprivate suspend fun task1() {\n    delay(4_000)\n}\n\nprivate suspend fun task2() {\n    delay(2_000)\n}\n\nprivate suspend fun task3() {\n    delay(3_000)\n}</string>
     <string name="coroutine_scope_function_screen_snippet_code_dialog_desc">Running some tasks by coroutineScope function in the main thread.\nThe coroutineScope function is executed in the coroutine created by CoroutineScope(Dispatchers. Main).launch { ... }.\nThe coroutineScope function suspend the coroutine that execute in it until all launched its children complete.</string>
     <string name="coroutine_scope_function_screen_snippet_code_dialog_code">fun main() {\n    task1()\n\n    CoroutineScope(Dispatchers.Main)\n        .launch {\n            task2()\n\n            coroutineScope {\n                launch {\n                    task3()\n                }\n                launch {\n                    task4()\n                }\n            }\n\n            task5()\n        }\n\n    task6()\n}\n\n\nprivate fun task1() {\n    Thread.sleep(1_000)\n}\n\nprivate suspend fun task2() {\n    delay(4_000)\n}\n\nprivate suspend fun task3() {\n    delay(2_000)\n}\n\nprivate suspend fun task4() {\n    delay(3_000)\n}\n\nprivate suspend fun task5() {\n    delay(1_000)\n}\n\nprivate fun task6() {\n    Thread.sleep(2_500)\n}</string>
+    <string name="thread_name_title">"Thread name: "</string>
+    <string name="thread_id_title">"Thread id: "</string>
+    <string name="coroutine_name_title">"Coroutine name: "</string>
+    <string name="context_thread_title">"Context thread: "</string>
+    <string name="context_job_title">Context job: \n</string>
+    <string name="parent_job_title">Parent job: \n</string>
+    <string name="children_title">Children: \n</string>
+    <string name="no_child">No child</string>
+    <string name="task_name_title">"Task name: "</string>
+    <string name="duration_time_title">"Duration time: "</string>
+    <string name="scope_name_title">"Scope name: "</string>
+    <string name="guidance_thread">Thread</string>
+    <string name="guidance_coroutine">Coroutine</string>
+    <string name="guidance_task">Task</string>
+    <string name="guidance_scope">Scope</string>
+    <string name="guidance_stop">Stop</string>
+    <string name="guidance_processing">Processing</string>
+    <string name="guidance_done">Done</string>
+    <string name="guidance_cancel">Cancel</string>
+    <string name="guidance_failed">Failed</string>
 </resources>

@@ -69,7 +69,7 @@ fun Thread(
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -77,11 +77,11 @@ fun Thread(
         ) {
             val styledText = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Thread name: ")
+                    append(stringResource(R.string.thread_name_title))
                 }
                 append("${threadData?.threadName ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Thread id: ")
+                    append(stringResource(R.string.thread_id_title))
                 }
                 append(threadData?.threadId ?: "...")
             }
@@ -127,27 +127,27 @@ fun Coroutine(
         ) {
             val styledText = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Coroutine name: ")
+                    append(stringResource(R.string.coroutine_name_title))
                 }
                 append("${coroutineData?.coroutineName ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Context thread: ")
+                    append(stringResource(R.string.context_thread_title))
                 }
                 append("${coroutineData?.thread ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Context job: \n")
+                    append(stringResource(R.string.context_job_title))
                 }
                 append("${coroutineData?.job ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Parent job: \n")
+                    append(stringResource(R.string.parent_job_title))
                 }
                 append("${coroutineData?.parentJob ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Children: \n")
+                    append(stringResource(R.string.children_title))
                 }
 
                 if (coroutineData?.children.isNullOrEmpty())
-                    append("No child")
+                    append(stringResource(R.string.no_child))
 
                 coroutineData?.children?.forEachIndexed { index, job ->
                     val id = index + 1
@@ -197,17 +197,17 @@ fun Task(
         ) {
             val styledText = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Task name: ")
+                    append(stringResource(R.string.task_name_title))
                 }
                 append("${taskData?.taskName ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Duration time: ")
+                    append(stringResource(R.string.duration_time_title))
                 }
                 append("${taskData?.durationTime ?: "..."} MS")
             }
 
             Text(
-                modifier = Modifier.padding(start = 8.dp, end = 16.dp),
+                modifier = modifier.padding(start = 8.dp, end = 16.dp),
                 text = styledText,
                 style = TextStyle(
                     fontSize = 10.sp,
@@ -249,31 +249,31 @@ fun Scope(
         ) {
             val styledText = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Scope name: ")
+                    append(stringResource(R.string.scope_name_title))
                 }
                 append("${coroutineData?.scopeName ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Coroutine name: ")
+                    append(stringResource(R.string.coroutine_name_title))
                 }
                 append("${coroutineData?.coroutineName ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Context thread: ")
+                    append(stringResource(R.string.context_thread_title))
                 }
                 append("${coroutineData?.thread ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Context job: \n")
+                    append(stringResource(R.string.context_job_title))
                 }
                 append("${coroutineData?.job ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Parent job: \n")
+                    append(stringResource(R.string.parent_job_title))
                 }
                 append("${coroutineData?.parentJob ?: "..."}\n")
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Children: \n")
+                    append(stringResource(R.string.children_title))
                 }
 
                 if (coroutineData?.children.isNullOrEmpty())
-                    append("No child")
+                    append(stringResource(R.string.no_child))
 
                 coroutineData?.children?.forEachIndexed { index, job ->
                     val id = index + 1
@@ -368,7 +368,7 @@ fun Guidance(
             Text(
                 modifier = modifier.padding(start = 2.dp, end = 10.dp),
                 fontSize = 10.sp,
-                text = "Thread"
+                text = stringResource(R.string.guidance_thread)
             )
 
             Box(
@@ -380,7 +380,7 @@ fun Guidance(
             Text(
                 modifier = modifier.padding(start = 2.dp, end = 10.dp),
                 fontSize = 10.sp,
-                text = "Coroutine"
+                text = stringResource(R.string.guidance_coroutine)
             )
 
             Box(
@@ -392,7 +392,7 @@ fun Guidance(
             Text(
                 modifier = modifier.padding(start = 2.dp, end = 10.dp),
                 fontSize = 10.sp,
-                text = "Task"
+                text = stringResource(R.string.guidance_task)
             )
 
             ElevatedCard(
@@ -409,7 +409,7 @@ fun Guidance(
             Text(
                 modifier = modifier.padding(start = 2.dp, end = 10.dp),
                 fontSize = 10.sp,
-                text = "Scope"
+                text = stringResource(R.string.guidance_scope)
             )
         }
 
@@ -427,7 +427,7 @@ fun Guidance(
             Text(
                 modifier = modifier.padding(start = 2.dp, end = 8.dp),
                 fontSize = 10.sp,
-                text = "Stop"
+                text = stringResource(R.string.guidance_stop)
             )
 
             CircularProgressIndicator(
@@ -441,7 +441,7 @@ fun Guidance(
             Text(
                 modifier = modifier.padding(start = 2.dp, end = 8.dp),
                 fontSize = 10.sp,
-                text = "Processing"
+                text = stringResource(R.string.guidance_processing)
             )
 
             Icon(
@@ -452,7 +452,7 @@ fun Guidance(
             Text(
                 modifier = modifier.padding(start = 2.dp, end = 8.dp),
                 fontSize = 10.sp,
-                text = "Done"
+                text = stringResource(R.string.guidance_done)
             )
 
             Icon(
@@ -463,7 +463,7 @@ fun Guidance(
             Text(
                 modifier = modifier.padding(start = 2.dp, end = 8.dp),
                 fontSize = 10.sp,
-                text = "Cancel"
+                text = stringResource(R.string.guidance_cancel)
             )
 
             Icon(
@@ -474,7 +474,7 @@ fun Guidance(
             Text(
                 modifier = modifier.padding(start = 2.dp, end = 8.dp),
                 fontSize = 10.sp,
-                text = "Failed"
+                text = stringResource(R.string.guidance_failed)
             )
         }
     }
