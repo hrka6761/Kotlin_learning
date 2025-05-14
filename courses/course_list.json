@@ -15,7 +15,7 @@
       "course_name": "coroutine",
       "course_title": "Coroutine & Flow",
       "topics_file_name": "coroutine_topics_list.json",
-      "course_description": "By following the tips in this section, you will master Kotlin coroutines.\nTo ensure a clear understanding of the concepts, all use cases of Kotlin coroutines and flows are visualized. The app fetches and updates the tips similar to a Kotlin language course, and to access the latest visualizations and examples, you will need to update the app to the newest version.",
+      "course_description": "By following the tips in this section, you will master Kotlin coroutines.\nTo ensure a clear understanding of the concepts, all use cases of Kotlin coroutines and flows are visualized. The app fetches and updates the tips similar to the Kotlin language course, and to access the latest visualizations and examples, you will need to update the app to the newest version.",
       "course_banner": "https://raw.githubusercontent.com/hrka6761/Kotlin_cheat_sheet/master/courses/coroutine_course_banner.png",
       "is_active": true
     }
