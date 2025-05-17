@@ -119,4 +119,7 @@ dependencies {
 
     // Browser
     implementation(libs.androidx.browser)
+
+    // Data Store
+    implementation(libs.androidx.datastore.preferences)
 }
