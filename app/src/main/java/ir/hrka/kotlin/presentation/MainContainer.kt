@@ -6,7 +6,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.pm.PackageInfo
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -73,7 +72,10 @@ import ir.hrka.kotlin.presentation.ui.theme.KotlinTheme
 @Suppress("DEPRECATION")
 @SuppressLint("NewApi", "SourceLockedOrientationActivity")
 @Composable
-fun AppContent(modifier: Modifier = Modifier) {
+fun AppContent(
+    modifier: Modifier = Modifier,
+    appVersionCode: Int
+) {
     val navHostController = rememberNavController()
     val activity = (LocalContext.current as MainActivity)
     val onTopBarBackPressed: () -> Unit = {
@@ -109,7 +111,7 @@ fun AppContent(modifier: Modifier = Modifier) {
                     navHostController.navigate(Home.destination)
                 }
                 val onCheckAction = {
-                    splashViewModel.checkChangelog(getAppVersionCode(activity))
+                    splashViewModel.checkChangelog(appVersionCode)
                 }
                 val navigateToHome = {
                     navHostController.navigate(Home.destination) {
@@ -207,7 +209,7 @@ fun AppContent(modifier: Modifier = Modifier) {
                     updateTopicState = updateTopicState,
                     onClickTopicRow = onClickTopicRow,
                     fetchTopics = fetchTopics,
-                    appVersionCode = getAppVersionCode(activity)
+                    appVersionCode = topicViewModel.appVersionCode
                 )
             }
             composable(
@@ -248,7 +250,7 @@ fun AppContent(modifier: Modifier = Modifier) {
                     modifier = modifier,
                     topic = topic,
                     onTopBarBackPressed = onTopBarBackPressed,
-                    appVersionCode = getAppVersionCode(activity),
+                    appVersionCode = pointViewModel.appVersionCode,
                     navigateToVisualizer = navigateToVisualizer,
                     pointsResult = points,
                     updateTopicStateOnDBResult = updateTopicStateOnDBResult,
@@ -540,17 +542,9 @@ private val customTabsIntent =
 private fun openUrl(context: Context, url: String) =
     customTabsIntent.launchUrl(context, url.toUri())
 
-private fun getAppVersionCode(context: Context): Int {
-    val packageInfo: PackageInfo =
-        context.packageManager.getPackageInfo(context.packageName, 0)
-    val versionCode = packageInfo.longVersionCode.toInt()
-
-    return versionCode
-}
-
 
 @Preview(showBackground = true)
 @Composable
 fun AppContentPreview(modifier: Modifier = Modifier) {
-    AppContent()
+    AppContent(appVersionCode = 0)
 }

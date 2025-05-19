@@ -44,6 +44,7 @@ class PointsViewModel @Inject constructor(
     private val _updateTopicStateOnDBResult: MutableStateFlow<Resource<Boolean?>> =
         MutableStateFlow(Resource.Initial())
     val updateTopicStateOnDBResult: StateFlow<Resource<Boolean?>> = _updateTopicStateOnDBResult
+    val appVersionCode: Int = globalData.appVersionCode!!
 
 
     fun getPoints(topic: Topic?) {

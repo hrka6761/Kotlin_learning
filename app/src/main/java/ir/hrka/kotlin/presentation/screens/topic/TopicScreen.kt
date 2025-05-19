@@ -213,22 +213,21 @@ fun TopicItem(
                     fontWeight = FontWeight.Bold
                 )
 
-                if (topic.hasVisualizer)
-                    if (appVersionCode >= topic.visualizerVersionCode)
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                modifier = Modifier
-                                    .size(20.dp),
-                                painter = painterResource(R.drawable.visualization),
-                                contentDescription = ""
-                            )
-                            Text(
-                                fontSize = 12.sp,
-                                text = "Visual"
-                            )
-                        }
+                if (topic.hasVisualizer && appVersionCode >= topic.visualizerVersionCode)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(20.dp),
+                            painter = painterResource(R.drawable.visualization),
+                            contentDescription = ""
+                        )
+                        Text(
+                            fontSize = 12.sp,
+                            text = "Visual"
+                        )
+                    }
             }
 
             if (topic.hasUpdate)

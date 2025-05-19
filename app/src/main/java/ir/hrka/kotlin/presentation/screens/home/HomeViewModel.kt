@@ -1,9 +1,12 @@
 package ir.hrka.kotlin.presentation.screens.home
 
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.hrka.kotlin.core.Constants.COURSES_VERSION_ID_PREFERENCE_KEY
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
+import ir.hrka.kotlin.core.utilities.DataStoreManager
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.Resource
@@ -11,7 +14,6 @@ import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.usecases.db.courses.GetCoursesFromDBUseCase
 import ir.hrka.kotlin.domain.usecases.db.courses.UpdateCoursesOnDBUseCase
 import ir.hrka.kotlin.domain.usecases.git.GetCoursesFromGitUseCase
-import ir.hrka.kotlin.domain.usecases.preference.SaveCoursesVersionIdUseCase
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +29,7 @@ class HomeViewModel @Inject constructor(
     private val getCoursesFromGitUseCase: GetCoursesFromGitUseCase,
     private val getCoursesFromDBUseCase: GetCoursesFromDBUseCase,
     private val updateCoursesOnDBUseCase: UpdateCoursesOnDBUseCase,
-    private val saveCoursesVersionIdUseCase: SaveCoursesVersionIdUseCase
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
     private val hasCoursesUpdate = globalData.hasCoursesUpdate
@@ -41,14 +43,11 @@ class HomeViewModel @Inject constructor(
     val courses: StateFlow<Resource<List<Course>?>> = _courses
     private val _saveCourseOnDBResult: MutableStateFlow<Resource<Boolean?>> =
         MutableStateFlow(Resource.Initial())
-    private val _updateCoursesVersionIdResult: MutableStateFlow<Resource<Boolean?>> =
-        MutableStateFlow(Resource.Initial())
 
 
     fun getCourses() {
         initGetCoursesResult()
         initSaveCoursesOnDBResult()
-        initUpdateCoursesVersionIdResult()
 
         if (_executionState.value == Start) {
             setExecutionState(ExecutionState.Loading)
@@ -91,27 +90,8 @@ class HomeViewModel @Inject constructor(
                         is Resource.Initial -> {}
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            updateCoursesVersionId()
-                        }
-
-                        is Resource.Error -> {
+                            updateCoursesVersion()
                             setExecutionState(ExecutionState.Stop)
-                        }
-                    }
-            }
-        }
-    }
-
-    private fun initUpdateCoursesVersionIdResult() {
-        viewModelScope.launch {
-            _updateCoursesVersionIdResult.collect { result ->
-                if (_executionState.value != ExecutionState.Stop)
-                    when (result) {
-                        is Resource.Initial -> {}
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            setExecutionState(ExecutionState.Stop)
-                            updateCoursesVersionIdInGlobalData()
                         }
 
                         is Resource.Error -> {
@@ -151,15 +131,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun updateCoursesVersionId() {
-        viewModelScope.launch(io) {
-            val versionId = lastVersionId ?: DEFAULT_VERSION_ID
-            _updateCoursesVersionIdResult.value = Resource.Loading()
-            _updateCoursesVersionIdResult.value = saveCoursesVersionIdUseCase(versionId)
-        }
-    }
-
-    private fun updateCoursesVersionIdInGlobalData() {
+    private suspend fun updateCoursesVersion() {
+        val versionId = lastVersionId ?: DEFAULT_VERSION_ID
+        dataStoreManager.saveData(
+            intPreferencesKey(COURSES_VERSION_ID_PREFERENCE_KEY),
+            versionId
+        )
         globalData.hasCoursesUpdate = false
     }
 }

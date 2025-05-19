@@ -11,8 +11,6 @@ import ir.hrka.kotlin.data.repositories.git.ReadGitChangelogRepoImpl
 import ir.hrka.kotlin.data.repositories.db.write.WriteDBCoursesRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitCoursesRepoImpl
 import ir.hrka.kotlin.data.repositories.git.ReadGitTopicsRepoImpl
-import ir.hrka.kotlin.data.repositories.preference.ReadPreferencesRepoImpl
-import ir.hrka.kotlin.data.repositories.preference.WritePreferencesRepoImpl
 import ir.hrka.kotlin.data.repositories.db.write.WriteDBTopicsRepoImpl
 import ir.hrka.kotlin.data.repositories.db.write.WriteDBPointsRepoImpl
 import ir.hrka.kotlin.data.repositories.db.write.WriteDBSnippetCodesRepoImpl
@@ -23,9 +21,7 @@ import ir.hrka.kotlin.domain.repositories.write.WriteCoursesRepo
 import ir.hrka.kotlin.domain.repositories.read.ReadCoursesRepo
 import ir.hrka.kotlin.domain.repositories.read.ReadPointsRepo
 import ir.hrka.kotlin.domain.repositories.read.ReadTopicsRepo
-import ir.hrka.kotlin.domain.repositories.read.ReadPreferencesRepo
 import ir.hrka.kotlin.domain.repositories.write.WritePointsRepo
-import ir.hrka.kotlin.domain.repositories.write.WritePreferencesRepo
 import ir.hrka.kotlin.domain.repositories.write.WriteSnippetCodesRepo
 import ir.hrka.kotlin.domain.repositories.write.WriteSubPointsRepo
 import ir.hrka.kotlin.domain.repositories.write.WriteTopicsRepo
@@ -37,12 +33,6 @@ interface RepositoryModule {
 
     @Binds
     fun bindReadChangelogRepoImpl(readGitChangelogRepoImpl: ReadGitChangelogRepoImpl): ReadChangelogRepo
-
-    @Binds
-    fun bindReadPreferencesRepoImpl(readPreferencesRepoImpl: ReadPreferencesRepoImpl): ReadPreferencesRepo
-
-    @Binds
-    fun bindWritePreferencesRepoImpl(writePreferencesRepoImpl: WritePreferencesRepoImpl): WritePreferencesRepo
 
     @Named("git")
     @Binds

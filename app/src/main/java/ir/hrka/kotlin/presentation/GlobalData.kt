@@ -1,5 +1,6 @@
 package ir.hrka.kotlin.presentation
 
+import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.utilities.VersionType
 import ir.hrka.kotlin.domain.entities.Version
 import ir.hrka.kotlin.domain.entities.VersionsInfo
@@ -11,9 +12,9 @@ class GlobalData @Inject constructor() {
 
     private var _versionsInfo: VersionsInfo? = null
     private var _versionsList: List<Version>? = null
-    private var _coursesVersionId = -1
-    private var _kotlinVersionId = -1
-    private var _coroutineVersionId = -1
+    private var _coursesVersionId = DEFAULT_VERSION_ID
+    private var _kotlinVersionId = DEFAULT_VERSION_ID
+    private var _coroutineVersionId = DEFAULT_VERSION_ID
     var appVersionCode: Int? = null
         private set
     var lastVersionId: Int? = null

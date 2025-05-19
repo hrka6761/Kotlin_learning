@@ -1,10 +1,14 @@
 package ir.hrka.kotlin.presentation.screens.topic
 
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.hrka.kotlin.core.Constants.COROUTINE_VERSION_ID_PREFERENCE_KEY
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.Constants.KOTLIN_COURSE_NAME
+import ir.hrka.kotlin.core.Constants.KOTLIN_VERSION_ID_PREFERENCE_KEY
+import ir.hrka.kotlin.core.utilities.DataStoreManager
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
@@ -15,9 +19,7 @@ import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.domain.usecases.db.topics.GetTopicsFromDBUseCase
 import ir.hrka.kotlin.domain.usecases.git.GetTopicsFromGitUseCase
 import ir.hrka.kotlin.domain.usecases.db.topics.UpdateTopicsOnDBUseCase
-import ir.hrka.kotlin.domain.usecases.preference.SaveKotlinVersionIdUseCase
 import ir.hrka.kotlin.domain.usecases.db.topics.UpdateTopicsStateOnDBUseCase
-import ir.hrka.kotlin.domain.usecases.preference.SaveCoroutineVersionIdUseCase
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,9 +35,8 @@ class TopicViewModel @Inject constructor(
     private val getTopicsFromGitUseCase: GetTopicsFromGitUseCase,
     private val getTopicsFromDBUseCase: GetTopicsFromDBUseCase,
     private val updateTopicsOnDBUseCase: UpdateTopicsOnDBUseCase,
-    private val saveKotlinVersionIdUseCase: SaveKotlinVersionIdUseCase,
-    private val saveCoroutineVersionIdUseCase: SaveCoroutineVersionIdUseCase,
-    private val updateTopicsStateOnDBUseCase: UpdateTopicsStateOnDBUseCase
+    private val updateTopicsStateOnDBUseCase: UpdateTopicsStateOnDBUseCase,
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
     private val hasKotlinTopicsUpdate = globalData.hasKotlinTopicsUpdate
@@ -56,8 +57,7 @@ class TopicViewModel @Inject constructor(
         MutableStateFlow(Resource.Initial())
     private val _updateTopicsStateOnDBResult: MutableStateFlow<Resource<Boolean?>> =
         MutableStateFlow(Resource.Initial())
-    private val _updateVersionIdResult: MutableStateFlow<Resource<Boolean?>> =
-        MutableStateFlow(Resource.Initial())
+    val appVersionCode: Int = globalData.appVersionCode!!
 
 
     fun updateTopicStateInList(id: Int) {
@@ -73,7 +73,6 @@ class TopicViewModel @Inject constructor(
         course?.let {
             initTopicsResult(it)
             initUpdateTopicsOnDBResult(it)
-            initUpdateVersionIdResult(it)
             initUpdateTopicsStateOnDBResult(it)
 
             if (_executionState.value == Start) {
@@ -128,36 +127,15 @@ class TopicViewModel @Inject constructor(
                         is Resource.Initial -> {}
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            updateVersionId(course)
-                        }
+                            updateStoredVersionId(course)
 
-                        is Resource.Error -> {
-                            setExecutionState(Stop)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun initUpdateVersionIdResult(course: Course) {
-        viewModelScope.launch {
-            _updateVersionIdResult.collect { result ->
-                if (_executionState.value != Stop) {
-                    when (result) {
-                        is Resource.Initial -> {}
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
                             if (hasTopicsUpdate(course)) {
                                 setExecutionState(Stop)
-                                updateVersionIdInGlobalData(course)
                                 return@collect
                             }
 
-                            if (hasTopicsPointsUpdate(course)) {
+                            if (hasTopicsPointsUpdate(course))
                                 getTopicsFromDB(course)
-                                updateVersionIdInGlobalData(course)
-                            }
                         }
 
                         is Resource.Error -> {
@@ -180,7 +158,8 @@ class TopicViewModel @Inject constructor(
                         is Resource.Initial -> {}
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            updateVersionId(course)
+                            getTopicsFromDB(course)
+                            updateStoredVersionId(course)
                         }
 
                         is Resource.Error -> {
@@ -263,25 +242,24 @@ class TopicViewModel @Inject constructor(
         }
     }
 
-    private fun updateVersionId(course: Course) {
+    private fun updateStoredVersionId(course: Course) {
         viewModelScope.launch(io) {
             val versionId = lastVersionId ?: DEFAULT_VERSION_ID
-            _updateVersionIdResult.value = Resource.Loading()
-            _updateVersionIdResult.value =
-                if (course.courseName == KOTLIN_COURSE_NAME)
-                    saveKotlinVersionIdUseCase(versionId)
-                else
-                    saveCoroutineVersionIdUseCase(versionId)
-        }
-    }
-
-    private fun updateVersionIdInGlobalData(course: Course) {
-        if (course.courseName == KOTLIN_COURSE_NAME) {
-            globalData.hasKotlinTopicsUpdate = false
-            globalData.hasKotlinTopicsPointsUpdate = false
-        } else {
-            globalData.hasCoroutineTopicsUpdate = false
-            globalData.hasCoroutineTopicsPointsUpdate = false
+            if (course.courseName == KOTLIN_COURSE_NAME) {
+                dataStoreManager.saveData(
+                    intPreferencesKey(KOTLIN_VERSION_ID_PREFERENCE_KEY),
+                    versionId
+                )
+                globalData.hasKotlinTopicsUpdate = false
+                globalData.hasKotlinTopicsPointsUpdate = false
+            } else {
+                dataStoreManager.saveData(
+                    intPreferencesKey(COROUTINE_VERSION_ID_PREFERENCE_KEY),
+                    versionId
+                )
+                globalData.hasCoroutineTopicsUpdate = false
+                globalData.hasCoroutineTopicsPointsUpdate = false
+            }
         }
     }
 }
