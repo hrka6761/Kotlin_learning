@@ -41,9 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.errors.BaseError
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
-import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.domain.entities.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.presentation.Failed
@@ -57,8 +58,8 @@ fun PointsScreen(
     onTopBarBackPressed: () -> Unit,
     appVersionCode: Int,
     navigateToVisualizer: () -> Unit,
-    pointsResult: Resource<List<Point>?>,
-    updateTopicStateOnDBResult: Resource<Boolean?>,
+    pointsResult: Result<List<Point>?, BaseError>,
+    updateTopicStateOnDBResult: Result<Boolean?, BaseError>,
     setUpdatedTopicId: () -> Unit,
     executionState: ExecutionState,
     failedState: Boolean,
@@ -109,15 +110,14 @@ fun PointsScreen(
             contentAlignment = Alignment.Center
         ) {
             when (pointsResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {
+                is Result.Initial, Result.Loading -> {
                     Loading(
                         modifier = modifier,
                         executionState = executionState
                     )
                 }
 
-                is Resource.Success -> {
+                is Result.Success -> {
                     PointsList(
                         modifier = modifier,
                         points = pointsResult.data,
@@ -126,7 +126,7 @@ fun PointsScreen(
                     )
                 }
 
-                is Resource.Error -> {
+                is Result.Error -> {
                     Failed(
                         modifier = modifier,
                         failedState = failedState
@@ -139,7 +139,7 @@ fun PointsScreen(
             }
 
             LaunchedEffect(updateTopicStateOnDBResult) {
-                if (updateTopicStateOnDBResult is Resource.Success)
+                if (updateTopicStateOnDBResult is Result.Success)
                     setUpdatedTopicId()
             }
         }
@@ -360,8 +360,8 @@ fun PointsScreenPreview() {
         onTopBarBackPressed = {},
         appVersionCode = 0,
         navigateToVisualizer = {},
-        pointsResult = Resource.Success(null),
-        updateTopicStateOnDBResult = Resource.Success(null),
+        pointsResult = Result.Initial,
+        updateTopicStateOnDBResult = Result.Initial,
         setUpdatedTopicId = {},
         executionState = Stop,
         failedState = false,

@@ -3,11 +3,15 @@ package ir.hrka.kotlin.presentation.screens.point
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.hrka.kotlin.core.errors.BaseError
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
-import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.utilities.Result
+import ir.hrka.kotlin.core.utilities.onError
+import ir.hrka.kotlin.core.utilities.onLoading
+import ir.hrka.kotlin.core.utilities.onSuccess
 import ir.hrka.kotlin.domain.entities.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.domain.usecases.db.points.GetPointsFromDBUseCase
@@ -36,100 +40,26 @@ class PointsViewModel @Inject constructor(
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val failedState: StateFlow<Boolean> = _failedState
-    private val _points: MutableStateFlow<Resource<List<Point>?>> =
-        MutableStateFlow(Resource.Initial())
-    val points: StateFlow<Resource<List<Point>?>> = _points
-    private val _updatePointsOnDBResult: MutableStateFlow<Resource<Boolean?>> =
-        MutableStateFlow(Resource.Initial())
-    private val _updateTopicStateOnDBResult: MutableStateFlow<Resource<Boolean?>> =
-        MutableStateFlow(Resource.Initial())
-    val updateTopicStateOnDBResult: StateFlow<Resource<Boolean?>> = _updateTopicStateOnDBResult
+    private val _points: MutableStateFlow<Result<List<Point>?, BaseError>> =
+        MutableStateFlow(Result.Initial)
+    val points: StateFlow<Result<List<Point>?, BaseError>> = _points
+    private val _updateTopicStateOnDBResult: MutableStateFlow<Result<Boolean?, BaseError>> =
+        MutableStateFlow(Result.Initial)
+    val updateTopicStateOnDBResult: StateFlow<Result<Boolean?, BaseError>> =
+        _updateTopicStateOnDBResult
     val appVersionCode: Int = globalData.appVersionCode!!
 
 
     fun getPoints(topic: Topic?) {
-        initPointsResult(topic)
-        initUpdatePointsOnDBResult(topic)
-        initUpdateTopicStateOnDBResult()
-
-        if (_executionState.value == Start) {
-            setExecutionState(Loading)
+        if (_executionState.value == Start)
             topic?.let {
                 if (topic.hasUpdate)
                     getPointsFromGit(it)
                 else
                     getPointsFromDB(it)
             }
-        }
     }
 
-
-    private fun initPointsResult(topic: Topic?) {
-        viewModelScope.launch {
-            _points.collect { result ->
-                if (_executionState.value != Stop) {
-                    when (result) {
-                        is Resource.Initial -> {}
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            topic?.let {
-                                if (topic.hasUpdate)
-                                    result.data?.let { updatePointsOnDB(topic, it) }
-                                else
-                                    setExecutionState(Stop)
-                            }
-
-                        }
-
-                        is Resource.Error -> {
-                            setExecutionState(Stop)
-                            setFailedState(true)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun initUpdatePointsOnDBResult(topic: Topic?) {
-        viewModelScope.launch {
-            _updatePointsOnDBResult.collect { result ->
-                if (_executionState.value != Stop) {
-                    when (result) {
-                        is Resource.Initial -> {}
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            topic?.let { updateTopicStateOnDB(it) }
-                        }
-
-                        is Resource.Error -> {
-                            setExecutionState(Stop)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun initUpdateTopicStateOnDBResult() {
-        viewModelScope.launch {
-            _updateTopicStateOnDBResult.collect { result ->
-                if (_executionState.value != Stop) {
-                    when (result) {
-                        is Resource.Initial -> {}
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            setExecutionState(Stop)
-                        }
-
-                        is Resource.Error -> {
-                            setExecutionState(Stop)
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     private fun setExecutionState(state: ExecutionState) {
         _executionState.value = state
@@ -141,30 +71,82 @@ class PointsViewModel @Inject constructor(
 
     private fun getPointsFromGit(topic: Topic) {
         viewModelScope.launch(io) {
-            _points.value = Resource.Loading()
-            _points.value = getPointsFromGitUseCase(topic)
+            getPointsFromGitUseCase(topic)
+                .collect { result ->
+                    _points.value = result
+
+                    result
+                        .onLoading {
+                            setExecutionState(Loading)
+                        }.onSuccess { points ->
+                            if (_executionState.value != Stop)
+                                points?.let { updatePointsOnDB(topic, it) }
+                        }.onError {
+                            if (_executionState.value != Stop) {
+                                setExecutionState(Stop)
+                                setFailedState(true)
+                            }
+                        }
+                }
         }
     }
 
     private fun getPointsFromDB(topic: Topic) {
         viewModelScope.launch(io) {
-            _points.value = Resource.Loading()
-            _points.value = getPointsFromDBUseCase(topic)
+            getPointsFromDBUseCase(topic)
+                .collect { result ->
+                    _points.value = result
+
+                    result
+                        .onLoading {
+
+                        }.onSuccess { _ ->
+                            setExecutionState(Stop)
+                        }.onError {
+                            if (_executionState.value != Stop) {
+                                setExecutionState(Stop)
+                                setFailedState(true)
+                            }
+                        }
+                }
         }
     }
 
     private fun updatePointsOnDB(topic: Topic, points: List<Point>) {
         viewModelScope.launch(io) {
-            _updatePointsOnDBResult.value = Resource.Loading()
-            _updatePointsOnDBResult.value = updatePointsOnDBUseCase(points, topic)
+            updatePointsOnDBUseCase(points, topic)
+                .collect { result ->
+                    result
+                        .onLoading {
+
+                        }.onSuccess { _ ->
+                            if (_executionState.value != Stop)
+                                updateTopicStateOnDB(topic)
+                        }.onError {
+                            setExecutionState(Stop)
+                        }
+                }
         }
     }
 
     private fun updateTopicStateOnDB(topic: Topic) {
         viewModelScope.launch(io) {
-            _updateTopicStateOnDBResult.value = Resource.Loading()
-            _updateTopicStateOnDBResult.value =
-                updateTopicsStateOnDBUseCase(topicsIds = intArrayOf(topic.id), state = false)[0]
+            updateTopicsStateOnDBUseCase(
+                topicsIds = intArrayOf(topic.id),
+                state = false
+            )
+                .collect { result ->
+                    _updateTopicStateOnDBResult.value = result
+
+                    result
+                        .onLoading {
+
+                        }.onSuccess { _ ->
+                            setExecutionState(Stop)
+                        }.onError {
+                            setExecutionState(Stop)
+                        }
+                }
         }
     }
 }

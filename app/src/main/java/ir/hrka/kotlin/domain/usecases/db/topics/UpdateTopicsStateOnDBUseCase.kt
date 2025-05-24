@@ -1,19 +1,23 @@
 package ir.hrka.kotlin.domain.usecases.db.topics
 
-import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.domain.repositories.write.WriteTopicsRepo
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class UpdateTopicsStateOnDBUseCase @Inject constructor(private val writeTopicsRepo: WriteTopicsRepo) {
 
-    suspend operator fun invoke(vararg topicsIds: Int, state: Boolean): List<Resource<Boolean?>> {
-        val totalResult: MutableList<Resource<Boolean?>> = mutableListOf()
-
-        topicsIds.forEach { topicId ->
-            val result = writeTopicsRepo.updateTopicState(topicId, state)
-            totalResult.add(result)
+    operator fun invoke(
+        vararg topicsIds: Int,
+        state: Boolean
+    ): Flow<Result<Boolean?, BaseError>> =
+        flow {
+            topicsIds.forEach { topicId ->
+                writeTopicsRepo.updateTopicState(topicId, state).collect { updateTopicStateResult ->
+                    emit(updateTopicStateResult)
+                }
+            }
         }
-
-        return totalResult
-    }
 }

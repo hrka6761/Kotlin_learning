@@ -8,12 +8,16 @@ import ir.hrka.kotlin.core.Constants.COROUTINE_VERSION_ID_PREFERENCE_KEY
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.Constants.KOTLIN_COURSE_NAME
 import ir.hrka.kotlin.core.Constants.KOTLIN_VERSION_ID_PREFERENCE_KEY
+import ir.hrka.kotlin.core.errors.BaseError
 import ir.hrka.kotlin.core.utilities.DataStoreManager
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
-import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.utilities.Result
+import ir.hrka.kotlin.core.utilities.onError
+import ir.hrka.kotlin.core.utilities.onLoading
+import ir.hrka.kotlin.core.utilities.onSuccess
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.domain.usecases.db.topics.GetTopicsFromDBUseCase
@@ -50,34 +54,26 @@ class TopicViewModel @Inject constructor(
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val failedState: StateFlow<Boolean> = _failedState
-    private val _topics: MutableStateFlow<Resource<List<Topic>?>> =
-        MutableStateFlow(Resource.Initial())
-    val topics: StateFlow<Resource<List<Topic>?>> = _topics
-    private val _updateTopicsOnDBResult: MutableStateFlow<Resource<Boolean?>> =
-        MutableStateFlow(Resource.Initial())
-    private val _updateTopicsStateOnDBResult: MutableStateFlow<Resource<Boolean?>> =
-        MutableStateFlow(Resource.Initial())
+    private val _topics: MutableStateFlow<Result<List<Topic>?, BaseError>> =
+        MutableStateFlow(Result.Initial)
+    val topics: StateFlow<Result<List<Topic>?, BaseError>> = _topics
     val appVersionCode: Int = globalData.appVersionCode!!
 
 
     fun updateTopicStateInList(id: Int) {
-        _topics.value.data?.forEach { topic ->
-            if (topic.id == id) {
-                topic.hasUpdate = false
-                return
+        (_topics.value as? Result.Success)
+            ?.data
+            ?.forEach { topic ->
+                if (topic.id == id) {
+                    topic.hasUpdate = false
+                    return
+                }
             }
-        }
     }
 
     fun getTopics(course: Course?) {
         course?.let {
-            initTopicsResult(it)
-            initUpdateTopicsOnDBResult(it)
-            initUpdateTopicsStateOnDBResult(it)
-
             if (_executionState.value == Start) {
-                setExecutionState(Loading)
-
                 if (hasTopicsUpdate(it)) {
                     getTopicsFromGit(it)
                     return
@@ -89,84 +85,6 @@ class TopicViewModel @Inject constructor(
                 }
 
                 getTopicsFromDB(it)
-            }
-        }
-    }
-
-
-    private fun initTopicsResult(course: Course) {
-        viewModelScope.launch {
-            _topics.collect { result ->
-                if (_executionState.value != Stop) {
-                    when (result) {
-                        is Resource.Initial -> {}
-                        is Resource.Loading -> {}
-
-                        is Resource.Success -> {
-                            if (hasTopicsUpdate(course))
-                                result.data?.let { updateTopicsOnDB(course, it) }
-                            else
-                                setExecutionState(Stop)
-                        }
-
-                        is Resource.Error -> {
-                            setExecutionState(Stop)
-                            setFailedState(true)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun initUpdateTopicsOnDBResult(course: Course) {
-        viewModelScope.launch {
-            _updateTopicsOnDBResult.collect { result ->
-                if (_executionState.value != Stop) {
-                    when (result) {
-                        is Resource.Initial -> {}
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            updateStoredVersionId(course)
-
-                            if (hasTopicsUpdate(course)) {
-                                setExecutionState(Stop)
-                                return@collect
-                            }
-
-                            if (hasTopicsPointsUpdate(course))
-                                getTopicsFromDB(course)
-                        }
-
-                        is Resource.Error -> {
-                            if (hasTopicsPointsUpdate(course))
-                                getTopicsFromDB(course)
-                            else
-                                setExecutionState(Stop)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun initUpdateTopicsStateOnDBResult(course: Course) {
-        viewModelScope.launch {
-            _updateTopicsStateOnDBResult.collect { result ->
-                if (_executionState.value != Stop) {
-                    when (result) {
-                        is Resource.Initial -> {}
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            getTopicsFromDB(course)
-                            updateStoredVersionId(course)
-                        }
-
-                        is Resource.Error -> {
-                            getTopicsFromDB(course)
-                        }
-                    }
-                }
             }
         }
     }
@@ -195,52 +113,101 @@ class TopicViewModel @Inject constructor(
 
     private fun getTopicsFromGit(course: Course) {
         viewModelScope.launch(io) {
-            _topics.value = Resource.Loading()
-            _topics.value = getTopicsFromGitUseCase(course)
+            getTopicsFromGitUseCase(course)
+                .collect { result ->
+                    _topics.value = result
+
+                    result
+                        .onLoading {
+                            setExecutionState(Loading)
+                        }.onSuccess { topics ->
+                            if (_executionState.value != Stop)
+                                topics?.let { updateTopicsOnDB(course, it) }
+                        }.onError {
+                            if (_executionState.value != Stop) {
+                                setExecutionState(Stop)
+                                setFailedState(true)
+                            }
+                        }
+                }
         }
     }
 
     private fun getTopicsFromDB(course: Course) {
         viewModelScope.launch(io) {
-            _topics.value = Resource.Loading()
-            _topics.value = getTopicsFromDBUseCase(course)
+            getTopicsFromDBUseCase(course)
+                .collect { result ->
+                    _topics.value = result
+
+                    result
+                        .onLoading {
+
+                        }.onSuccess { topics ->
+                            setExecutionState(Stop)
+                        }.onError {
+                            if (_executionState.value != Stop) {
+                                setExecutionState(Stop)
+                                setFailedState(true)
+                            }
+                        }
+                }
         }
     }
 
     private fun updateTopicsOnDB(course: Course, topics: List<Topic>) {
         viewModelScope.launch(io) {
-            _updateTopicsOnDBResult.value = Resource.Loading()
-            _updateTopicsOnDBResult.value = updateTopicsOnDBUseCase(topics, course)
+            updateTopicsOnDBUseCase(topics, course)
+                .collect { result ->
+                    result
+                        .onLoading {
+
+                        }.onSuccess { topics ->
+                            if (_executionState.value != Stop) {
+                                updateStoredVersionId(course)
+                                setExecutionState(Stop)
+                            }
+                        }.onError {
+                            setExecutionState(Stop)
+                        }
+                }
         }
     }
 
     private fun updateTopicsStateOnDB(course: Course) {
+        val updatedTopics = getUpdatedTopics(course)
+        var successfulUpdatesNum = 0
+
         viewModelScope.launch(io) {
-            _updateTopicsStateOnDBResult.value = Resource.Loading()
-
-            var successResult: Resource<Boolean?>? = null
-            var errorResult: Resource<Boolean?>? = null
-
-            val updatedTopics =
-                if (course.courseName == KOTLIN_COURSE_NAME)
-                    updatedKotlinTopics.toIntArray()
-                else
-                    updatedCoroutineTopics.toIntArray()
-
             updateTopicsStateOnDBUseCase(
                 topicsIds = updatedTopics,
                 state = true
-            ).forEach { result ->
-                if (result is Resource.Error)
-                    errorResult = result
-                else
-                    successResult = result
-            }
+            )
+                .collect { result ->
+                    result
+                        .onLoading {
 
-            _updateTopicsStateOnDBResult.value =
-                if (errorResult != null) errorResult!! else successResult!!
+                        }.onSuccess { _ ->
+                            if (_executionState.value != Stop) {
+                                successfulUpdatesNum++
+
+                                if (successfulUpdatesNum >= updatedTopics.size) {
+                                    getTopicsFromDB(course)
+                                    updateStoredVersionId(course)
+                                }
+                            }
+                        }.onError {
+                            if (_executionState.value != Stop)
+                                getTopicsFromDB(course)
+                        }
+                }
         }
     }
+
+    private fun getUpdatedTopics(course: Course) =
+        if (course.courseName == KOTLIN_COURSE_NAME)
+            updatedKotlinTopics.toIntArray()
+        else
+            updatedCoroutineTopics.toIntArray()
 
     private fun updateStoredVersionId(course: Course) {
         viewModelScope.launch(io) {

@@ -1,18 +1,28 @@
 package ir.hrka.kotlin.domain.usecases.db.courses
 
-import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.repositories.write.WriteCoursesRepo
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class UpdateCoursesOnDBUseCase @Inject constructor(private val writeCoursesRepo: WriteCoursesRepo) {
 
-    suspend operator fun invoke(courses: List<Course>): Resource<Boolean?> {
-        val removeResult = writeCoursesRepo.removeCourses()
+    operator fun invoke(courses: List<Course>): Flow<Result<Boolean?, BaseError>> {
+        var readyToSave = false
 
-        if (removeResult is Resource.Error)
-            return removeResult
+        return flow {
+            writeCoursesRepo.removeCourses().collect { removeResult ->
+                if (removeResult !is Result.Success) emit(removeResult)
+                readyToSave = removeResult is Result.Success
+            }
 
-        return writeCoursesRepo.saveCourses(courses)
+            if (readyToSave)
+                writeCoursesRepo.saveCourses(courses).collect { saveResult ->
+                    if (saveResult !is Result.Loading) emit(saveResult)
+                }
+        }
     }
 }

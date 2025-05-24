@@ -1,9 +1,11 @@
 package ir.hrka.kotlin.domain.repositories.read
 
-import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.domain.entities.VersionsInfo
+import kotlinx.coroutines.flow.Flow
 
 interface ReadChangelogRepo {
 
-    suspend fun getChangeLog(): Resource<VersionsInfo?>
+    suspend fun getChangeLog(): Flow<Result<VersionsInfo?, BaseError>>
 }

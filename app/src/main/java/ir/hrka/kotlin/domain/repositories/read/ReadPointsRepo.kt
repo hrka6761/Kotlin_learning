@@ -1,10 +1,12 @@
 package ir.hrka.kotlin.domain.repositories.read
 
-import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.domain.entities.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
+import kotlinx.coroutines.flow.Flow
 
 interface ReadPointsRepo {
 
-    suspend fun getPoints(topic: Topic): Resource<List<Point>?>
+    suspend fun getPoints(topic: Topic): Flow<Result<List<Point>?, BaseError>>
 }

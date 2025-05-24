@@ -44,9 +44,10 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.request.RequestOptions
 import ir.hrka.kotlin.R
+import ir.hrka.kotlin.core.errors.BaseError
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
-import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.presentation.Failed
 import ir.hrka.kotlin.presentation.Loading
@@ -58,7 +59,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToAbout: () -> Unit,
     failedState: Boolean,
-    coursesResult: Resource<List<Course>?>,
+    coursesResult: Result<List<Course>?, BaseError>,
     executionState: ExecutionState,
     fetchCourses: () -> Unit,
     onClickCourseRow: (course: Course) -> Unit
@@ -101,15 +102,14 @@ fun HomeScreen(
             contentAlignment = Alignment.TopCenter
         ) {
             when (coursesResult) {
-                is Resource.Initial -> {}
-                is Resource.Loading -> {
+                is Result.Initial, Result.Loading -> {
                     Loading(
                         modifier = modifier,
                         executionState = executionState
                     )
                 }
 
-                is Resource.Success -> {
+                is Result.Success -> {
                     when (configuration.orientation) {
                         ORIENTATION_PORTRAIT -> CoursesColumnList(
                             modifier = modifier,
@@ -125,7 +125,7 @@ fun HomeScreen(
                     }
                 }
 
-                is Resource.Error -> {
+                is Result.Error -> {
                     Failed(
                         modifier = modifier,
                         failedState = failedState
@@ -294,7 +294,7 @@ fun HomeScreenPreview() {
     HomeScreen(
         navigateToAbout = {},
         failedState = false,
-        coursesResult = Resource.Success(null),
+        coursesResult = Result.Initial,
         executionState = Stop,
         fetchCourses = {},
         onClickCourseRow = {}

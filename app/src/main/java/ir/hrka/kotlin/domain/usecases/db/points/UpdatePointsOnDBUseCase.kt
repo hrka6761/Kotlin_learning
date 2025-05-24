@@ -1,8 +1,9 @@
 package ir.hrka.kotlin.domain.usecases.db.points
 
 import ir.hrka.kotlin.core.Constants.DB_WRITE_POINTS_ERROR_CODE
+import ir.hrka.kotlin.core.errors.BaseError
 import ir.hrka.kotlin.core.errors.Error
-import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.domain.entities.Point
 import ir.hrka.kotlin.domain.entities.db.DBPoint
 import ir.hrka.kotlin.domain.entities.db.SnippetCode
@@ -15,78 +16,87 @@ import ir.hrka.kotlin.domain.repositories.write.WriteSubPointsRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.last
 import javax.inject.Inject
 import javax.inject.Named
 
 class UpdatePointsOnDBUseCase @Inject constructor(
     @Named("Default") private val default: CoroutineDispatcher,
-    @Named("db")private val readPointsRepo: ReadPointsRepo,
+    @Named("db") private val readPointsRepo: ReadPointsRepo,
     private val writePointsRepo: WritePointsRepo,
     private val writeSubPointsRepo: WriteSubPointsRepo,
     private val writeSnippetCodesRepo: WriteSnippetCodesRepo
 ) {
 
-    suspend operator fun invoke(topicPoints: List<Point>, topic: Topic): Resource<Boolean?> {
-        val getOldPointsResult = readPointsRepo.getPoints(topic)
+    operator fun invoke(
+        topicPoints: List<Point>,
+        topic: Topic
+    ): Flow<Result<Boolean?, BaseError>> {
+        var readyToRemove = false
+        var readyToSave = false
+        var oldPoints: List<Point>? = null
 
-        if (getOldPointsResult is Resource.Error)
-            return Resource.Error(getOldPointsResult.error!!)
+        return flow {
+            readPointsRepo.getPoints(topic).collect { result ->
+                if (result is Result.Loading || result is Result.Error) emit(result)
+                if (result is Result.Success) {
+                    readyToRemove = !result.data.isNullOrEmpty()
+                    readyToSave = result.data.isNullOrEmpty()
 
-        val oldPoints = getOldPointsResult.data
+                    if (!result.data.isNullOrEmpty()) oldPoints = result.data
+                }
+            }
 
-        if (oldPoints.isNullOrEmpty()) {
-            val saveResult = saveNewPointsOnDb(topicPoints, topic.topicTitle)
+            if (readyToRemove) {
+                val removeResult = removeOldPointFromDB(oldPoints)
+                readyToSave = removeResult is Result.Success
 
-            if (saveResult is Resource.Error)
-                return saveResult
-        } else {
-            val removeResult = removeOldPointFromDB(oldPoints)
+                if (removeResult is Result.Error) emit(removeResult)
+            }
 
-            if (removeResult is Resource.Error)
-                return removeResult
-
-            val saveResult = saveNewPointsOnDb(topicPoints, topic.topicTitle)
-
-            if (saveResult is Resource.Error)
-                return saveResult
+            if (readyToSave) emit(saveNewPointsOnDb(topicPoints, topic.topicTitle))
         }
-
-        return Resource.Success(true)
     }
 
 
-    private suspend fun removeOldPointFromDB(
-        oldPoints: List<Point>
-    ): Resource<Boolean?> {
-        oldPoints.forEach { oldPoint ->
+    private suspend fun removeOldPointFromDB(oldPoints: List<Point>?): Result<Boolean?, BaseError> {
+        oldPoints?.forEach { oldPoint ->
             val removePointDiffered =
-                CoroutineScope(default).async { writePointsRepo.removePoint(oldPoint.id) }
+                CoroutineScope(default).async {
+                    writePointsRepo.removePoint(oldPoint.id).last()
+                }
             val removeSubPointDiffered =
-                CoroutineScope(default).async { writeSubPointsRepo.removeSubPoints(oldPoint.id) }
+                CoroutineScope(default).async {
+                    writeSubPointsRepo.removeSubPoints(oldPoint.id).last()
+                }
             val removeSnippetCodeDiffered =
-                CoroutineScope(default).async { writeSnippetCodesRepo.removeSnippetCodes(oldPoint.id) }
+                CoroutineScope(default).async {
+                    writeSnippetCodesRepo.removeSnippetCodes(oldPoint.id).last()
+                }
 
             val removePointResult = removePointDiffered.await()
             val removeSubPointResult = removeSubPointDiffered.await()
             val removeSnippetCodeResult = removeSnippetCodeDiffered.await()
 
-            if (removePointResult is Resource.Error)
+            if (removePointResult is Result.Error)
                 return removePointResult
 
-            if (removeSubPointResult is Resource.Error)
+            if (removeSubPointResult is Result.Error)
                 return removeSubPointResult
 
-            if (removeSnippetCodeResult is Resource.Error)
+            if (removeSnippetCodeResult is Result.Error)
                 return removeSnippetCodeResult
         }
 
-        return Resource.Success(true)
+        return Result.Success(true)
     }
 
     private suspend fun saveNewPointsOnDb(
         newPoints: List<Point>,
         topicTitle: String
-    ): Resource<Boolean?> {
+    ): Result<Boolean?, BaseError> {
         newPoints.forEach { newPoint ->
             val savePointDiffered =
                 CoroutineScope(default).async {
@@ -95,15 +105,15 @@ class UpdatePointsOnDBUseCase @Inject constructor(
                             pointText = newPoint.headPoint,
                             topicName = topicTitle
                         )
-                    )
+                    ).last()
                 }
 
             val savePointResult = savePointDiffered.await()
 
-            if (savePointResult is Resource.Error)
-                return Resource.Error(savePointResult.error!!)
+            if (savePointResult is Result.Error)
+                return Result.Error(savePointResult.error)
 
-            val rowId = savePointResult.data
+            val rowId = (savePointResult as Result.Success).data
 
             if (rowId != null) {
                 val saveSubPointDiffered =
@@ -113,7 +123,9 @@ class UpdatePointsOnDBUseCase @Inject constructor(
                                 pointId = rowId,
                                 subPointText = str
                             )
-                        }?.toTypedArray()?.let { writeSubPointsRepo.saveSubPoints(it) }
+                        }?.toTypedArray()?.let {
+                            writeSubPointsRepo.saveSubPoints(it)
+                        }?.last()
                     }
 
                 val saveSnippetCodeDiffered =
@@ -123,20 +135,22 @@ class UpdatePointsOnDBUseCase @Inject constructor(
                                 pointId = rowId,
                                 snippetCodeText = str
                             )
-                        }?.toTypedArray()?.let { writeSnippetCodesRepo.saveSnippetCodes(it) }
+                        }?.toTypedArray()?.let {
+                            writeSnippetCodesRepo.saveSnippetCodes(it)
+                        }?.last()
                     }
 
                 val saveSubPointResult = saveSubPointDiffered.await()
                 val saveSnippetCodeResult = saveSnippetCodeDiffered.await()
 
-                if (saveSubPointResult is Resource.Error)
+                if (saveSubPointResult is Result.Error)
                     return saveSubPointResult
 
-                if (saveSnippetCodeResult is Resource.Error)
+                if (saveSnippetCodeResult is Result.Error)
                     return saveSnippetCodeResult
 
             } else
-                return Resource.Error(
+                return Result.Error(
                     Error(
                         errorCode = DB_WRITE_POINTS_ERROR_CODE,
                         errorMsg = "Can't save sub Points and snippet codes when Point id is null."
@@ -144,6 +158,6 @@ class UpdatePointsOnDBUseCase @Inject constructor(
                 )
         }
 
-        return Resource.Success(true)
+        return Result.Success(true)
     }
 }

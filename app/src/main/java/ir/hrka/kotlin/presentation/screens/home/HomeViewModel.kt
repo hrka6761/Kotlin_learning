@@ -6,10 +6,16 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.core.Constants.COURSES_VERSION_ID_PREFERENCE_KEY
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
+import ir.hrka.kotlin.core.errors.BaseError
 import ir.hrka.kotlin.core.utilities.DataStoreManager
 import ir.hrka.kotlin.core.utilities.ExecutionState
+import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
+import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
-import ir.hrka.kotlin.core.utilities.Resource
+import ir.hrka.kotlin.core.utilities.Result
+import ir.hrka.kotlin.core.utilities.onError
+import ir.hrka.kotlin.core.utilities.onLoading
+import ir.hrka.kotlin.core.utilities.onSuccess
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.usecases.db.courses.GetCoursesFromDBUseCase
 import ir.hrka.kotlin.domain.usecases.db.courses.UpdateCoursesOnDBUseCase
@@ -38,68 +44,17 @@ class HomeViewModel @Inject constructor(
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val failedState: StateFlow<Boolean> = _failedState
-    private val _courses: MutableStateFlow<Resource<List<Course>?>> =
-        MutableStateFlow(Resource.Initial())
-    val courses: StateFlow<Resource<List<Course>?>> = _courses
-    private val _saveCourseOnDBResult: MutableStateFlow<Resource<Boolean?>> =
-        MutableStateFlow(Resource.Initial())
+    private val _courses: MutableStateFlow<Result<List<Course>?, BaseError>> =
+        MutableStateFlow(Result.Initial)
+    val courses: StateFlow<Result<List<Course>?, BaseError>> = _courses
 
 
     fun getCourses() {
-        initGetCoursesResult()
-        initSaveCoursesOnDBResult()
-
-        if (_executionState.value == Start) {
-            setExecutionState(ExecutionState.Loading)
+        if (_executionState.value == Start)
             if (hasCoursesUpdate)
                 getCoursesFromGit()
             else
                 getCoursesFromDB()
-        }
-    }
-
-
-    private fun initGetCoursesResult() {
-        viewModelScope.launch {
-            _courses.collect { result ->
-                if (_executionState.value != ExecutionState.Stop)
-                    when (result) {
-                        is Resource.Initial -> {}
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            if (hasCoursesUpdate)
-                                _courses.value.data?.let { saveCoursesOnDB(it) }
-                            else
-                                setExecutionState(ExecutionState.Stop)
-                        }
-
-                        is Resource.Error -> {
-                            setExecutionState(ExecutionState.Stop)
-                            setFailedState(true)
-                        }
-                    }
-            }
-        }
-    }
-
-    private fun initSaveCoursesOnDBResult() {
-        viewModelScope.launch {
-            _saveCourseOnDBResult.collect { result ->
-                if (_executionState.value != ExecutionState.Stop)
-                    when (result) {
-                        is Resource.Initial -> {}
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            updateCoursesVersion()
-                            setExecutionState(ExecutionState.Stop)
-                        }
-
-                        is Resource.Error -> {
-                            setExecutionState(ExecutionState.Stop)
-                        }
-                    }
-            }
-        }
     }
 
     private fun setExecutionState(state: ExecutionState) {
@@ -112,22 +67,60 @@ class HomeViewModel @Inject constructor(
 
     private fun getCoursesFromGit() {
         viewModelScope.launch(io) {
-            _courses.value = Resource.Loading()
-            _courses.value = getCoursesFromGitUseCase()
+            getCoursesFromGitUseCase()
+                .collect { result ->
+                    _courses.value = result
+                    result
+                        .onLoading {
+                            setExecutionState(Loading)
+                        }.onSuccess { courses ->
+                            if (_executionState.value != Stop)
+                                courses?.let { saveCoursesOnDB(it) }
+                        }.onError {
+                            if (_executionState.value != Stop) {
+                                setExecutionState(Stop)
+                                setFailedState(true)
+                            }
+                        }
+                }
         }
     }
 
     private fun getCoursesFromDB() {
         viewModelScope.launch(io) {
-            _courses.value = Resource.Loading()
-            _courses.value = getCoursesFromDBUseCase()
+            getCoursesFromDBUseCase()
+                .collect { result ->
+                    _courses.value = result
+
+                    result
+                        .onLoading {
+                            setExecutionState(Loading)
+                        }.onSuccess { courses ->
+                            setExecutionState(Stop)
+                        }.onError {
+                            if (_executionState.value != Stop) {
+                                setExecutionState(Stop)
+                                setFailedState(true)
+                            }
+                        }
+                }
         }
     }
 
     private fun saveCoursesOnDB(courses: List<Course>) {
         viewModelScope.launch(io) {
-            _saveCourseOnDBResult.value = Resource.Loading()
-            _saveCourseOnDBResult.value = updateCoursesOnDBUseCase(courses)
+            updateCoursesOnDBUseCase(courses)
+                .collect { result ->
+                    result
+                        .onLoading {
+
+                        }.onSuccess { _ ->
+                            updateCoursesVersion()
+                            setExecutionState(Stop)
+                        }.onError {
+                            setExecutionState(Stop)
+                        }
+                }
         }
     }
 

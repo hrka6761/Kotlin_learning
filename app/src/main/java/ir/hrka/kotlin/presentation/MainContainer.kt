@@ -110,7 +110,7 @@ fun AppContent(
                 val updateDialogOptionalDismissAction = {
                     navHostController.navigate(Home.destination)
                 }
-                val onCheckAction = {
+                val checkUpdate = {
                     splashViewModel.checkChangelog(appVersionCode)
                 }
                 val navigateToHome = {
@@ -126,7 +126,7 @@ fun AppContent(
                     updateDialogOptionalDismissAction = updateDialogOptionalDismissAction,
                     executionState = executionState,
                     updateState = updateState,
-                    checkUpdate = onCheckAction,
+                    checkUpdate = checkUpdate,
                     navigateToHome = navigateToHome
                 )
             }
