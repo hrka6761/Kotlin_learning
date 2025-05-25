@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.domain.usecases.db.topics
 
-import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.errors.Errors
 import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.domain.repositories.write.WriteTopicsRepo
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +12,7 @@ class UpdateTopicsStateOnDBUseCase @Inject constructor(private val writeTopicsRe
     operator fun invoke(
         vararg topicsIds: Int,
         state: Boolean
-    ): Flow<Result<Boolean?, BaseError>> =
+    ): Flow<Result<Boolean?, Errors>> =
         flow {
             topicsIds.forEach { topicId ->
                 writeTopicsRepo.updateTopicState(topicId, state).collect { updateTopicStateResult ->

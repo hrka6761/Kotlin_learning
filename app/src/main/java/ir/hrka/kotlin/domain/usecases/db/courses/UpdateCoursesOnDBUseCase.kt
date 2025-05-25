@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.domain.usecases.db.courses
 
-import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.errors.Errors
 import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.repositories.write.WriteCoursesRepo
@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class UpdateCoursesOnDBUseCase @Inject constructor(private val writeCoursesRepo: WriteCoursesRepo) {
 
-    operator fun invoke(courses: List<Course>): Flow<Result<Boolean?, BaseError>> {
+    operator fun invoke(courses: List<Course>): Flow<Result<Boolean?, Errors>> {
         var readyToSave = false
 
         return flow {

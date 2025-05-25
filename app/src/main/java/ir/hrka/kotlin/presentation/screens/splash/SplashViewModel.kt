@@ -20,7 +20,7 @@ import ir.hrka.kotlin.core.utilities.ExecutionState.Start
 import ir.hrka.kotlin.core.utilities.onError
 import ir.hrka.kotlin.core.utilities.onLoading
 import ir.hrka.kotlin.core.utilities.onSuccess
-import ir.hrka.kotlin.domain.entities.VersionsInfo
+import ir.hrka.kotlin.domain.entities.git.VersionsData
 import ir.hrka.kotlin.domain.usecases.git.GetChangelogFromGitUseCase
 import ir.hrka.kotlin.presentation.GlobalData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -43,7 +43,7 @@ class SplashViewModel @Inject constructor(
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _updateState: MutableStateFlow<Int> = MutableStateFlow(UPDATE_UNKNOWN_STATE)
     val updateState: StateFlow<Int> = _updateState
-    private var _versionsInfo: VersionsInfo? = null
+    private var _versionsData: VersionsData? = null
     private var _coursesVersionId: Int = DEFAULT_VERSION_ID
     private var _kotlinVersionId: Int = DEFAULT_VERSION_ID
     private var _coroutineVersionId: Int = DEFAULT_VERSION_ID
@@ -66,7 +66,7 @@ class SplashViewModel @Inject constructor(
                         .onLoading {
                             setExecutionState(Loading)
                         }.onSuccess { versionsInfo ->
-                            _versionsInfo = versionsInfo
+                            _versionsData = versionsInfo
                             initAndCheck(appVersionCode)
                         }.onError {
                             initAndCheck(appVersionCode)
@@ -92,7 +92,7 @@ class SplashViewModel @Inject constructor(
 
     private fun initGlobalData(appVersionCode: Int) {
         globalData.initGlobalData(
-            versionsInfo = _versionsInfo,
+            versionsData = _versionsData,
             coursesVersionId = _coursesVersionId,
             kotlinVersionId = _kotlinVersionId,
             coroutineVersionId = _coroutineVersionId,
@@ -102,9 +102,9 @@ class SplashViewModel @Inject constructor(
 
     private fun checkNewVersion() {
         val appVersionCode = globalData.appVersionCode ?: DEFAULT_VERSION_CODE
-        val lastVersionCode = _versionsInfo?.lastVersionCode ?: appVersionCode
+        val lastVersionCode = _versionsData?.lastVersionCode ?: appVersionCode
         val minSupportedVersionCode =
-            _versionsInfo?.minSupportedVersionCode ?: appVersionCode
+            _versionsData?.minSupportedVersionCode ?: appVersionCode
 
         _updateState.value =
             if (appVersionCode < lastVersionCode)

@@ -1,11 +1,9 @@
 package ir.hrka.kotlin.domain.usecases.db.points
 
-import ir.hrka.kotlin.core.Constants.DB_WRITE_POINTS_ERROR_CODE
-import ir.hrka.kotlin.core.errors.BaseError
-import ir.hrka.kotlin.core.errors.Error
+import ir.hrka.kotlin.core.errors.Errors
 import ir.hrka.kotlin.core.utilities.Result
-import ir.hrka.kotlin.domain.entities.Point
 import ir.hrka.kotlin.domain.entities.db.DBPoint
+import ir.hrka.kotlin.domain.entities.git.inner_data.Point
 import ir.hrka.kotlin.domain.entities.db.SnippetCode
 import ir.hrka.kotlin.domain.entities.db.SubPoint
 import ir.hrka.kotlin.domain.entities.db.Topic
@@ -33,7 +31,7 @@ class UpdatePointsOnDBUseCase @Inject constructor(
     operator fun invoke(
         topicPoints: List<Point>,
         topic: Topic
-    ): Flow<Result<Boolean?, BaseError>> {
+    ): Flow<Result<Boolean?, Errors>> {
         var readyToRemove = false
         var readyToSave = false
         var oldPoints: List<Point>? = null
@@ -61,7 +59,7 @@ class UpdatePointsOnDBUseCase @Inject constructor(
     }
 
 
-    private suspend fun removeOldPointFromDB(oldPoints: List<Point>?): Result<Boolean?, BaseError> {
+    private suspend fun removeOldPointFromDB(oldPoints: List<Point>?): Result<Boolean?, Errors> {
         oldPoints?.forEach { oldPoint ->
             val removePointDiffered =
                 CoroutineScope(default).async {
@@ -96,7 +94,7 @@ class UpdatePointsOnDBUseCase @Inject constructor(
     private suspend fun saveNewPointsOnDb(
         newPoints: List<Point>,
         topicTitle: String
-    ): Result<Boolean?, BaseError> {
+    ): Result<Boolean?, Errors> {
         newPoints.forEach { newPoint ->
             val savePointDiffered =
                 CoroutineScope(default).async {
@@ -113,9 +111,7 @@ class UpdatePointsOnDBUseCase @Inject constructor(
             if (savePointResult is Result.Error)
                 return Result.Error(savePointResult.error)
 
-            val rowId = (savePointResult as Result.Success).data
-
-            if (rowId != null) {
+            (savePointResult as Result.Success).data?.let { rowId ->
                 val saveSubPointDiffered =
                     CoroutineScope(default).async {
                         newPoint.subPoints?.map { str ->
@@ -148,14 +144,7 @@ class UpdatePointsOnDBUseCase @Inject constructor(
 
                 if (saveSnippetCodeResult is Result.Error)
                     return saveSnippetCodeResult
-
-            } else
-                return Result.Error(
-                    Error(
-                        errorCode = DB_WRITE_POINTS_ERROR_CODE,
-                        errorMsg = "Can't save sub Points and snippet codes when Point id is null."
-                    )
-                )
+            }
         }
 
         return Result.Success(true)

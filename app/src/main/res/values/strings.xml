@@ -41,6 +41,8 @@
     <string name="visualization_page_title">Play Visualizer</string>
     <string name="failed_to_fetch_the_data">Failed to fetch the data</string>
     <string name="about_app_bar_title">Author info</string>
+
+    <!--Visualizers Snippet code dialogs-->
     <string name="visualizer_snippet_code_dialog_title">Visualizer Code</string>
     <string name="visualizer_snippet_code_dialog_close_btn">Close</string>
     <string name="sequential_programming_screen_snippet_code_dialog_desc">Running three tasks in the main thread sequentially.</string>
@@ -55,6 +57,8 @@
     <string name="regular_coroutine_scope_function_screen_snippet_code_dialog_code">fun main() {\n    val scope = CoroutineScope(...)\n    \n    scope.launch {\n        task1()\n    }\n    \n    scope.launch {\n        task2()\n    }\n\n    scope.launch {\n        task3()\n    }\n}\n\n\nprivate suspend fun task1() {\n    delay(4_000)\n}\n\nprivate suspend fun task2() {\n    delay(2_000)\n}\n\nprivate suspend fun task3() {\n    delay(3_000)\n}</string>
     <string name="coroutine_scope_function_screen_snippet_code_dialog_desc">Running some tasks by coroutineScope function in the main thread.\nThe coroutineScope function is executed in the coroutine created by CoroutineScope(Dispatchers. Main).launch { ... }.\nThe coroutineScope function suspend the coroutine that execute in it until all launched its children complete.</string>
     <string name="coroutine_scope_function_screen_snippet_code_dialog_code">fun main() {\n    task1()\n\n    CoroutineScope(Dispatchers.Main)\n        .launch {\n            task2()\n\n            coroutineScope {\n                launch {\n                    task3()\n                }\n                launch {\n                    task4()\n                }\n            }\n\n            task5()\n        }\n\n    task6()\n}\n\n\nprivate fun task1() {\n    Thread.sleep(1_000)\n}\n\nprivate suspend fun task2() {\n    delay(4_000)\n}\n\nprivate suspend fun task3() {\n    delay(2_000)\n}\n\nprivate suspend fun task4() {\n    delay(3_000)\n}\n\nprivate suspend fun task5() {\n    delay(1_000)\n}\n\nprivate fun task6() {\n    Thread.sleep(2_500)\n}</string>
+
+    <!--Visualizers components-->
     <string name="thread_name_title">"Thread name: "</string>
     <string name="thread_id_title">"Thread id: "</string>
     <string name="coroutine_name_title">"Coroutine name: "</string>
@@ -66,6 +70,8 @@
     <string name="task_name_title">"Task name: "</string>
     <string name="duration_time_title">"Duration time: "</string>
     <string name="scope_name_title">"Scope name: "</string>
+
+    <!--Visualizers guidance-->
     <string name="guidance_thread">Thread</string>
     <string name="guidance_coroutine">Coroutine</string>
     <string name="guidance_task">Task</string>

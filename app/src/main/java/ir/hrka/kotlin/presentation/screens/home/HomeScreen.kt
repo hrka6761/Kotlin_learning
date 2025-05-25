@@ -44,7 +44,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.request.RequestOptions
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.errors.Errors
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Result
@@ -59,7 +59,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToAbout: () -> Unit,
     failedState: Boolean,
-    coursesResult: Result<List<Course>?, BaseError>,
+    coursesResult: Result<List<Course>?, Errors>,
     executionState: ExecutionState,
     fetchCourses: () -> Unit,
     onClickCourseRow: (course: Course) -> Unit

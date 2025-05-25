@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.data.datasource.git
 
-import ir.hrka.kotlin.domain.entities.GitFileData
+import ir.hrka.kotlin.domain.entities.git.GitFileData
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers

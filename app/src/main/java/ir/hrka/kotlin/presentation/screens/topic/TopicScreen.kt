@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.errors.Errors
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Result
@@ -53,7 +53,7 @@ fun TopicsScreen(
     modifier: Modifier = Modifier,
     course: Course?,
     onTopBarBackPressed: () -> Unit,
-    topicsResult: Result<List<Topic>?, BaseError>,
+    topicsResult: Result<List<Topic>?, Errors>,
     executionState: ExecutionState,
     failedState: Boolean,
     updateTopicState: () -> Unit,

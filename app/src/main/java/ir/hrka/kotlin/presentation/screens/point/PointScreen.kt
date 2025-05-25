@@ -41,11 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import ir.hrka.kotlin.R
-import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.errors.Errors
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
 import ir.hrka.kotlin.core.utilities.Result
-import ir.hrka.kotlin.domain.entities.Point
+import ir.hrka.kotlin.domain.entities.git.inner_data.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.presentation.Failed
 import ir.hrka.kotlin.presentation.Loading
@@ -58,8 +58,8 @@ fun PointsScreen(
     onTopBarBackPressed: () -> Unit,
     appVersionCode: Int,
     navigateToVisualizer: () -> Unit,
-    pointsResult: Result<List<Point>?, BaseError>,
-    updateTopicStateOnDBResult: Result<Boolean?, BaseError>,
+    pointsResult: Result<List<Point>?, Errors>,
+    updateTopicStateOnDBResult: Result<Boolean?, Errors>,
     setUpdatedTopicId: () -> Unit,
     executionState: ExecutionState,
     failedState: Boolean,

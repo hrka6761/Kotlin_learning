@@ -37,24 +37,10 @@ object Constants {
     const val TOKEN = "This is a secret."
     const val BASE_URL = "https://api.github.com/repos/hrka6761/Kotlin_learning/contents/"
 
-    const val UNKNOWN_ERROR_CODE = 999
-    const val RETROFIT_ERROR_CODE = 1000
-    const val READ_FILE_ERROR_CODE = 1001
-    const val LOCAL_DATA_READ_ERROR_CODE = 2000
-    const val LOCAL_DATA_WRITE_ERROR_CODE = 2001
-    const val DB_WRITE_TOPICS_ERROR_CODE = 3001
-    const val DB_CLEAR_TOPICS_ERROR_CODE = 3002
-    const val DB_UPDATE_TOPICS_ERROR_CODE = 3003
-    const val DB_READ_COURSES_ERROR_CODE = 3004
-    const val DB_WRITE_COURSES_ERROR_CODE = 3005
-    const val DB_REMOVE_COURSES_ERROR_CODE = 3006
-    const val DB_READ_POINTS_ERROR_CODE = 3007
-    const val DB_WRITE_POINTS_ERROR_CODE = 3008
-    const val DB_WRITE_SUB_POINTS_ERROR_CODE = 3009
-    const val DB_WRITE_SNIPPET_CODES_ERROR_CODE = 3010
-    const val DB_REMOVE_POINTS_ERROR_CODE = 3011
-    const val DB_REMOVE_SUB_POINTS_ERROR_CODE = 3012
-    const val DB_REMOVE_SNIPPET_CODES_ERROR_CODE = 3013
+    const val DB_ERROR_CODE = 1000
+    const val EXTRACTION_ERROR_CODE = 1001
+    const val RETROFIT_ERROR_CODE = 1002
+    const val JSON_CONVERSION_ERROR_CODE = 1003
 
     const val DATABASE_NAME = "kotlin-database"
     const val COURSES_VERSION_ID_PREFERENCE_KEY = "coursesVersionId"

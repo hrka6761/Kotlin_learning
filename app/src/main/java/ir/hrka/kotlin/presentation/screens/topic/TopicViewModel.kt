@@ -8,7 +8,7 @@ import ir.hrka.kotlin.core.Constants.COROUTINE_VERSION_ID_PREFERENCE_KEY
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.Constants.KOTLIN_COURSE_NAME
 import ir.hrka.kotlin.core.Constants.KOTLIN_VERSION_ID_PREFERENCE_KEY
-import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.errors.Errors
 import ir.hrka.kotlin.core.utilities.DataStoreManager
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
@@ -54,9 +54,9 @@ class TopicViewModel @Inject constructor(
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val failedState: StateFlow<Boolean> = _failedState
-    private val _topics: MutableStateFlow<Result<List<Topic>?, BaseError>> =
+    private val _topics: MutableStateFlow<Result<List<Topic>?, Errors>> =
         MutableStateFlow(Result.Initial)
-    val topics: StateFlow<Result<List<Topic>?, BaseError>> = _topics
+    val topics: StateFlow<Result<List<Topic>?, Errors>> = _topics
     val appVersionCode: Int = globalData.appVersionCode!!
 
 

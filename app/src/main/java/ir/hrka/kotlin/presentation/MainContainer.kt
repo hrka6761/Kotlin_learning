@@ -42,7 +42,7 @@ import ir.hrka.kotlin.core.utilities.Screen.RegularCoroutineScopeFunction
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Stop
 import ir.hrka.kotlin.core.utilities.sharePoint
 import ir.hrka.kotlin.core.utilities.translatePoint
-import ir.hrka.kotlin.domain.entities.Point
+import ir.hrka.kotlin.domain.entities.git.inner_data.Point
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.presentation.screens.about.AboutScreen

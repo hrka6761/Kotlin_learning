@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
-import ir.hrka.kotlin.domain.entities.Point
+import ir.hrka.kotlin.domain.entities.git.inner_data.Point
 import androidx.core.net.toUri
 
 private val sendIntent = Intent().apply {

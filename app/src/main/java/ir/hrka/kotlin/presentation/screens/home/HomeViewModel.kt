@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hrka.kotlin.core.Constants.COURSES_VERSION_ID_PREFERENCE_KEY
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
-import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.errors.Errors
 import ir.hrka.kotlin.core.utilities.DataStoreManager
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Stop
@@ -44,9 +44,9 @@ class HomeViewModel @Inject constructor(
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val failedState: StateFlow<Boolean> = _failedState
-    private val _courses: MutableStateFlow<Result<List<Course>?, BaseError>> =
+    private val _courses: MutableStateFlow<Result<List<Course>?, Errors>> =
         MutableStateFlow(Result.Initial)
-    val courses: StateFlow<Result<List<Course>?, BaseError>> = _courses
+    val courses: StateFlow<Result<List<Course>?, Errors>> = _courses
 
 
     fun getCourses() {

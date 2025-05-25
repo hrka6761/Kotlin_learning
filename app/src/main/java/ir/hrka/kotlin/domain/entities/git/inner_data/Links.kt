@@ -1,4 +1,4 @@
-package ir.hrka.kotlin.domain.entities
+package ir.hrka.kotlin.domain.entities.git.inner_data
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.core.errors
 
-interface BaseError {
+interface Errors {
     val errorCode: Int
-    val errorMsg: String
+    val msg: String?
 }

@@ -1,6 +1,6 @@
 package ir.hrka.kotlin.domain.usecases.db.topics
 
-import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.errors.Errors
 import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class UpdateTopicsOnDBUseCase @Inject constructor(private val writeTopicsRepo: WriteTopicsRepo) {
 
-    operator fun invoke(topics: List<Topic>, course: Course): Flow<Result<Boolean?, BaseError>> {
+    operator fun invoke(topics: List<Topic>, course: Course): Flow<Result<Boolean?, Errors>> {
         var readyToSave = false
 
         return flow {

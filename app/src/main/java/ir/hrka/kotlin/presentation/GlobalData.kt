@@ -2,15 +2,15 @@ package ir.hrka.kotlin.presentation
 
 import ir.hrka.kotlin.core.Constants.DEFAULT_VERSION_ID
 import ir.hrka.kotlin.core.utilities.VersionType
-import ir.hrka.kotlin.domain.entities.Version
-import ir.hrka.kotlin.domain.entities.VersionsInfo
+import ir.hrka.kotlin.domain.entities.git.inner_data.Version
+import ir.hrka.kotlin.domain.entities.git.VersionsData
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GlobalData @Inject constructor() {
 
-    private var _versionsInfo: VersionsInfo? = null
+    private var _versionsData: VersionsData? = null
     private var _versionsList: List<Version>? = null
     private var _coursesVersionId = DEFAULT_VERSION_ID
     private var _kotlinVersionId = DEFAULT_VERSION_ID
@@ -28,16 +28,16 @@ class GlobalData @Inject constructor() {
 
 
     fun initGlobalData(
-        versionsInfo: VersionsInfo?,
+        versionsData: VersionsData?,
         coursesVersionId: Int,
         kotlinVersionId: Int,
         coroutineVersionId: Int,
         appVersionCode: Int
     ) {
-        _versionsInfo = versionsInfo
+        _versionsData = versionsData
         this.appVersionCode = appVersionCode
-        lastVersionId = _versionsInfo?.lastVersionId
-        _versionsList = _versionsInfo?.versions
+        lastVersionId = _versionsData?.lastVersionId
+        _versionsList = _versionsData?.versions
         _coursesVersionId = coursesVersionId
         _kotlinVersionId = kotlinVersionId
         _coroutineVersionId = coroutineVersionId
@@ -49,7 +49,7 @@ class GlobalData @Inject constructor() {
 
 
     private fun checkCoursesUpdate() {
-        if (_versionsInfo == null && _coursesVersionId > 0) return
+        if (_versionsData == null && _coursesVersionId > 0) return
         if (_coursesVersionId == lastVersionId) return
 
         if (_coursesVersionId == -1) {
@@ -66,7 +66,7 @@ class GlobalData @Inject constructor() {
     }
 
     private fun checkKotlinUpdate() {
-        if (_versionsInfo == null && _kotlinVersionId > 0) return
+        if (_versionsData == null && _kotlinVersionId > 0) return
         if (_kotlinVersionId == lastVersionId) return
 
         if (_kotlinVersionId == -1) {
@@ -92,7 +92,7 @@ class GlobalData @Inject constructor() {
     }
 
     private fun checkCoroutineUpdate() {
-        if (_versionsInfo == null && _coroutineVersionId > 0) return
+        if (_versionsData == null && _coroutineVersionId > 0) return
         if (_coroutineVersionId == lastVersionId) return
 
         if (_coroutineVersionId == -1) {

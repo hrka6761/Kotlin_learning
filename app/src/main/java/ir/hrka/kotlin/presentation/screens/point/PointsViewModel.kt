@@ -3,7 +3,7 @@ package ir.hrka.kotlin.presentation.screens.point
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.hrka.kotlin.core.errors.BaseError
+import ir.hrka.kotlin.core.errors.Errors
 import ir.hrka.kotlin.core.utilities.ExecutionState
 import ir.hrka.kotlin.core.utilities.ExecutionState.Loading
 import ir.hrka.kotlin.core.utilities.ExecutionState.Start
@@ -12,7 +12,7 @@ import ir.hrka.kotlin.core.utilities.Result
 import ir.hrka.kotlin.core.utilities.onError
 import ir.hrka.kotlin.core.utilities.onLoading
 import ir.hrka.kotlin.core.utilities.onSuccess
-import ir.hrka.kotlin.domain.entities.Point
+import ir.hrka.kotlin.domain.entities.git.inner_data.Point
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.domain.usecases.db.points.GetPointsFromDBUseCase
 import ir.hrka.kotlin.domain.usecases.db.points.UpdatePointsOnDBUseCase
@@ -40,12 +40,12 @@ class PointsViewModel @Inject constructor(
     val executionState: MutableStateFlow<ExecutionState> = _executionState
     private val _failedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val failedState: StateFlow<Boolean> = _failedState
-    private val _points: MutableStateFlow<Result<List<Point>?, BaseError>> =
+    private val _points: MutableStateFlow<Result<List<Point>?, Errors>> =
         MutableStateFlow(Result.Initial)
-    val points: StateFlow<Result<List<Point>?, BaseError>> = _points
-    private val _updateTopicStateOnDBResult: MutableStateFlow<Result<Boolean?, BaseError>> =
+    val points: StateFlow<Result<List<Point>?, Errors>> = _points
+    private val _updateTopicStateOnDBResult: MutableStateFlow<Result<Boolean?, Errors>> =
         MutableStateFlow(Result.Initial)
-    val updateTopicStateOnDBResult: StateFlow<Result<Boolean?, BaseError>> =
+    val updateTopicStateOnDBResult: StateFlow<Result<Boolean?, Errors>> =
         _updateTopicStateOnDBResult
     val appVersionCode: Int = globalData.appVersionCode!!
 

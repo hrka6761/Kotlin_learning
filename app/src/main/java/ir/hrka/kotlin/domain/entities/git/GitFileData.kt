@@ -1,7 +1,8 @@
-package ir.hrka.kotlin.domain.entities
+package ir.hrka.kotlin.domain.entities.git
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import ir.hrka.kotlin.domain.entities.git.inner_data.Links
 
 @JsonClass(generateAdapter = true)
 data class GitFileData(
@@ -17,4 +18,7 @@ data class GitFileData(
     @field:Json val content: String?,
     @field:Json val encoding: String?,
     @field:Json(name = "_links") val links: Links?,
-)
+) : Data<GitFileData> {
+
+    override fun getMasterData(): GitFileData = this
+}
