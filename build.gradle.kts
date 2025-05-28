@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.ksp.devtool)
     alias(libs.plugins.daggerHiltAndroid) apply false
     alias(libs.plugins.kotlin.compose) apply false
+    alias(libs.plugins.android.library) apply false
 }

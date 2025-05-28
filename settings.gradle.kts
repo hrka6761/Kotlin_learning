@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Kotlin Learning"
 include(":app")
- 
+include(":app:download")
