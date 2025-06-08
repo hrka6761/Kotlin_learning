@@ -122,4 +122,9 @@ dependencies {
 
     // Data Store
     implementation(libs.androidx.datastore.preferences)
+
+    // Mediapipe
+    implementation(libs.mediapipe.tasks.text)
+    implementation(libs.mediapipe.tasks.genai)
+    implementation(libs.mediapipe.tasks.imagegen)
 }
