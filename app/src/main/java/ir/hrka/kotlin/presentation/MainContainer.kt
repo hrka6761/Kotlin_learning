@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.util.Log
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -19,6 +20,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -28,11 +31,14 @@ import ir.hrka.kotlin.core.Constants.CLIPBOARD_TEXT
 import ir.hrka.kotlin.core.Constants.POINTS_SCREEN_TOPIC_ARGUMENT
 import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_COURSE_ARGUMENT
 import ir.hrka.kotlin.core.Constants.TOPICS_SCREEN_UPDATED_TOPIC_STATE_ID_ARGUMENT
+import ir.hrka.kotlin.core.chat.ChatState
+import ir.hrka.kotlin.core.chat.MessageOwner
 import ir.hrka.kotlin.core.utilities.Screen.Splash
 import ir.hrka.kotlin.core.utilities.Screen.Home
 import ir.hrka.kotlin.core.utilities.Screen.Topic
 import ir.hrka.kotlin.core.utilities.Screen.Point
 import ir.hrka.kotlin.core.utilities.Screen.About
+import ir.hrka.kotlin.core.utilities.Screen.Chat
 import ir.hrka.kotlin.core.utilities.Screen.SequentialProgramming
 import ir.hrka.kotlin.core.utilities.Screen.MultiThreadProgramming
 import ir.hrka.kotlin.core.utilities.Screen.Coroutines
@@ -42,11 +48,14 @@ import ir.hrka.kotlin.core.utilities.Screen.RegularCoroutineScopeFunction
 import ir.hrka.kotlin.core.utilities.coroutine_visualizers_utilities.ComponentState.Stop
 import ir.hrka.kotlin.core.utilities.sharePoint
 import ir.hrka.kotlin.core.utilities.translatePoint
+import ir.hrka.kotlin.domain.entities.ChatMessage
 import ir.hrka.kotlin.domain.entities.git.inner_data.Point
 import ir.hrka.kotlin.domain.entities.db.Course
 import ir.hrka.kotlin.domain.entities.db.Topic
 import ir.hrka.kotlin.presentation.screens.about.AboutScreen
 import ir.hrka.kotlin.presentation.screens.about.AboutViewModel
+import ir.hrka.kotlin.presentation.screens.chat.ChatScreen
+import ir.hrka.kotlin.presentation.screens.chat.ChatViewModel
 import ir.hrka.kotlin.presentation.screens.point.PointsScreen
 import ir.hrka.kotlin.presentation.screens.topic.TopicsScreen
 import ir.hrka.kotlin.presentation.screens.home.HomeScreen
@@ -97,7 +106,7 @@ fun AppContent(
             composable(
                 route = Splash.destination
             ) {
-                val splashViewModel: SplashViewModel = hiltViewModel()
+                val splashViewModel = navHostController.getViewModel<SplashViewModel>()
                 val executionState by splashViewModel.executionState.collectAsState()
                 val updateState by splashViewModel.updateState.collectAsState()
                 val updateDialogConfirmAction = {
@@ -135,7 +144,7 @@ fun AppContent(
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                val homeViewModel: HomeViewModel = hiltViewModel()
+                val homeViewModel = navHostController.getViewModel<HomeViewModel>()
                 val failedState by homeViewModel.failedState.collectAsState()
                 val coursesResult by homeViewModel.courses.collectAsState()
                 val executionState by homeViewModel.executionState.collectAsState()
@@ -153,6 +162,9 @@ fun AppContent(
 
                     navHostController.navigate(Topic.destination)
                 }
+                val navigateToChat = {
+                    navHostController.navigate(Chat.destination)
+                }
 
                 HomeScreen(
                     modifier = modifier,
@@ -161,7 +173,8 @@ fun AppContent(
                     coursesResult = coursesResult,
                     executionState = executionState,
                     fetchCourses = fetchCourses,
-                    onClickCourseRow = onClickCourseRow
+                    onClickCourseRow = onClickCourseRow,
+                    navigateToChat = navigateToChat
                 )
             }
             composable(
@@ -169,7 +182,7 @@ fun AppContent(
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                val topicViewModel: TopicViewModel = hiltViewModel()
+                val topicViewModel = navHostController.getViewModel<TopicViewModel>()
                 val topics by topicViewModel.topics.collectAsState()
                 val executionState by topicViewModel.executionState.collectAsState()
                 val failedState by topicViewModel.failedState.collectAsState()
@@ -217,7 +230,7 @@ fun AppContent(
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                val pointViewModel: PointsViewModel = hiltViewModel()
+                val pointViewModel = navHostController.getViewModel<PointsViewModel>()
                 val points by pointViewModel.points.collectAsState()
                 val failedState by pointViewModel.failedState.collectAsState()
                 val executionState by pointViewModel.executionState.collectAsState()
@@ -267,7 +280,7 @@ fun AppContent(
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                val aboutViewModel: AboutViewModel = hiltViewModel()
+                val aboutViewModel = navHostController.getViewModel<AboutViewModel>()
                 val onClickEmail = {
                     val clipboard =
                         activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -288,11 +301,39 @@ fun AppContent(
                 )
             }
             composable(
+                route = Chat.destination,
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
+            ) {
+                val chatViewModel: ChatViewModel = navHostController.getViewModel<ChatViewModel>()
+                val chatState by chatViewModel.chatState.collectAsState()
+                val lastResponse by chatViewModel.lastResponse.collectAsState()
+                val chatMessages by chatViewModel.chatMessages.collectAsState()
+
+                ChatScreen(
+                    modifier = modifier,
+                    onTopBarBackPressed = onTopBarBackPressed,
+                    chatMessageList = chatMessages,
+                    onUserSendMessage = { userText ->
+                        chatViewModel.addMessage(
+                            ChatMessage(
+                                text = userText,
+                                owner = MessageOwner.User
+                            )
+                        )
+                        chatViewModel.generateResponse(activity, userText)
+                        chatViewModel.setChatState(ChatState.GenerateResponse)
+                    },
+                    onUserStopAnswering = {},
+                    state = chatState,
+                )
+            }
+            composable(
                 route = SequentialProgramming.destination,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                val viewModel: SequentialProgrammingViewModel = hiltViewModel()
+                val viewModel = navHostController.getViewModel<SequentialProgrammingViewModel>()
                 val executionState by viewModel.executionState.collectAsState()
                 val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
                 val task1State by viewModel.task1State.observeAsState(initial = Stop())
@@ -324,7 +365,7 @@ fun AppContent(
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                val viewModel: MultiThreadProgrammingViewModel = hiltViewModel()
+                val viewModel = navHostController.getViewModel<MultiThreadProgrammingViewModel>()
                 val executionState by viewModel.executionState.collectAsState()
                 val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
                 val thread1State by viewModel.thread1State.observeAsState(initial = Stop())
@@ -366,7 +407,7 @@ fun AppContent(
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                val viewModel: CoroutinesViewModel = hiltViewModel()
+                val viewModel = navHostController.getViewModel<CoroutinesViewModel>()
                 val executionState by viewModel.executionState.collectAsState()
                 val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
                 val coroutine1State by viewModel.coroutine1State.observeAsState(initial = Stop())
@@ -408,7 +449,7 @@ fun AppContent(
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                val viewModel: RunBlockingViewModel = hiltViewModel()
+                val viewModel = navHostController.getViewModel<RunBlockingViewModel>()
                 val executionState by viewModel.executionState.collectAsState()
                 val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
                 val coroutine1State by viewModel.coroutine1State.observeAsState(initial = Stop())
@@ -448,7 +489,8 @@ fun AppContent(
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                val viewModel: RegularCoroutineScopeFunctionViewModel = hiltViewModel()
+                val viewModel =
+                    navHostController.getViewModel<RegularCoroutineScopeFunctionViewModel>()
                 val executionState by viewModel.executionState.collectAsState()
                 val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
                 val scopeState by viewModel.scopeState.observeAsState(initial = Stop())
@@ -488,7 +530,7 @@ fun AppContent(
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None }
             ) {
-                val viewModel: CoroutineScopeFunctionViewModel = hiltViewModel()
+                val viewModel = navHostController.getViewModel<CoroutineScopeFunctionViewModel>()
                 val executionState by viewModel.executionState.collectAsState()
                 val mainThreadState by viewModel.mainThreadState.observeAsState(initial = Stop())
                 val scopeState by viewModel.scopeState.observeAsState(initial = Stop())
@@ -531,6 +573,23 @@ fun AppContent(
             }
         }
     }
+}
+
+@Composable
+private inline fun <reified T : ViewModel> NavHostController.getViewModel(): T {
+    val navBackStackEntry = this.currentBackStackEntry
+    val currentGraphId = navBackStackEntry?.destination?.parent?.id
+
+    val viewModelStoreOwner = currentGraphId?.let { navGraphId ->
+        try {
+            this.getViewModelStoreOwner(navGraphId)
+        } catch (e: Exception) {
+            Log.w("AppContent", "getViewModel: ${e.message}")
+            null
+        }
+    }
+
+    return viewModelStoreOwner?.let { hiltViewModel(it) } ?: hiltViewModel()
 }
 
 private val customTabsIntent =
