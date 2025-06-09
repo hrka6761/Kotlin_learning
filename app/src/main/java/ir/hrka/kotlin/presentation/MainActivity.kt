@@ -1,8 +1,11 @@
 package ir.hrka.kotlin.presentation
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,6 +19,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppContent(appVersionCode = getAppVersionCode(this))
+        }
+
+        if (!Environment.isExternalStorageManager()) {
+            val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+            startActivity(intent)
         }
     }
 

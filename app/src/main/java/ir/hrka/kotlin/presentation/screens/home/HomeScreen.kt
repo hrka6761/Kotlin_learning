@@ -3,7 +3,11 @@ package ir.hrka.kotlin.presentation.screens.home
 import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +22,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -62,7 +68,8 @@ fun HomeScreen(
     coursesResult: Result<List<Course>?, Errors>,
     executionState: ExecutionState,
     fetchCourses: () -> Unit,
-    onClickCourseRow: (course: Course) -> Unit
+    onClickCourseRow: (course: Course) -> Unit,
+    navigateToChat: () -> Unit
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val configuration = LocalConfiguration.current
@@ -93,7 +100,26 @@ fun HomeScreen(
                 modifier = modifier.fillMaxWidth(),
                 hostState = snackBarHostState
             )
-        }
+        },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = { navigateToChat() }
+            ) {
+                Row(
+                    modifier = modifier,
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.gemini),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = modifier.width(8.dp))
+                    Text(stringResource(R.string.home_chat_btn_txt))
+                }
+            }
+        },
+        floatingActionButtonPosition = FabPosition.EndOverlay
     ) { innerPaddings ->
         Box(
             modifier = modifier
@@ -297,6 +323,7 @@ fun HomeScreenPreview() {
         coursesResult = Result.Initial,
         executionState = Stop,
         fetchCourses = {},
-        onClickCourseRow = {}
+        onClickCourseRow = {},
+        navigateToChat = {}
     )
 }

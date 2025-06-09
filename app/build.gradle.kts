@@ -127,4 +127,7 @@ dependencies {
     implementation(libs.mediapipe.tasks.text)
     implementation(libs.mediapipe.tasks.genai)
     implementation(libs.mediapipe.tasks.imagegen)
+
+    // Markdown
+    implementation(libs.compose.markdown)
 }

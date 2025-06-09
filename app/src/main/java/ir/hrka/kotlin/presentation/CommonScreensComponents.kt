@@ -32,12 +32,13 @@ import ir.hrka.kotlin.core.utilities.ExecutionState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     title: String,
     navigationClick: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
+        modifier = modifier,
         title = {
             Text(
                 modifier = modifier.padding(end = 16.dp),
