@@ -1,19 +1,21 @@
 package ir.hrka.kotlin.presentation.screens.chat
 
-import android.R.attr.textSize
 import android.widget.TextView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -66,9 +68,10 @@ fun ChatScreen(
     activity: MainActivity,
     onTopBarBackPressed: () -> Unit,
     chatMessageList: List<ChatMessage>,
-    onUserSendMessage: (text: String) -> Unit,
-    onUserStopAnswering: () -> Unit,
+    onUserAsk: (text: String) -> Unit,
+    onStopAnswering: () -> Unit,
     state: ChatState,
+    isChatInitialized: Boolean
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -88,89 +91,120 @@ fun ChatScreen(
             )
         }
     ) { innerPaddings ->
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPaddings),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
+            contentAlignment = Alignment.Center
         ) {
-            val listState = rememberLazyListState()
+            Column(
+                modifier = modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                val listState = rememberLazyListState()
 
-            LaunchedEffect(chatMessageList.size) {
-                if (chatMessageList.isNotEmpty())
-                    listState.animateScrollToItem(chatMessageList.lastIndex)
-            }
-
-            if (chatMessageList.isEmpty())
-                Box(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        textAlign = TextAlign.Center,
-                        text = stringResource(R.string.chat_place_holder),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                LaunchedEffect(chatMessageList.size) {
+                    if (chatMessageList.isNotEmpty())
+                        listState.animateScrollToItem(chatMessageList.lastIndex)
                 }
-            else
-                LazyColumn(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(bottom = 8.dp),
-                    state = listState,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    items(
-                        items = chatMessageList,
-                        key = { chatMessage -> chatMessage.text }
-                    ) { chatMessage ->
-                        val owner = chatMessage.owner
 
-                        AnimatedVisibility(
-                            visible = true,
-                            enter = fadeIn() + expandVertically(),
-                            exit = fadeOut() + shrinkVertically()
-                        ) {
-                            if (owner == MessageOwner.User)
-                                UserRequest(
-                                    modifier = modifier,
-                                    text = chatMessage.text
-                                )
-                            else
-                                GeminiResponse(
-                                    modifier = modifier,
-                                    activity = activity,
-                                    text = chatMessage.text,
-                                    state = state,
-                                )
+                if (chatMessageList.isEmpty())
+                    Box(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            textAlign = TextAlign.Center,
+                            text = stringResource(R.string.chat_place_holder),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                else
+                    LazyColumn(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(bottom = 8.dp),
+                        state = listState,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Bottom
+                    ) {
+                        items(
+                            items = chatMessageList,
+                            key = { chatMessage -> chatMessage.id }
+                        ) { chatMessage ->
+                            val owner = chatMessage.owner
+
+                            AnimatedVisibility(
+                                visible = true,
+                                enter = fadeIn() + expandVertically(),
+                                exit = fadeOut() + shrinkVertically()
+                            ) {
+                                if (owner == MessageOwner.User)
+                                    UserRequest(
+                                        modifier = modifier,
+                                        text = chatMessage.text
+                                    )
+                                else
+                                    GeminiResponse(
+                                        modifier = modifier,
+                                        activity = activity,
+                                        text = chatMessage.text,
+                                        state = state,
+                                        isLastResponse = chatMessage.id == chatMessageList.lastIndex
+                                    )
+                            }
                         }
                     }
-                }
 
-            ChatInputMessage(
-                modifier = modifier,
-                onUserSendMessage = onUserSendMessage,
-                onUserStopAnswering = onUserStopAnswering,
-                state = state
+                ChatInputMessage(
+                    modifier = modifier,
+                    onUserSendMessage = onUserAsk,
+                    onStopAnswering = onStopAnswering,
+                    state = state
+                )
+
+                Text(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    text = stringResource(R.string.chat_description),
+                    fontSize = 8.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+
+    if (!isChatInitialized)
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primaryContainer),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CircularProgressIndicator(
+                modifier = modifier.size(50.dp),
+                strokeWidth = 1.dp
+            )
+
+            Spacer(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
             )
 
             Text(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                text = stringResource(R.string.chat_description),
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                text = stringResource(R.string.chat_initializing_msg),
+                fontWeight = FontWeight.Bold
             )
         }
-    }
 }
 
 
@@ -178,7 +212,7 @@ fun ChatScreen(
 fun ChatInputMessage(
     modifier: Modifier,
     onUserSendMessage: (text: String) -> Unit,
-    onUserStopAnswering: () -> Unit,
+    onStopAnswering: () -> Unit,
     state: ChatState
 ) {
     var text by remember { mutableStateOf("") }
@@ -187,7 +221,7 @@ fun ChatInputMessage(
         maxLines = 3,
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(start = 6.dp, end = 6.dp, top = 16.dp),
         value = text,
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
@@ -208,9 +242,9 @@ fun ChatInputMessage(
                         onUserSendMessage(text)
                         text = ""
                     } else
-                        onUserStopAnswering()
+                        onStopAnswering()
                 },
-                enabled = text.isNotEmpty()
+                enabled = if (state == ChatState.UserInput) text.isNotEmpty() else true
             ) {
                 Icon(
                     painter = painterResource(
@@ -264,11 +298,12 @@ fun GeminiResponse(
     activity: MainActivity,
     text: String,
     state: ChatState,
+    isLastResponse: Boolean
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(6.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
@@ -282,14 +317,13 @@ fun GeminiResponse(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.gemini),
+                    painter = painterResource(R.drawable.safe_mind),
                     tint = colorResource(R.color.gemini_icon_color),
                     contentDescription = null
                 )
 
-                if (state == ChatState.GenerateResponse && text.isEmpty())
+                if (state == ChatState.GenerateResponse && isLastResponse)
                     CircularProgressIndicator(
-                        modifier = modifier.padding(2.dp),
                         strokeWidth = 1.dp
                     )
             }
@@ -327,7 +361,6 @@ fun MarkdownText(activity: MainActivity, markdown: String, modifier: Modifier = 
         }
     )
 }
-
 
 
 @Preview(showBackground = true)
@@ -371,8 +404,9 @@ fun ChatScreenPreview(modifier: Modifier = Modifier) {
                 MessageOwner.Gemini
             ),
         ),
-        onUserSendMessage = {},
-        onUserStopAnswering = {},
+        onUserAsk = {},
+        onStopAnswering = {},
         state = ChatState.UserInput,
+        isChatInitialized = false
     )
 }

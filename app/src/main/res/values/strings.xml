@@ -41,7 +41,6 @@
     <string name="visualization_page_title">Play Visualizer</string>
     <string name="failed_to_fetch_the_data">Failed to fetch the data</string>
     <string name="about_app_bar_title">Author info</string>
-    <string name="chat_app_bar_title">Gemini Chat</string>
 
     <!--Visualizers Snippet code dialogs-->
     <string name="visualizer_snippet_code_dialog_title">Visualizer Code</string>
@@ -82,9 +81,12 @@
     <string name="guidance_done">Done</string>
     <string name="guidance_cancel">Cancel</string>
     <string name="guidance_failed">Failed</string>
-    <string name="home_chat_btn_txt">Gemini</string>
-    <string name="chat_screen_gemini_title">Gemini</string>
-    <string name="chat_input_place_holder_txt">Ask Gemini</string>
+
+    <!---->
+    <string name="chat_app_bar_title">Safe Mind</string>
+    <string name="home_chat_btn_txt">Safe Mind</string>
+    <string name="chat_input_place_holder_txt">Ask Anything</string>
     <string name="chat_place_holder">What can I help with?</string>
     <string name="chat_description">The Gemini model runs directly in the app and generates answers locally.</string>
+    <string name="chat_initializing_msg">Chat Initializing…</string>
 </resources>

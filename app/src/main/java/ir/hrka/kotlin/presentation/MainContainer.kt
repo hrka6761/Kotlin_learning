@@ -305,17 +305,23 @@ fun AppContent(
                 val chatViewModel: ChatViewModel = navHostController.getViewModel<ChatViewModel>()
                 val chatState by chatViewModel.chatState.collectAsState()
                 val chatMessages by chatViewModel.chatMessages.collectAsState()
+                val isChatInitialized by chatViewModel.isChatInitialized.collectAsState()
+
+                chatViewModel.initialChat()
 
                 ChatScreen(
                     modifier = modifier,
                     activity = activity,
                     onTopBarBackPressed = onTopBarBackPressed,
                     chatMessageList = chatMessages,
-                    onUserSendMessage = { userText ->
-                        chatViewModel.addMessage(userInput = userText)
+                    onUserAsk = { userText ->
+                        chatViewModel.ask(userInput = userText)
                     },
-                    onUserStopAnswering = {},
+                    onStopAnswering = {
+                        chatViewModel.stopAnswering()
+                    },
                     state = chatState,
+                    isChatInitialized = isChatInitialized
                 )
             }
             composable(

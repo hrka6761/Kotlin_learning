@@ -11,6 +11,8 @@ import ir.hrka.kotlin.local_ai_chat.utilities.ChatState
 import ir.hrka.kotlin.local_ai_chat.utilities.MessageOwner
 import ir.hrka.kotlin.domain.entities.ChatMessage
 import ir.hrka.kotlin.local_ai_chat.OnDeviceAiChat
+import ir.hrka.kotlin.local_ai_chat.exceptions.ManuallyGenerationCancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,13 +20,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
+    @Named("Default") private val default: CoroutineDispatcher,
     private val onDeviceAiChat: OnDeviceAiChat
 ) : ViewModel() {
 
@@ -36,18 +39,24 @@ class ChatViewModel @Inject constructor(
     private val aiResponse: MutableStateFlow<String> = MutableStateFlow("")
     private val currentLlmOption: MutableStateFlow<LlmInferenceOptions> =
         MutableStateFlow(getDefaultLlmOptions())
-
-
-    init {
-        initialChat()
-    }
+    private var _isChatInitialized: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var isChatInitialized: StateFlow<Boolean> = _isChatInitialized
+    private var chatCount = 0
 
 
     fun setChatState(state: ChatState) {
         _chatState.value = state
     }
 
-    fun addMessage(userInput: String) {
+    fun initialChat() {
+        if (!_isChatInitialized.value)
+            viewModelScope.launch(default) {
+                onDeviceAiChat.initial(options = currentLlmOption.value)
+                _isChatInitialized.value = true
+            }
+    }
+
+    fun ask(userInput: String) {
         setChatState(ChatState.GenerateResponse)
 
         val list = mutableStateListOf<ChatMessage>()
@@ -55,24 +64,29 @@ class ChatViewModel @Inject constructor(
         list.addAll(_chatMessages.value)
         list.add(
             ChatMessage(
-                id = list.size,
+                id = chatCount,
                 text = userInput,
                 owner = MessageOwner.User
             )
         )
+        chatCount++
         list.add(
             ChatMessage(
-                id = list.size,
+                id = chatCount,
                 text = aiResponse.value,
                 owner = MessageOwner.Gemini
             )
         )
+        chatCount++
         _chatMessages.value = list
 
         generateResponse(userInput)
     }
 
-    fun initialChat() = onDeviceAiChat.initial(currentLlmOption.value)
+    fun stopAnswering() {
+        onDeviceAiChat.stopGenerate()
+        setChatState(ChatState.UserInput)
+    }
 
 
     private fun generateResponse(userInput: String) {
@@ -81,13 +95,11 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Default) {
             onDeviceAiChat
                 .generateResponse(userInput)
-                .onStart {
-                }
                 .onEach {
                     setChatState(ChatState.ProvideResponse)
                     response.append(it)
                     _chatMessages.value = _chatMessages.value.map { chatMessage ->
-                        if (chatMessage.id == _chatMessages.value.size -1 )
+                        if (chatMessage.id == _chatMessages.value.lastIndex)
                             chatMessage.copy(text = response.toString())
                         else
                             chatMessage
@@ -97,7 +109,15 @@ class ChatViewModel @Inject constructor(
                     setChatState(ChatState.UserInput)
                 }
                 .catch {
-                    setChatState(ChatState.UserInput)
+                    if (it is ManuallyGenerationCancellationException) {
+                        _chatMessages.value = _chatMessages.value.map { chatMessage ->
+                            if (chatMessage.id == _chatMessages.value.lastIndex) {
+                                response.append("   ...")
+                                chatMessage.copy(text = response.toString())
+                            } else
+                                chatMessage
+                        }
+                    }
                 }
                 .collect()
         }
@@ -111,6 +131,8 @@ class ChatViewModel @Inject constructor(
 
         return LlmInferenceOptions.builder()
             .setModelPath(file.absolutePath)
+            .setMaxTokens(4096)
+            .setMaxTopK(40)
             .setPreferredBackend(Backend.CPU)
             .build()
     }

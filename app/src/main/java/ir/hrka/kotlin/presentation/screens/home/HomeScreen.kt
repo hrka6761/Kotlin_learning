@@ -111,7 +111,7 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.gemini),
+                        painter = painterResource(R.drawable.safe_mind),
                         contentDescription = null
                     )
                     Spacer(modifier = modifier.width(8.dp))
