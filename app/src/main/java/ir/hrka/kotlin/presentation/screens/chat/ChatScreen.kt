@@ -1,10 +1,13 @@
 package ir.hrka.kotlin.presentation.screens.chat
 
+import android.R.attr.textSize
+import android.widget.TextView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,15 +51,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import io.noties.markwon.Markwon
 import ir.hrka.kotlin.R
 import ir.hrka.kotlin.local_ai_chat.utilities.ChatState
 import ir.hrka.kotlin.local_ai_chat.utilities.MessageOwner
 import ir.hrka.kotlin.domain.entities.ChatMessage
+import ir.hrka.kotlin.presentation.MainActivity
 import ir.hrka.kotlin.presentation.TopBar
 
 @Composable
 fun ChatScreen(
     modifier: Modifier = Modifier,
+    activity: MainActivity,
     onTopBarBackPressed: () -> Unit,
     chatMessageList: List<ChatMessage>,
     onUserSendMessage: (text: String) -> Unit,
@@ -137,6 +145,7 @@ fun ChatScreen(
                             else
                                 GeminiResponse(
                                     modifier = modifier,
+                                    activity = activity,
                                     text = chatMessage.text,
                                     state = state,
                                 )
@@ -252,6 +261,7 @@ fun UserRequest(
 @Composable
 fun GeminiResponse(
     modifier: Modifier,
+    activity: MainActivity,
     text: String,
     state: ChatState,
 ) {
@@ -284,15 +294,40 @@ fun GeminiResponse(
                     )
             }
         }
-        Text(
-            modifier = modifier.padding(top = 8.dp),
-            text = text,
-            fontSize = 12.sp,
-            lineHeight = 16.sp,
-            overflow = TextOverflow.Clip
+
+        MarkdownText(
+            activity = activity,
+            markdown = text,
+            modifier = modifier
         )
     }
 }
+
+@Composable
+fun MarkdownText(activity: MainActivity, markdown: String, modifier: Modifier = Modifier) {
+    val isDarkTheme = isSystemInDarkTheme()
+    val textColor = if (isDarkTheme) Color.White else Color.Black
+
+    val markwon = remember {
+        Markwon.create(activity)
+    }
+
+    AndroidView(
+        modifier = modifier,
+        factory = { ctx ->
+            TextView(ctx).apply {
+                setTextIsSelectable(true)
+                textSize = 16f
+                setTextColor(textColor.toArgb())
+            }
+        },
+        update = { textView ->
+            textView.setTextColor(textColor.toArgb())
+            markwon.setMarkdown(textView, markdown)
+        }
+    )
+}
+
 
 
 @Preview(showBackground = true)
@@ -302,6 +337,7 @@ fun ChatScreenPreview(modifier: Modifier = Modifier) {
 
     ChatScreen(
         modifier = modifier,
+        activity = MainActivity(),
         onTopBarBackPressed = {},
         chatMessageList = mutableListOf<ChatMessage>(
             ChatMessage(

@@ -308,6 +308,7 @@ fun AppContent(
 
                 ChatScreen(
                     modifier = modifier,
+                    activity = activity,
                     onTopBarBackPressed = onTopBarBackPressed,
                     chatMessageList = chatMessages,
                     onUserSendMessage = { userText ->

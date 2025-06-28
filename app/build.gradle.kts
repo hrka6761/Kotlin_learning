@@ -123,8 +123,22 @@ dependencies {
     // Data Store
     implementation(libs.androidx.datastore.preferences)
 
-    // Mediapipe
+    // Media pipe
     implementation(libs.mediapipe.tasks.text)
     implementation(libs.mediapipe.tasks.genai)
     implementation(libs.mediapipe.tasks.imagegen)
+
+    // Markdown language
+    implementation(libs.core)
+    implementation(libs.html)
+    implementation(libs.image.glide)
+    implementation(libs.syntax.highlight)
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.jetbrains" && requested.name == "annotations-java5") {
+            useTarget("org.jetbrains:annotations:23.0.0")
+        }
+    }
 }
