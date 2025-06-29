@@ -31,17 +31,24 @@ class ChatViewModel @Inject constructor(
     private val onDeviceAiChat: OnDeviceAiChat
 ) : ViewModel() {
 
+
     private val _chatMessages: MutableStateFlow<List<ChatMessage>> =
         MutableStateFlow(mutableListOf())
     val chatMessages: StateFlow<List<ChatMessage>> = _chatMessages
     private val _chatState: MutableStateFlow<ChatState> = MutableStateFlow(ChatState.UserInput)
     val chatState: StateFlow<ChatState> = _chatState
     private val aiResponse: MutableStateFlow<String> = MutableStateFlow("")
-    private val currentLlmOption: MutableStateFlow<LlmInferenceOptions> =
-        MutableStateFlow(getDefaultLlmOptions())
+    private val currentLlmOption: MutableStateFlow<LlmInferenceOptions?> =
+        MutableStateFlow(null)
     private var _isChatInitialized: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isChatInitialized: StateFlow<Boolean> = _isChatInitialized
+    private var _isModelAvailable: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var isModelAvailable: StateFlow<Boolean> = _isModelAvailable
     private var chatCount = 0
+    private val modelFile = File(
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
+        "gemma-3n-E4B-it-int45.task"
+    )
 
 
     fun setChatState(state: ChatState) {
@@ -50,13 +57,17 @@ class ChatViewModel @Inject constructor(
 
     fun initialChat() {
         if (!_isChatInitialized.value)
-            viewModelScope.launch(default) {
-                onDeviceAiChat.initial(options = currentLlmOption.value)
-                _isChatInitialized.value = true
-            }
+            if (isModelAvailable())
+                viewModelScope.launch(default) {
+                    currentLlmOption.value = getDefaultLlmOptions()
+                    currentLlmOption.value?.let {
+                        onDeviceAiChat.initial(options = it)
+                        _isChatInitialized.value = true
+                    }
+                }
     }
 
-    fun ask(userInput: String) {
+    fun startAsk(userInput: String) {
         setChatState(ChatState.GenerateResponse)
 
         val list = mutableStateListOf<ChatMessage>()
@@ -88,6 +99,13 @@ class ChatViewModel @Inject constructor(
         setChatState(ChatState.UserInput)
     }
 
+
+    private fun isModelAvailable(): Boolean {
+        val availability = modelFile.exists()
+        _isModelAvailable.value = availability
+
+        return availability
+    }
 
     private fun generateResponse(userInput: String) {
         val response = StringBuilder("")
@@ -123,17 +141,11 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun getDefaultLlmOptions(): LlmInferenceOptions {
-        val file = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
-            "gemma-3n-E4B-it-int4.task"
-        )
-
-        return LlmInferenceOptions.builder()
-            .setModelPath(file.absolutePath)
+    private fun getDefaultLlmOptions() =
+        LlmInferenceOptions.builder()
+            .setModelPath(modelFile.absolutePath)
             .setMaxTokens(4096)
             .setMaxTopK(40)
             .setPreferredBackend(Backend.CPU)
             .build()
-    }
 }

@@ -22,6 +22,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -32,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -71,7 +74,9 @@ fun ChatScreen(
     onUserAsk: (text: String) -> Unit,
     onStopAnswering: () -> Unit,
     state: ChatState,
-    isChatInitialized: Boolean
+    isChatInitialized: Boolean,
+    isModelAvailable: Boolean,
+    downloadModel: () -> Unit
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -205,6 +210,41 @@ fun ChatScreen(
                 fontWeight = FontWeight.Bold
             )
         }
+
+    if (!isModelAvailable)
+        AlertDialog(
+            modifier = modifier.fillMaxWidth(),
+            onDismissRequest = {},
+            confirmButton = {
+                Button(
+                    onClick = { downloadModel() }
+                ) {
+                    Text(
+                        text = stringResource(R.string.chat_download_model_dialog_positive_btn_txt),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+
+                    }
+                ) {
+                    Text(text = stringResource(R.string.new_version_dialog_cancel_btn))
+                }
+            },
+            icon = { Icon(painterResource(R.drawable.update), contentDescription = null) },
+            title = {
+                Text(text = stringResource(R.string.chat_download_model_dialog_title))
+            },
+            text = {
+
+            },
+            shape = RoundedCornerShape(16.dp),
+            tonalElevation = 16.dp
+        )
 }
 
 
@@ -407,6 +447,8 @@ fun ChatScreenPreview(modifier: Modifier = Modifier) {
         onUserAsk = {},
         onStopAnswering = {},
         state = ChatState.UserInput,
-        isChatInitialized = false
+        isChatInitialized = false,
+        isModelAvailable = false,
+        downloadModel = {}
     )
 }

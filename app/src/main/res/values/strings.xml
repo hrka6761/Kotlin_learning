@@ -89,4 +89,6 @@
     <string name="chat_place_holder">What can I help with?</string>
     <string name="chat_description">The Gemini model runs directly in the app and generates answers locally.</string>
     <string name="chat_initializing_msg">Chat Initializing…</string>
+    <string name="chat_download_model_dialog_title">Download Model</string>
+    <string name="chat_download_model_dialog_positive_btn_txt">Download</string>
 </resources>

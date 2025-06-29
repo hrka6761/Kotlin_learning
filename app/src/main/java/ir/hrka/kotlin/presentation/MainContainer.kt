@@ -306,6 +306,7 @@ fun AppContent(
                 val chatState by chatViewModel.chatState.collectAsState()
                 val chatMessages by chatViewModel.chatMessages.collectAsState()
                 val isChatInitialized by chatViewModel.isChatInitialized.collectAsState()
+                val isModelAvailable by chatViewModel.isModelAvailable.collectAsState()
 
                 chatViewModel.initialChat()
 
@@ -315,13 +316,14 @@ fun AppContent(
                     onTopBarBackPressed = onTopBarBackPressed,
                     chatMessageList = chatMessages,
                     onUserAsk = { userText ->
-                        chatViewModel.ask(userInput = userText)
+                        chatViewModel.startAsk(userInput = userText)
                     },
                     onStopAnswering = {
                         chatViewModel.stopAnswering()
                     },
                     state = chatState,
-                    isChatInitialized = isChatInitialized
+                    isChatInitialized = isChatInitialized,
+                    isModelAvailable = isModelAvailable
                 )
             }
             composable(
